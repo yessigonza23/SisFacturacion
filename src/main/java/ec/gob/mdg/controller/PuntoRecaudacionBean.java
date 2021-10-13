@@ -1,0 +1,168 @@
+package ec.gob.mdg.controller;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import ec.gob.mdg.model.Institucion;
+import ec.gob.mdg.model.Provincia;
+import ec.gob.mdg.model.PuntoRecaudacion;
+import ec.gob.mdg.service.IInstitucionService;
+import ec.gob.mdg.service.IProvinciaService;
+import ec.gob.mdg.service.IPuntoRecaudacionService;
+
+@Named
+@ViewScoped
+public class PuntoRecaudacionBean implements Serializable {
+	
+	private static final long serialVersionUID = -1880117470518909108L;
+	
+	@Inject
+	private IPuntoRecaudacionService service;
+	
+	@Inject
+	private IInstitucionService servicei;
+	
+	@Inject
+	private IProvinciaService serviceProvincia;
+	
+	private List<PuntoRecaudacion> lista;	
+	
+	private String tipoDialog;
+	private PuntoRecaudacion puntoRecaudacion;
+	
+	private List<Institucion> listai;
+	private Institucion institucion;
+	
+	private List<Provincia> listaProvincia;
+	private Provincia provincia;
+	
+	@PostConstruct
+	public void init() {
+		this.puntoRecaudacion = new PuntoRecaudacion();
+		this.listar();
+		this.listari();
+		this.listarProvincia();
+		this.tipoDialog = "Nuevo";
+	}
+	
+	public void operar(String accion) {
+		try {
+			if(accion.equalsIgnoreCase("R")) {
+				this.service.registrar(this.puntoRecaudacion);
+			}else if(accion.equalsIgnoreCase("M")) {
+				this.service.modificar(this.puntoRecaudacion);
+			}
+			this.listar();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private void listar() {
+		try {
+			this.lista = this.service.listar();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private void listari() {
+		try {
+			this.listai = this.servicei.listar();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private void listarProvincia() {
+		try {
+			this.listaProvincia = this.serviceProvincia.listar();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void mostrarData(PuntoRecaudacion i) {
+		this.puntoRecaudacion = i;
+		this.tipoDialog = "Modificar Punto de Recaudación";
+	}
+	
+	public void limpiarControles() {
+		this.puntoRecaudacion = new PuntoRecaudacion();
+		this.tipoDialog = "Nuevo Punto de Recaudación";
+	}
+	
+		
+	public List<Institucion> getListai() {
+		return listai;
+	}
+
+
+	public void setListai(List<Institucion> listai) {
+		this.listai = listai;
+	}
+
+
+	public Institucion getInstitucion() {
+		return institucion;
+	}
+
+
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
+	}
+	
+	public List<PuntoRecaudacion> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<PuntoRecaudacion> lista) {
+		this.lista = lista;
+	}
+	
+	
+	public String getTipoDialog() {
+		return tipoDialog;
+	}
+
+
+	public void setTipoDialog(String tipoDialog) {
+		this.tipoDialog = tipoDialog;
+	}
+
+
+	public PuntoRecaudacion getPuntoRecaudacion() {
+		return puntoRecaudacion;
+	}
+
+
+	public void setPuntoRecaudacion(PuntoRecaudacion puntoRecaudacion) {
+		this.puntoRecaudacion = puntoRecaudacion;
+	}
+
+	public List<Provincia> getListaProvincia() {
+		return listaProvincia;
+	}
+
+	public void setListaProvincia(List<Provincia> listaProvincia) {
+		this.listaProvincia = listaProvincia;
+	}
+
+	public Provincia getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(Provincia provincia) {
+		this.provincia = provincia;
+	}
+	
+	
+
+
+}
+

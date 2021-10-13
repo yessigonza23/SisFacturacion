@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingContable" onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">MODIFICACIÓN Y
+					CONSULTA DEL CONTABLE - #{contableBean.nombre.nombre}</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Incio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{contableBean.fecha_inicio}">
+								</p:calendar>
+								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaInicio" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Fin: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
+									value="#{contableBean.fecha_fin}">
+								</p:calendar>
+								<p:watermark for="txtFechaFin" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaFin" />
+							</p:column>
+						</p:row>
+
+						<p:commandButton icon="ui-icon-disk" id="btnConsultar"
+							value="Consultar"
+							actionListener="#{contableBean.listarContable()}" process="@form"
+							update="ingContable:cont">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panelGrid>
+				</p:panel>
+
+				<p:dataTable id="cont" style="width:850px;"
+					value="#{contableBean.listaContable }" var="e" rows="15"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="No." filterBy="#{e.id}"
+						filterMatchMode="contains" style="width:30px;">
+						<p:outputLabel value="#{e.id}" />
+					</p:column>
+
+					<p:column headerText="Descripción" style="text-align: justify;"
+						sortBy="#{e.detalle}" filterBy="#{e.detalle}"
+						filterMatchMode="contains">
+						<h:outputLabel value="#{e.detalle}" />
+					</p:column>
+
+					<p:column headerText="Fecha" filterBy="#{e.fecha}"
+						filterMatchMode="contains" style="width:80px;">
+						<p:outputLabel value="#{e.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Valor" filterBy="#{e.valor}"
+						filterMatchMode="contains" style="width:50px;">
+						<div align="right">
+							<p:outputLabel value="#{e.valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column exportable="false" style="width: 50px">
+						<h:commandButton action="#{contableBean.irDetalle(e.id)}"
+							value="Ver" />
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

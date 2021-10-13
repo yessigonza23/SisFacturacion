@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingReportes" onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">REPORTES POR
+					PUNTO DE RECAUDACIÓN #{reportesPorPuntoBean.nombre.nombre}</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Incio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{reportesPorPuntoBean.fecha_inicio}">
+								</p:calendar>
+								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaInicio" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Fin: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
+									value="#{reportesPorPuntoBean.fecha_fin}">
+								</p:calendar>
+								<p:watermark for="txtFechaFin" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaFin" />
+							</p:column>
+						</p:row>
+						<p:commandButton value="Emitir Reporte" style="margin-right:10px;" ajax="false"
+							target="_blank"
+							actionListener="#{reportesPorPuntoBean.reportesPorOpcion(reportesPorPuntoBean.opcion)}"></p:commandButton>
+						
+						
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" />
+
+					</p:panelGrid>
+				</p:panel>
+
+				<!-- 				<p:panel > -->
+				
+				<p:selectOneRadio id="city" value="#{reportesPorPuntoBean.opcion}" layout="responsive" columns="2" styleClass="grid-radio">
+					<f:selectItem itemLabel="1. Recaudaciones Generales a Detalle"
+						itemValue="1" />
+					<f:selectItem
+						itemLabel="2. Resumen de Ingresos por Pto. Recaud. y Código del Banco"
+						itemValue="2" />
+					
+					<f:selectItem 
+						itemLabel="3. Facturas Anuladas" 
+						itemValue="3" />
+					<f:selectItem 
+						itemLabel="4. Facturas No autorizadas" 
+						itemValue="4" />
+					<f:selectItem itemLabel="5. Cruce de Facturas con Notas de Crédito"
+						itemValue="5" />
+					<f:selectItem itemLabel="6. Cierre de Caja" 
+						itemValue="6" />
+				</p:selectOneRadio>
+				
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="usuarios"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">REGISTRAR
+					USUARIOS</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+
+				<p:panelGrid id="pg" columns="3"
+					columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+					contentStyleClass="p-align-baseline ui-fluid">
+
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Cédula: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtCi" value="#{usuarioBean.usuario.ci}"
+							required="true">
+							<p:ajax event="valueChange"
+								listener="#{usuarioBean.validaCedula(usuarioBean.usuario.ci)}"
+								update="@form" />
+						</p:inputText>
+						<p:message for="txtCi" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtNombres" disabled="#{usuarioBean.valida}"
+							value="#{usuarioBean.usuario.nombre}" required="true"
+							style="width:250px; text-transform: uppercase" />
+						<p:message for="txtNombres" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Apellidos: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtApellidos" disabled="#{usuarioBean.valida}"
+							value="#{usuarioBean.usuario.apellido}" required="true"
+							style="width:250px; text-transform: uppercase" />
+						<p:message for="txtApellidos" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtCargo" value="#{usuarioBean.usuario.cargo}"
+							required="true" disabled="#{usuarioBean.valida}"
+							style="width:250px; text-transform: uppercase" />
+						<p:message for="txtCargo" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtTelefono"
+							value="#{usuarioBean.usuario.telefono}" required="true"
+							maxlength="10"
+							onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+							disabled="#{usuarioBean.valida}" style="width:100px;" />
+						<p:message for="txtTelefono" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Correo Electrónico: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtCorreo"
+							value="#{usuarioBean.usuario.correoelectronico}" required="true"
+							disabled="#{usuarioBean.valida}" maxlength="50"
+							requiredMessage="Requerido Correo electronico"
+							style="width:250px;"
+							validatorMessage="Correo electrónico no es válido">
+							<f:validateRegex
+								pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+						</p:inputText>
+						<p:message for="txtCorreo" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Usuario de sistema: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtUsername" disabled="#{usuarioBean.valida}"
+							style="width:150px; text-transform: lowercase"
+							value="#{usuarioBean.usuario.username}" required="true" />
+						<p:message for="txtUsername" display="text" />
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Tipo Usuario: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:selectOneMenu id="tipo" disabled="#{usuarioBean.valida}"
+							value="#{usuarioBean.usuario.tipo}" required="true"
+							style="width:100px">
+							<f:selectItem itemLabel="Jefe" itemValue="J" />
+							<f:selectItem itemLabel="Analista Migración" itemValue="M" />
+							<f:selectItem itemLabel="Analista Gobernaciones" itemValue="G" />
+							<f:selectItem itemLabel="Analista Sustancias" itemValue="S" />
+							<f:selectItem itemLabel="Recaudador" itemValue="R" />
+							<f:selectItem itemLabel="Administrador TI" itemValue="T" />
+
+						</p:selectOneMenu>
+					</p:column>
+					
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Título: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:selectOneMenu id="titulo" disabled="#{usuarioBean.valida}"
+							value="#{usuarioBean.usuario.titulo}" required="true"
+							style="width:100px">
+							<f:selectItem itemLabel="ECO." itemValue="Eco" />
+							<f:selectItem itemLabel="LIC." itemValue="LIC." />
+							<f:selectItem itemLabel="ING." itemValue="ING." />
+							<f:selectItem itemLabel="SRA." itemValue="SRA." />
+							<f:selectItem itemLabel="SR." itemValue="SR." />
+							<f:selectItem itemLabel="MGS." itemValue="MGS." />
+
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:selectOneMenu id="estado" disabled="#{usuarioBean.valida}"
+							value="#{usuarioBean.usuario.estado}" required="true"
+							style="width:100px">
+							<f:selectItem itemLabel="Activo" itemValue="A" />
+
+						</p:selectOneMenu>
+					</p:column>
+				</p:panelGrid>
+				<p:panelGrid columns="7" style="display:block; text-align:center"
+					columnClasses="centered">
+
+					<p:commandButton id="btnguardar" value="Guardar"
+						icon="fa fa-fw fa-floppy-o"
+						actionListener="#{usuarioBean.registrar()}" process="@form"
+						update=" @this" disabled="#{usuarioBean.estadeshabilitado}">
+
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-newwin" id="btnNuevo" value="Nuevo"
+						onclick="location.reload()">
+					</p:commandButton>
+
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

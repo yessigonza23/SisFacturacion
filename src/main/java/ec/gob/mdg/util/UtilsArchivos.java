@@ -1,0 +1,166 @@
+package ec.gob.mdg.util;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Properties;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.model.UploadedFile;
+
+public class UtilsArchivos {
+
+	private static final Properties p = System.getProperties();
+	public static final String sep = p.getProperty("file.separator");
+	private static final String rutaRaiz = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "/opt"
+			: p.getProperty("user.home")) + sep + "comprobanteselectronicos" + sep;
+	
+	private static final String sistemaOperativo = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "UTF-8"
+			: "Cp1252");
+
+	// devuelve la ruta y si no existe la crea
+	public static String crearRuta(String ruta) {
+		File directorio = new File(ruta);
+		if (!directorio.exists()) {
+			directorio.mkdirs();
+		}
+		return ruta;
+	}
+
+	// devuelve true si elimina el archivo
+	public static boolean eliminarArchivo(String archivo) {
+		File directorio = new File(archivo);
+		return directorio.delete();
+	}
+
+	public static String getRutaRaiz() {
+		return crearRuta(rutaRaiz);
+	}
+
+	public static String getRutaCargaMasiva() {
+		return crearRuta(getRutaRaiz() + "cargamasiva" + sep);
+	}
+
+	public static String getRutaCertificados() {
+		return crearRuta(getRutaRaiz() + "certificados" + sep);
+	}
+
+	public static String getRutaFirmados() {
+		return crearRuta(getRutaRaiz() + "firmados" + sep);
+	}
+
+	public static String getRutaAutorizados() {
+		return crearRuta(getRutaRaiz() + "autorizados" + sep);
+	}
+
+	public static String getRutaGenerados() {
+		System.out.println("generados ");
+		return crearRuta(getRutaRaiz() + "generados" + sep);
+	}
+
+	public static String getRutaLogo() {
+		return crearRuta(getRutaRaiz() + "logos" + sep);
+	}
+
+	public static String getRutaReportes() {
+		return crearRuta(getRutaRaiz() + "reportes" + sep);
+	}
+
+	public static String getRutaReportesJasper() {
+		return crearRuta(getRutaRaiz() + "reportesjasper" + sep);
+	}
+	// metodo para cargar archivos de cualquier tipo a una ubicacion determinada.
+	// valido
+	
+	public static String upload(UploadedFile file, String nombreArchivo) throws IOException {
+		String rutaAdjuntos = "";
+		try {
+			rutaAdjuntos = UtilsArchivos.getRutaCargaMasiva();
+
+			InputStream in = (InputStream) file.getInputstream();
+			File f = new File(rutaAdjuntos + nombreArchivo);
+			f.createNewFile();
+			FileOutputStream out1 = new FileOutputStream(f);
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out1.write(buffer, 0, length);
+			}		
+			
+			String path = rutaAdjuntos + nombreArchivo;
+			String pathS = rutaAdjuntos + "S"+nombreArchivo;
+			
+			String line = "";
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+		            new FileInputStream(path),
+		            "Cp1252"));		
+		     Writer out = new BufferedWriter(
+		            new OutputStreamWriter(new FileOutputStream(
+		                    pathS), sistemaOperativo));
+		    try {
+		        while ((line = br.readLine()) != null) {
+		            out.write(line);
+		            out.write("\n");
+		        }	
+		    } finally {
+		        br.close();
+		        out.close();
+		    }
+		    out1.close();
+			in.close();
+
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
+					"El archivo " + file.getFileName() + " se guardo satisfactoriamente"));
+			return rutaAdjuntos;
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
+		return rutaAdjuntos;
+
+	}
+	
+	public static String uploadFirma(UploadedFile file, String nombreArchivo) throws IOException {
+		String rutaAdjuntos = "";
+		
+		
+		try {
+			rutaAdjuntos = UtilsArchivos.getRutaCertificados();
+			
+			InputStream in = (InputStream) file.getInputstream();
+			
+			File f = new File(rutaAdjuntos + nombreArchivo);
+		
+			f.createNewFile();
+			
+			FileOutputStream out = new FileOutputStream(f);
+			
+			byte[] buffer = new byte[1024];
+			
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}	
+	
+		    out.close();
+			in.close();
+
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
+					"El certificado: " + file.getFileName() + " se carga satisfactoriamente"));
+			return rutaAdjuntos;
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
+		return rutaAdjuntos;
+
+	}
+
+}

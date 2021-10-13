@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingCierreCaja"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">CONSULTA DE
+					FACTURAS #{comprobanteConsultaModificaBean.nombre.nombre}</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Incio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{comprobanteConsultaModificaBean.fecha_inicio}">
+								</p:calendar>
+								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaInicio" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Fin: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
+									value="#{comprobanteConsultaModificaBean.fecha_fin}">
+								</p:calendar>
+								<p:watermark for="txtFechaFin" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaFin" />
+							</p:column>
+						</p:row>
+
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Consultar"
+							actionListener="#{comprobanteConsultaModificaBean.listarComprobantes()}"
+							process="@form" update="ingCierreCaja:fact">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+
+					</p:panelGrid>
+				</p:panel>
+
+				<p:dataTable id="fact" resizableColumns="true"
+					value="#{comprobanteConsultaModificaBean.listaComprobante}" var="e"
+					rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column exportable="false" style="width: 50px">
+						<h:commandButton
+							action="#{comprobanteConsultaModificaBean.irDetalle(e.id)}"
+							value="Ver" />
+					</p:column>
+
+					<p:column headerText="Número Factura" filterBy="#{e.numero}"
+						filterMatchMode="contains" style="width:150px;">
+						<p:outputLabel
+							value="#{e.puntoRecaudacion.establecimiento}-#{e.puntoRecaudacion.puntoemision}-#{e.numero}" />
+					</p:column>
+					<p:column headerText="Estado" filterBy="#{e.estado}"
+						style="width:150px;">
+						<p:selectOneMenu id="estado" value="#{e.estado}" disabled="true"
+							style="width:100px">
+							<f:selectItem itemLabel="Válida" itemValue="A" />
+							<f:selectItem itemLabel="Anulada" itemValue="N" />
+							<f:selectItem itemLabel="Nota Crédito" itemValue="C" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="Cliente" filterBy="#{e.clientenombre}"
+						filterMatchMode="contains" style="width:250px;">
+						<p:outputLabel value="#{e.clientenombre}" />
+					</p:column>
+					<p:column headerText="CI/RUC/Pas." filterBy="#{e.clienteruc}"
+						filterMatchMode="contains" style="width:200px;">
+						<p:outputLabel value="#{e.clienteruc}" />
+					</p:column>
+					<p:column headerText="Detalle" filterBy="#{e.detalle}"
+						filterMatchMode="contains" style="width:250px;">
+						<p:outputLabel value="#{e.detalle}" />
+					</p:column>
+
+					<p:column headerText="Fecha de Emisión"
+						filterBy="#{e.fechaemision}" filterMatchMode="contains"
+						style="width:80px;">
+						<p:outputLabel value="#{e.fechaemision}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Valor" filterBy="#{e.valor}"
+						filterMatchMode="contains" style="width:60px;">
+						<div align="right">
+							<p:outputLabel value="#{e.valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+					<p:column headerText="No. Cierre" filterBy="#{e.cierre.id}"
+						filterMatchMode="contains" style="width:50px;">
+						<p:outputLabel value="#{e.cierre.id}" />
+					</p:column>
+					<p:column headerText="No. Autorización"
+						filterBy="#{e.autorizacion}" filterMatchMode="contains"
+						style="width:150px;">
+						<p:outputLabel value="#{e.autorizacion}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

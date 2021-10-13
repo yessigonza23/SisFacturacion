@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingContable" onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center"> CONTABLE -
+					COMPROBANTES DE INGRESO</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<!-- Botones -->
+				<h1 style="color: #003778; text-align: center"></h1>
+
+				<h:panelGrid columns="2" style="margin-left: 45%">
+					<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+						value="Guardar"
+						actionListener="#{contableConsultaModificaBean.modificarContable()}"
+						process="@form"
+						update="ingContable:idcontable1, ingContable:det, @this"
+						disabled="#{contableConsultaModificaBean.estadeshabilitado}">
+					</p:commandButton>
+					<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+				</h:panelGrid>
+
+				<p:layout id="capaDatosClienteFactura"
+					style="width: 100%;height: 130px;">
+
+
+					<p:layoutUnit id="datosCliente" position="center"
+						style="padding: 5px; text-align: justify; font-sizw: 14px;"
+						size="100">
+
+						<p:panelGrid columns="2" id="cliente"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPunto2" size="25"
+										value="#{contableConsultaModificaBean.contable.puntoRecaudacion.nombre}"
+										readonly="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="idcontable1" size="5"
+										value="#{contableConsultaModificaBean.id}" readonly="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:160px;">Detalle: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDetalle1" size="5" readonly="true"
+										value="#{contableConsultaModificaBean.contable.detalle}"
+										style="width:600px;" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="valor" size="5"
+										value="#{contableConsultaModificaBean.contable.valor}"
+										readonly="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">No. de Cierre: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="idCierre" size="5" readonly="true"
+										value="#{contableConsultaModificaBean.contable.idcierre}" />
+								</p:column>
+							</p:row>
+
+
+						</p:panelGrid>
+					</p:layoutUnit>
+				</p:layout>
+
+				<!-- 	hasta aqui -->
+
+
+				<p:fieldset legend="Detalle" style="width:860px;">
+
+					<!-- BOTON AGREGAR  -->
+
+					<p:commandButton value="Agregar Detalle"
+						actionListener="#{contableConsultaModificaBean.limpiarControles()}"
+						process="@this" oncomplete="PF('registraDetalle').show();"
+						update="dialogo" icon="ui-icon-tasks">
+					</p:commandButton>
+
+
+					<!-- TABLA DEL DETALLE -->
+					<p:dataTable id="det" style="width:850px;"
+						value="#{contableConsultaModificaBean.listaContableDetalle}"  var="d"
+						widgetVar="accionTabla" 
+						rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+						emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index">
+
+						<p:column headerText="Codigo Contable"
+							style="text-align: justify; width:100px;"
+							sortBy="#{d.plancontable.codigo}">
+							<h:outputLabel value="#{d.plancontable.codigo}" />
+						</p:column>
+
+						<p:column headerText="Descripción"
+							style="text-align: justify; width:490px;"
+							sortBy="#{d.plancontable.nombre}">
+							<h:outputLabel value="#{d.plancontable.nombre}" />
+						</p:column>
+
+						<p:column headerText="Debe" style="text-align: right; width:70px;"
+							sortBy="#{d.debe}">
+							<h:outputLabel value="#{d.debe}" />
+						</p:column>
+
+						<p:column headerText="Haber"
+							style="text-align: right; width:70px;" sortBy="#{d.haber}">
+							<h:outputLabel value="#{d.haber}" />
+						</p:column>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column />
+								<p:column colspan="1" style="text-align:right"
+									footerText="Total " />
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<p:outputLabel id="totaldebe"
+											value="#{contableConsultaModificaBean.totaldeb}$">
+											<f:convertNumber pattern="###,##0.00" />
+										</p:outputLabel>
+									</f:facet>
+								</p:column>
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<p:outputLabel id="totalhaber"
+											value="#{contableConsultaModificaBean.totalhab}$">
+											<f:convertNumber pattern="###,##0.00" />
+										</p:outputLabel>
+									</f:facet>
+								</p:column>
+
+							</p:row>
+
+						</p:columnGroup>
+						<p:column>
+							<p:commandLink styleClass="fa fa-fw fa-edit"
+								actionListener="#{contableConsultaModificaBean.mostrarDataDetalle(d)}"
+								oncomplete="PF('registraDetalle').show()"
+								update="ingContable:dialogo" immediate="true" process="@this">
+							</p:commandLink>
+						</p:column>
+									
+					</p:dataTable>
+
+				</p:fieldset>
+
+				<!-- EMPIEZA DIALOGO DETALLE -->
+				<p:dialog id="dialogo" widgetVar="registraDetalle" resizable="false"
+					width="900" draggable="false" modal="true" position="center"
+					closeOnEscape="true">
+					<h2 style="text-align: center">Registro Detalle</h2>
+					<p:panelGrid id="pg">
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden;  width:130px;">Codigo Contable: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="cboCodigoContable"
+									value="#{contableConsultaModificaBean.contableDetalle.plancontable}"
+									converter="omnifaces.SelectItemsConverter"
+									styleClass="form-control radius-none" autoWidth="false"
+									style="width:500px;" filter="true" required="true"
+									requiredMessage="Requerido el Codigo Contable">
+									<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+									<f:selectItems
+										value="#{contableConsultaModificaBean.listaPlanContable}"
+										var="r" itemLabel="#{r.codigo} #{r.nombre}"
+										itemValue="#{r}" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor Debe: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="NumValDebe"
+									value="#{contableConsultaModificaBean.contableDetalle.debe}"
+									required="true" requiredMessage="Requerido Valor Debe"
+									style="width:200px; color: red;">
+								</p:inputNumber>
+								<p:message for="NumValDebe" display="icon" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor Debe: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="NumValHaber"
+									value="#{contableConsultaModificaBean.contableDetalle.haber}"
+									required="true" requiredMessage="Requerido Valor Haber"
+									style="width:200px; color: red;">
+								</p:inputNumber>
+								<p:message for="NumValHaber" display="icon" />
+							</p:column>
+						</p:row>
+
+						<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+							<p:commandButton value="Registrar" icon="ui-icon-disk" id="btnGuardartmp"
+								actionListener="#{contableConsultaModificaBean.operar('R')}"
+								ajax="true"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDetalle').hide()"
+								update="@form"
+								rendered="#{contableConsultaModificaBean.tipoDialog == 'Nuevo'}">
+
+							</p:commandButton>
+							<p:commandButton value="Modificar" icon="ui-icon-disk" id="btnRegistrar"
+								
+								actionListener="#{contableConsultaModificaBean.operar('M')}"
+								ajax="true"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDetalle').hide()"
+								update="ingContable:det,@form"
+								rendered="#{contableConsultaModificaBean.tipoDialog == 'Modificar'}">
+
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-fw fa-remove" value="Cancelar"
+								oncomplete="PF('registraDetalle').hide();">
+							</p:commandButton>
+
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</p:dialog>
+				<!-- TERMINA DIALOGO -->
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

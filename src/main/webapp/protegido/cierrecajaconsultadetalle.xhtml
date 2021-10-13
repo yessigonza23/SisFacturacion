@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingCierreCaja"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CONSULTA Y
+					MODIFICACIÓN DE CIERRE DE CAJA</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<!-- Botones -->
+				<h1 style="color: #003778; text-align: center"></h1>
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							actionListener="#{cierreCajaConsultaModificaBean.modificarCierre()}"
+							process="@this"
+							disabled="#{cierreCajaConsultaModificaBean.estadeshabilitado}"
+							update="@this">
+						</p:commandButton>
+						<p:commandButton value="Emitir Reporte" style="margin-right:10px;"
+							ajax="false" target="_blank"
+							actionListener="#{cierreCajaConsultaModificaBean.generarReporte(cierreCajaConsultaModificaBean.cierre)}"></p:commandButton>
+
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+				<p:panel>
+					<p:fieldset legend="Información General" tyle="width:70%">
+						<p:panelGrid columns="2"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="ui-fluid">
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="numcierre" size="5"
+										value="#{cierreCajaConsultaModificaBean.cierre.id}"
+										readonly="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto de Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPunto" maxlength="20"
+										value="#{cierreCajaConsultaModificaBean.cierre.puntoRecaudacion.nombre}"
+										required="true"
+										requiredMessage="Requerido punto de recaudación "
+										style="width:300px; color: red;" />
+									<p:message for="txtPunto" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Emisión: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtFechaEmision" size="5"
+										value="#{cierreCajaConsultaModificaBean.cierre.fecha}"
+										style="width:200px;" readonly="true" />
+								</p:column>
+							</p:row>
+
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Banco: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtBanco" disabled="true"
+										value="#{cierreCajaConsultaModificaBean.cierre.id_banco}"
+										required="true" style="width:150px">
+										<f:selectItem itemLabel="Banco Pacifico" itemValue="1" />
+									</p:selectOneMenu>
+									<p:message for="txtBanco" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Cuenta de Recaudaciones: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtCuenta" disabled="true"
+										value="#{cierreCajaConsultaModificaBean.cierre.id_cuenta}"
+										required="true" style="width:100px">
+										<f:selectItem itemLabel="7228562" itemValue="1" />
+									</p:selectOneMenu>
+									<p:message for="txtCuenta" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Detalle: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText
+										value="#{cierreCajaConsultaModificaBean.cierre.detalle}"
+										required="true" requiredMessage="Requerido detalle de cierre"
+										style="width:400px; " readonly="true" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber required="true" id="numValor" readonly="true"
+										value="#{cierreCajaConsultaModificaBean.totaldet}"
+										style="width:50px; ">
+									</p:inputNumber>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+				<p:fieldset legend="Recaudación" style="width:860px;">
+
+					<!-- TABLA DEL DETALLE -->
+					<p:dataTable id="det" style="width:870px;" var="d"
+						value="#{cierreCajaConsultaModificaBean.listaComprobante}"
+						widgetVar="accionTabla" rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+						emptyMessage="No hay ningún registro con esa opción">
+						<p:column headerText="Factura"
+							style="text-align: justify;width:40px;" sortBy="#{d.id}"
+							filterBy="#{d.numero}" filterMatchMode="contains">
+							<h:outputLabel value="#{d.numero}" />
+						</p:column>
+						<p:column headerText="Fecha Emisión"
+							style="text-align: justify;width:80px;"
+							sortBy="#{d.fechaemision}">
+							<h:outputLabel style="width:10px" value="#{d.fechaemision}" />
+						</p:column>
+
+						<p:column headerText="Cliente"
+							style="text-align: justify;width:150px;"
+							sortBy="#{d.clientenombre}">
+							<h:outputLabel value="#{d.clientenombre}" />
+						</p:column>
+
+						<p:column headerText="RUC"
+							style="text-align: justify;width:100px;" sortBy="#{d.clienteruc}">
+							<h:outputLabel value="#{d.clienteruc}" />
+						</p:column>
+
+						<p:column headerText="Detalle"
+							style="text-align: justify;width:150px;" sortBy="#{d.detalle}">
+							<h:outputLabel value="#{d.detalle}" />
+						</p:column>
+						<p:column headerText="Valor" style="text-align:right;width:50px;"
+							sortBy="#{d.valor}">
+							<h:outputLabel value="#{d.valor}" />
+						</p:column>
+						<p:column headerText="Estado"
+							style="text-align: justify;width:100px" sortBy="#{d.estado}">
+							<p:selectOneMenu id="estado" value="#{d.estado}" disabled="true"
+								required="true" style="width:60px">
+								<f:selectItem itemLabel="Activo" itemValue="A" />
+								<f:selectItem itemLabel="Anulada" itemValue="N" />
+								<f:selectItem itemLabel="Nota de Crédito" itemValue="C" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Seleccionar" style="text-align: justify"
+							sortBy="#{d.detalle}">
+							<p:selectBooleanCheckbox id="check" value="#{d.cierre_b}">
+								<p:ajax
+									listener="#{cierreCajaConsultaModificaBean.totalValor(d.cierre_b, d.valor)}"
+									update="ingCierreCaja:det,ingCierreCaja:numValor, @this"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</p:column>
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column colspan="1" style="text-align:right"
+									footerText="Total:" />
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<div align="right">
+											<p:outputLabel id="total"
+												value="#{cierreCajaConsultaModificaBean.totaldet}$">
+												<f:convertNumber pattern="###,##0.00" />
+											</p:outputLabel>
+										</div>
+									</f:facet>
+								</p:column>
+								<p:column />
+								<p:column />
+							</p:row>
+						</p:columnGroup>
+					</p:dataTable>
+				</p:fieldset>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

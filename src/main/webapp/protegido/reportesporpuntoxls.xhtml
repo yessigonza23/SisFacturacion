@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingReportes"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">REPORTES POR
+					PUNTO DE RECAUDACIÓN #{reportesPorPuntoBean.nombre.nombre}</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Incio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{reportesPorPuntoBean.fecha_inicio}">
+								</p:calendar>
+								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaInicio" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Fin: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaFin" pattern="dd/MM/yyyy" mask="true"
+									value="#{reportesPorPuntoBean.fecha_fin}">
+								</p:calendar>
+								<p:watermark for="txtFechaFin" value="dd/MM/yyyy" />
+								<p:messages for="txtFechaFin" />
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+				</p:panel>
+
+
+
+				<p:panel header="Reporte en XLS de Recaudaciones por detalle">
+
+					<p:commandButton icon="ui-icon-disk" id="btnConRecDet"
+						value="Consultar"
+						actionListener="#{reportesPorPuntoBean.listarVistaRecaudacion(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
+						process="@form" update="ingReportes:factDet">
+					</p:commandButton>
+
+					<p:commandButton value="Export as XLS" ajax="false">
+						<p:dataExporter type="xls" target="factDet" fileName="recaudacion" />
+					</p:commandButton>
+
+					<p:dataTable id="factDet" resizableColumns="true"
+						value="#{reportesPorPuntoBean.listaVistaRecaudacionDTO}" var="e"
+						rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+						emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index">
+						<p:column style="text-align: justify;width:35px;">
+							<f:facet name="header">
+								<h:outputText value="No." />
+							</f:facet>
+							<h:outputText value="#{index + 1}" />
+						</p:column>
+
+
+						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
+							filterMatchMode="contains" style="width:100px;">
+							<p:outputLabel value="#{e.comp_numero}" />
+						</p:column>
+
+						<p:column headerText="Fecha Factura"
+							filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
+							style="width:180px;">
+							<p:outputLabel value="#{e.comp_fechaemision}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Cliente" filterBy="#{e.cliente_nombre}"
+							filterMatchMode="contains" style="width:250px;">
+							<p:outputLabel value="#{e.cliente_nombre}" />
+						</p:column>
+
+						<p:column headerText="Ruc" filterBy="#{e.cliente_ci}"
+							filterMatchMode="contains" style="width:100px;">
+							<p:outputLabel value="#{e.cliente_ci}" />
+						</p:column>
+
+
+						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
+							filterMatchMode="contains" style="width:100px;text-align:right">
+							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Cód.Recaudacion"
+							filterBy="#{e.recdetalle_codigo}" filterMatchMode="contains"
+							style="width:100px;">
+							<p:outputLabel value="#{e.recdetalle_codigo}" />
+						</p:column>
+
+						<p:column headerText="Cód.Banco"
+							filterBy="#{e.recaudacion_codigobanco}"
+							filterMatchMode="contains" style="width:80px;">
+							<p:outputLabel value="#{e.recaudacion_codigobanco}" />
+						</p:column>
+
+						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}"
+							filterMatchMode="contains" style="width:200px;">
+							<p:outputLabel value="#{e.usuario_nombre}" />
+						</p:column>
+
+
+						<p:column headerText="Punto Recaudación"
+							filterBy="#{e.punto_nombre}" filterMatchMode="contains"
+							style="width:200px;">
+							<p:outputLabel value="#{e.punto_nombre}" />
+						</p:column>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column colspan="1" style="text-align:right"
+									footerText="Total:" />
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<p:outputLabel id="total"
+											value="#{reportesPorPuntoBean.total}">
+											<f:convertNumber pattern="###,##0.00" />
+										</p:outputLabel>
+									</f:facet>
+								</p:column>
+								<p:column />
+								<p:column />
+								<p:column />
+							</p:row>
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</p:panel>
+
+				<!-- 				FIN REPORTES RECAUDACIONES POR DETALLE -->
+
+				<!--               REPORTES XLS PARA RECAUDACIONES CON DEPOSITOS -->
+
+				<p:panel header="Reporte en XLS de Recaudaciones por depósito">
+
+					<p:commandButton icon="ui-icon-disk" id="btnConRecDep"
+						value="Consultar"
+						actionListener="#{reportesPorPuntoBean.listarVistaRecaudacionDeposito(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
+						process="@form" update="ingReportes:factDep">
+					</p:commandButton>
+
+					<p:commandButton value="Export as XLS" ajax="false">
+						<p:dataExporter type="xls" target="factDep"
+							fileName="recaudacionDep" />
+					</p:commandButton>
+
+					<p:dataTable id="factDep" resizableColumns="true"
+						value="#{reportesPorPuntoBean.listaVistaRecaudacionDepositoDTO}"
+						var="e" rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+						emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index">
+						<p:column style="text-align: justify;width:35px;">
+							<f:facet name="header">
+								<h:outputText value="No." />
+							</f:facet>
+							<h:outputText value="#{index + 1}" />
+						</p:column>
+
+						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
+							filterMatchMode="contains" style="width:100px;">
+							<p:outputLabel value="#{e.comp_numero}" />
+						</p:column>
+
+						<p:column headerText="Fecha de Emisión"
+							filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
+							style="width:180px;">
+							<p:outputLabel value="#{e.comp_fechaemision}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+
+
+						<p:column headerText="Cliente" filterBy="#{e.cliente_nombre}"
+							filterMatchMode="contains" style="width:150px;">
+							<p:outputLabel value="#{e.cliente_nombre}" />
+						</p:column>
+
+						<p:column headerText="Ruc" filterBy="#{e.cliente_ci}"
+							filterMatchMode="contains" style="width:150px;">
+							<p:outputLabel value="#{e.cliente_ci}" />
+						</p:column>
+
+						<p:column headerText="No. Depósito"
+							filterBy="#{e.deposito_numero}" filterMatchMode="contains"
+							style="width:150px;">
+							<p:outputLabel value="#{e.deposito_numero}" />
+						</p:column>
+
+						<p:column headerText="Fecha Depósito"
+							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
+							style="width:100px;">
+							<p:outputLabel value="#{e.deposito_fecha}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
+							filterMatchMode="contains" style="width:100px;text-align:right">
+							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
+								<f:convertNumber pattern="#{e.comp_valor}" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}"
+							filterMatchMode="contains" style="width:150px;">
+							<p:outputLabel value="#{e.usuario_nombre}" />
+						</p:column>
+						
+						<p:column headerText="Punto Recaudación"
+							filterBy="#{e.punto_nombre}" filterMatchMode="contains"
+							style="width:150px;">
+							<p:outputLabel value="#{e.punto_nombre}" />
+						</p:column>
+						
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column colspan="1" style="text-align:right"
+									footerText="Total:" />
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<p:outputLabel id="totald"
+											value="#{reportesPorPuntoBean.totald}">
+											<f:convertNumber pattern="###,##0.00" />
+										</p:outputLabel>
+									</f:facet>
+								</p:column>
+								<p:column />
+								<p:column />
+							</p:row>
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</p:panel>
+				<!-- FIN REPORTE DE RECAUDACIONES CON DEPOSITOS -->
+
+				<!-- REPORTES EN XLS DE CIERRE DE CAJA -->
+				<p:panel header="Reporte en XLS de Cierre de Caja">
+
+					<p:commandButton icon="ui-icon-disk" id="btnCierreCaja"
+						value="Consultar"
+						actionListener="#{reportesPorPuntoBean.listarVistaCierre(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
+						process="@form" update="ingReportes:factCierre">
+					</p:commandButton>
+
+					<p:commandButton value="Export as XLS" ajax="false">
+						<p:dataExporter type="xls" target="factCierre"
+							fileName="CierreCaja" />
+					</p:commandButton>
+
+					<p:dataTable id="factCierre" resizableColumns="true"
+						value="#{reportesPorPuntoBean.listaVistaCierreDTO}" var="e"
+						rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+						emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index">
+						<p:column style="text-align: justify;width:35px;">
+							<f:facet name="header">
+								<h:outputText value="No." />
+							</f:facet>
+							<h:outputText value="#{index + 1}" />
+						</p:column>
+
+						
+
+						<p:column headerText="No. Cierre" filterBy="#{e.id_cierre}"
+							filterMatchMode="contains" style="width:80px;">
+							<p:outputLabel value="#{e.id_cierre}" />
+						</p:column>
+
+
+						<p:column headerText="Factura" filterBy="#{e.numeroFactura}"
+							filterMatchMode="contains" style="width:80px;">
+							<p:outputLabel value="#{e.numeroFactura}" />
+						</p:column>
+
+						<p:column headerText="Fecha Factura" filterBy="#{e.fechaemision}"
+							filterMatchMode="contains" style="width:180px;">
+							<p:outputLabel value="#{e.fechaemision}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+
+
+						<p:column headerText="Valor" filterBy="#{e.valor}"
+							filterMatchMode="contains" style="width:80px;text-align:right">
+							<p:outputLabel value="#{e.valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</p:column>
+
+
+						<p:column headerText="Estado" filterBy="#{e.estado}"
+							filterMatchMode="contains" style="width:80px;">
+							<p:outputLabel value="#{e.estado}" />
+						</p:column>
+						
+						<p:column headerText="Punto Recaudación"
+							filterBy="#{e.puntoRecaudacion}" filterMatchMode="contains"
+							style="width:200px;">
+							<p:outputLabel value="#{e.puntoRecaudacion}" />
+						</p:column>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column />
+								<p:column />
+								<p:column />
+								<p:column colspan="1" style="text-align:right"
+									footerText="Total:" />
+								<p:column style="text-align:right">
+									<f:facet name="footer">
+										<p:outputLabel id="totalc"
+											value="#{reportesPorPuntoBean.totalc}">
+											<f:convertNumber pattern="###,##0.00" />
+										</p:outputLabel>
+									</f:facet>
+								</p:column>
+								<p:column />
+								<p:column />
+							</p:row>
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</p:panel>
+
+				<!-- FIN REPORTES EN XLS DE CIERRE DE CAJA				 -->
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

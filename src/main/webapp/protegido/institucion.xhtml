@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">REGISTRO DE
+					INSTITUCIÓN</h2>
+
+				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
+					showSummary="true" showDetail="true" />
+
+				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+					actionListener="#{institucionBean.limpiarControles()}"
+					update="frm:dlg" process="@this" />
+
+
+				<p:dataTable id="dt" resizableColumns="true" var="e"
+					value="#{institucionBean.lista}" rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Nombre" style="width:50px">
+						<p:outputLabel value="#{e.nombre}" />
+					</p:column>
+
+					<p:column headerText="RUC" style="width:50px">
+						<p:outputLabel value="#{e.ruc}" />
+					</p:column>
+					<p:column exportable="false" style="width:10px">
+						<p:commandLink actionListener="#{institucionBean.mostrarData(e)}"
+							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
+							process="@this" style="width:50px">
+							<i class="fa fa-fw fa-edit"></i>
+							<!-- <p:graphicImage library="images" name="edit.jpg" /> -->
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+				<!--<p:dialog id="dlg" widgetVar="wdlg" header="#{institucionBean.tipoDialog}" modal="true"  closeOnEscape="true" resizable="false" draggable="true">  -->
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="false"
+					width="700" position="center">
+
+					<p:fieldset legend="#{institucionBean.tipoDialog}"
+						style="width:80%">
+
+						<p:panelGrid id="pg">
+
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden;  width:130px;">Nombre Institución: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtNombres"
+										value="#{institucionBean.institucion.nombre}" required="true" />
+								</p:column>
+
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden;  width:130px;">RUC: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtRuc"
+										value="#{institucionBean.institucion.ruc}" required="true" />
+									<p:messages for="txtRuc" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden;  width:130px;">Dirección: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDireccion"
+										value="#{institucionBean.institucion.direccion}"
+										required="true" style="width:300px;" />
+									<p:messages for="txtDireccion" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="estado"
+										value="#{institucionBean.institucion.estado}" required="true"
+										style="width:100px">
+										<f:selectItem itemLabel="Activo" itemValue="A" />
+										<f:selectItem itemLabel="Inactivo" itemValue="I" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden;  width:130px;">Fecha de Inicio: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:calendar id="txtFechaIni" locale="es" pattern="dd-MM-yyyy"
+										navigator="true" mask="true" required="true"
+										value="#{institucionBean.institucion.fechainicial}"
+										requiredMessage="Campo requerido"
+										style="width:90%;margin-left:5%;" />
+									<p:watermark for="txtFechaIni" value="dd-mm-aaaa" />
+									<p:messages for="txtFechaIni" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden;  width:130px;">Fecha Fin: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:calendar id="txtFechaFin" locale="es" pattern="dd-MM-yyyy"
+										navigator="true" mask="true"
+										value="#{institucionBean.institucion.fechafinal}"
+										style="width:90%;margin-left:5%;" />
+									<p:watermark for="txtFechaFin" value="dd-mm-aaaa" />
+									<p:messages for="txtFechaFin" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+						<p:commandButton value="Registrar"
+							actionListener="#{institucionBean.operar('R')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{institucionBean.tipoDialog == 'Nueva Institución'}" />
+						<p:commandButton value="Modificar"
+							actionListener="#{institucionBean.operar('M')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{institucionBean.tipoDialog == 'Modificar Institución'}" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

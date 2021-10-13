@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingFacturas"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CONSULTA DE
+					NOTAS DE CRÉDITO</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+
+				<!-- VALOR, FECHA, ESTADOS -->
+				<p:panel>
+					<p:fieldset legend="Información General" tyle="width:70%">
+						<p:panelGrid columns="6"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="ui-fluid">
+							<font></font>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPunto" size="25"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.puntoRecaudacion.nombre}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="numfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.numero}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Emisión: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtFechaEmision" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.fechaemision}"
+										style="width:200px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="valorfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.valor}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="estado"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.estado}"
+										required="true" style="width:100px" disabled="true">
+										<f:selectItem itemLabel="Activo" itemValue="A" />
+										<f:selectItem itemLabel="No Activo" itemValue="N" />
+										<f:selectItem itemLabel="Nota de Crédito" itemValue="C" />
+
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:separator />
+						<p:panelGrid columns="2">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="autfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.autorizacion}"
+										style="width:300px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="fechaAutfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.autorizacionfecha}"
+										style="width:100px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Estado SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoSRI"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.estadosri}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true" disabled="true">
+										<f:selectItem itemLabel="Pendiente de Envío" itemValue="P" />
+										<f:selectItem itemLabel="Envío al SRI" itemValue="E" />
+										<f:selectItem itemLabel="Autorizado por el SRI" itemValue="A" />
+										<f:selectItem itemLabel="Notificado al correo" itemValue="N" />
+										<f:selectItem itemLabel="Autorizado Pendiente SRI"
+											itemValue="Z" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Estado Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoError"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.estadoerror}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true" editable="false" disabled="true">
+										<f:selectItem itemLabel="Sin Error" itemValue="S" />
+										<f:selectItem itemLabel="Con Error" itemValue="C" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+				
+				<p:panel>
+					<p:fieldset tyle="width:70%">
+						<p:column style="border-style: hidden; width:100px;">Motivo Nota de Crédito: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:inputText id="motivoModfact" size="200"
+								value="#{consultarDetalleNotasBean.comprobanteNotas.motivonotacredito}"
+								style="width:600px;" />
+						</p:column>
+					</p:fieldset>
+				</p:panel>
+				<!-- EMPIEZA CLIENTE -->
+				<p:fieldset legend="Información Cliente" tyle="width:70%">
+					<p:layout id="capaDatosClienteFactura"
+						style="width: 100%;height: 130px;">
+						<p:layoutUnit id="datosCliente" position="center"
+							style="padding: 5px; text-align: justify; font-sizw: 14px;"
+							size="100">
+							<p:panelGrid columns="2" id="cliente"
+								columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+								contentStyleClass="p-align-baseline ui-fluid">
+								<p:row style="border-style: hidden;">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtCi" maxlength="13"
+											placeholder="cedula cliente"
+											onkeypress="return deshabilitarEnter(event);"
+											value="#{consultarDetalleNotasBean.comprobanteNotas.cliente.ci}"
+											readonly="true">
+										</p:inputText>
+										<p:message for="txtCi" display="icon" />
+									</p:column>
+								</p:row>
+								<p:row style="border-style: hidden;">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Nombres: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtNombres"
+											disabled="#{ingresoFactura.validador}"
+											value="#{consultarDetalleNotasBean.comprobanteNotas.cliente.nombre}"
+											required="true" requiredMessage="Requerido Nombres"
+											style="width:200px;" readonly="true" />
+										<p:message for="txtNombres" display="icon" />
+									</p:column>
+								</p:row>
+
+								<p:row style="border-style: hidden;">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Direccion: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtDireccion"
+											disabled="#{ingresoFactura.validador}"
+											value="#{consultarDetalleNotasBean.comprobanteNotas.cliente.direccion}"
+											required="true" requiredMessage="Dirección Requerida"
+											style="width:300px;" readonly="true" />
+										<p:message for="txtDireccion" display="icon" />
+									</p:column>
+								</p:row>
+								<p:row style="border-style: hidden;">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtTelefono"
+											disabled="#{ingresoFactura.validador}"
+											value="#{consultarDetalleNotasBean.comprobanteNotas.cliente.telefono}"
+											required="true" requiredMessage="Teléfono requerido"
+											style="width:100px;" readonly="true" />
+										<p:message for="txtTelefono" display="icon" />
+									</p:column>
+								</p:row>
+								<p:row style="border-style: hidden;">
+									<p:column style="border-style: hidden;width:50px;"></p:column>
+									<p:column style="border-style: hidden; width:130px;">Correo: </p:column>
+									<p:column style="border-style: hidden;">
+										<p:inputText id="txtCorreo"
+											disabled="#{ingresoFactura.validador}"
+											value="#{consultarDetalleNotasBean.comprobanteNotas.cliente.correo}"
+											required="true"
+											requiredMessage="Requerido Correo electronico"
+											style="width:300px;" readonly="true" />
+										<p:message for="txtCorreo" display="icon" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:layoutUnit>
+
+
+					</p:layout>
+				</p:fieldset>
+				<!-- TERMINA CLIENTE -->
+
+				<!-- INFORMACIÓN DE LA FACTURA MODIFICADA -->
+				<p:panel>
+					<p:fieldset legend="Información de la Factura" tyle="width:70%">
+						<p:panelGrid columns="3" id="factura"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Factura No.: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="compModfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.comprobantemod}"
+										style="width:100px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Fecha Emision: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="fechaEmisionModfact" size="5"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.fechacomprmodificado}"
+										style="width:80px;" readonly="true" />
+
+									<p:watermark for="fechaEmisionModfact" value="dd/mm/aaaa" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Punto de Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="cboPuntoRecaudacion"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.comprobantepto}"
+										converter="omnifaces.SelectItemsConverter"
+										styleClass="form-control radius-none" autoWidth="true"
+										style="width:300px;" disabled="true">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems value="#{puntoRecaudacionBean.lista}" var="p"
+											itemLabel="#{p.nombre}" itemValue="#{p.id}" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						
+					</p:fieldset>
+				</p:panel>
+				<!-- TERMINA INFORMACION DE FACTURA -->
+
+				<!-- EMPIEZA BDETALLE -->
+				<!-- TABLA DEL DETALLE -->
+				<p:dataTable id="det" style="width:900px;"
+					value="#{consultarDetalleNotasBean.listaComprobanteDet}" var="d"
+					widgetVar="accionTabla" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+					<p:column style="text-align: justify;width:15px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+					<p:column headerText="Codigo Banco"
+						style="text-align: justify;width:40px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.codigobanco}">
+						<h:outputLabel
+							value="#{d.recaudaciondetalle.recaudacion.codigobanco}" />
+					</p:column>
+
+					<p:column headerText="Servicio"
+						style="text-align: justify;width:300px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.nombre}">
+						<h:outputLabel value="#{d.recaudaciondetalle.recaudacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="Cant."
+						style="text-align: justify;width:30px;" sortBy="#{d.cantidad}">
+						<h:outputLabel value="#{d.cantidad}" />
+					</p:column>
+					<p:column headerText="ValorCero"
+						style="text-align:right;width:60px;" sortBy="#{d.valorcero}">
+						<h:outputLabel value="#{d.valorcero}" />
+					</p:column>
+					<p:column headerText="ValorIva"
+						style="text-align:right;width:60px;" sortBy="#{d.valoriva}">
+						<h:outputLabel value="#{d.valoriva}" />
+					</p:column>
+					<p:column headerText="Subtotal"
+						style="text-align:right;width:60px;" sortBy="#{d.subtotal}">
+						<h:outputLabel value="#{d.subtotal}" />
+					</p:column>
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{consultarDetalleNotasBean.totaldet}$">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+				<!-- TERMINA DETALLE				 -->
+
+				<!-- CAMPO DETALLE				 -->
+
+				<p:panel>
+					<p:fieldset tyle="width:70%">
+						<p:column style="border-style: hidden; width:100px;">Detalle: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:inputText id="txtDetalle" size="200"
+								value="#{consultarDetalleNotasBean.comprobanteNotas.detalle}"
+								style="width:600px;" />
+						</p:column>
+					</p:fieldset>
+				</p:panel>
+				
+				<!-- Botones -->
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							action="#{consultarDetalleNotasBean.modificarComprobante()}"
+							process="@this"
+							update="ingFacturas:btnGuardar,ingFacturas:estado"
+							disabled="#{consultarDetalleNotasBean.estadeshabilitado}">
+						</p:commandButton>
+						<p:commandButton icon=" ui-icon-circle-arrow-n" id="btnEnviar"
+							value="Enviar"
+							action="#{consultarDetalleNotasBean.enviar(consultarDetalleNotasBean.comprobanteNotas.id)}"
+							process="@this"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact , @this"
+							disabled="#{consultarDetalleNotasBean.estadeshabilitadoEnv}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnAutorizar"
+							value="Autorizar"
+							action="#{consultarDetalleNotasBean.autorizar(consultarDetalleNotasBean.comprobanteNotas.id)}"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact, @this"
+							disabled="#{consultarDetalleNotasBean.estadeshabilitadoAut}"
+							process="@this">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-print" id="btnImprimir"
+							value="Imprimir" style="margin-right:10px;" ajax="false"
+							target="_blank"
+							actionListener="#{imprimirFacturaBean.imprimirNotas(consultarDetalleNotasBean.comprobanteNotas)}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
+							value="Correo"
+							action="#{consultarDetalleNotasBean.eviarCorreo(consultarDetalleNotasBean.comprobanteNotas.id,'F')}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnBorrarSri"
+							value="Borrar SRI" process="@this"
+							actionListener="#{consultarDetalleNotasBean.validaFacturaAutorizacion()}"
+							disabled="#{consultarDetalleNotasBean.estadeshabilitadoAut}"
+							update="ingFacturas:btnGuardar,ingFacturas:btnEnviar,ingFacturas:btnAutorizar,ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" />
+					</p:panelGrid>
+				</p:panel>
+				<!-- INFORMACIÓN SRI -->
+
+				<p:panel>
+					<p:fieldset legend="Información SRI" tyle="width:70%">
+						<p:panelGrid>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Clave Acceso: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="clavefact" size="80" disabled="true"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.claveacceso}" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlfact" size="80"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.xml}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="Mensajefact" size="80"
+										value="#{consultarDetalleNotasBean.mensajeSri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:80px;">XML SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlSrifact" size="80"
+										value="#{consultarDetalleNotasBean.comprobanteNotas.xmlsri}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:80px;">Mensaje Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="MensajeErrorfact" size="80"
+										value="#{consultarDetalleNotasBean.mensajeSriError}" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

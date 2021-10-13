@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingFacturas"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">INGRESO DE NOTAS
+					DE CRÉDITO - AUTOMÁTICAMENTE</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+
+				<!-- VALOR, FECHA, ESTADOS -->
+				<p:panel>
+					<p:fieldset legend="Información General" tyle="width:70%">
+						<p:panelGrid columns="5"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="ui-fluid">
+							<font></font>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPunto" size="25"
+										value="#{ingresoNotasAutoBean.nombre.nombre}" disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="numfact" size="5"
+										value="#{ingresoNotasAutoBean.num}" disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Emisión: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtFechaEmision" size="5"
+										value="#{ingresoNotasAutoBean.fechaActual}"
+										style="width:200px;" disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="valorfact" size="5"
+										value="#{ingresoNotasAutoBean.totaldet}" disabled="true" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:separator />
+						<p:panelGrid columns="2">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="autfact" size="5"
+										value="#{sRIBean.comprobante.autorizacion}"
+										style="width:300px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="fechaAutfact" size="5"
+										value="#{sRIBean.comprobante.autorizacionfecha}"
+										style="width:100px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Estado SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoSRI"
+										value="#{sRIBean.comprobante.estadosri}" effect="fade"
+										converter="omnifaces.SelectItemsConverter" filter="true"
+										disabled="true">
+										<f:selectItem itemLabel="Pendiente de Envío" itemValue="P" />
+										<f:selectItem itemLabel="Envío al SRI" itemValue="E" />
+										<f:selectItem itemLabel="Clave ya registrada" itemValue="R" />
+										<f:selectItem itemLabel="Autorizado por el SRI" itemValue="A" />
+										<f:selectItem itemLabel="Notificado al correo" itemValue="N" />
+										<f:selectItem itemLabel="Autorizado Pendiente SRI"
+											itemValue="Z" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Estado Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoError" disabled="true"
+										value="#{sRIBean.comprobante.estadoerror}" effect="fade"
+										converter="omnifaces.SelectItemsConverter" filter="true">
+										<f:selectItem itemLabel="Sin Error" itemValue="S" />
+										<f:selectItem itemLabel="Con Error" itemValue="C" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+				<!-- INFORMACIÓN DE LA FACTURA MODIFICADA -->
+				<p:separator />
+				<p:panel>
+					<p:fieldset tyle="width:70%">
+						<p:column style="border-style: hidden; width:100px;">Motivo Nota de Crédito: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:inputText id="motivoModfact" size="200"
+								value="#{ingresoNotasAutoBean.comprobante.motivonotacredito}"
+								style="width:600px;" />
+						</p:column>
+					</p:fieldset>
+				</p:panel>
+				<p:panel>
+					<p:fieldset legend="Información de la Factura" tyle="width:70%">
+						<p:panelGrid columns="2" id="factura"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Factura: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="cboComprobante"
+										value="#{ingresoNotasAutoBean.comprobante.comprobantemod}"
+										converter="omnifaces.SelectItemsConverter" autoWidth="false"
+										style="width:150px;" filter="true" required="true"
+										requiredMessage="Requerida la Factura">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems
+											value="#{ingresoNotasAutoBean.listaComprobante}" var="c"
+											itemLabel="#{c.numero}" itemValue="#{c.numero}" />
+
+										<p:ajax event="change" process="@this"
+											listener="#{ingresoNotasAutoBean.buscarFactura(ingresoNotasAutoBean.id_punto,ingresoNotasAutoBean.comprobante.comprobantemod)}"
+											update="ingFacturas:valorfact,ingFacturas:txtfechaFactMod,ingFacturas:txtNombCliente,ingFacturas:txtCi,ingFacturas:txtDireccion,ingFacturas:txtTelefono,ingFacturas:txtCorreo,ingFacturas:det" />
+										<p:ajax event="click" process="@this"
+											listener="#{ingresoNotasAutoBean.vaciarLista()}"
+											update="ingFacturas:det" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Fecha Emision: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtfechaFactMod" size="20"
+										value="#{ingresoNotasAutoBean.comprobantetmp.fechaemision}"
+										style="width:100px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+
+						</p:panelGrid>
+
+
+						<p:panelGrid columns="2">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Apellidos y Nombres: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtNombCliente" size="20"
+										value="#{ingresoNotasAutoBean.comprobantetmp.clientenombre}"
+										style="width:250px;text-transform: uppercase;" readonly="true" />
+									<p:message for="txtNombCliente" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCi"
+										value="#{ingresoNotasAutoBean.comprobantetmp.clienteruc}"
+										style="width:100px;" readonly="true">
+									</p:inputText>
+									<p:message for="txtCi" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Dirección: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDireccion"
+										value="#{ingresoNotasAutoBean.comprobantetmp.clientedireccion}"
+										style="width:350px;text-transform: uppercase;" readonly="true">
+									</p:inputText>
+									<p:message for="txtDireccion" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtTelefono"
+										value="#{ingresoNotasAutoBean.comprobantetmp.clientetelefono}"
+										style="width:100px;" readonly="true"
+										onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;">
+									</p:inputText>
+									<p:message for="txtTelefono" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Correo Electrónico: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCorreo"
+										value="#{ingresoNotasAutoBean.comprobantetmp.cliente.correo}"
+										style="width:250px;" readonly="true">
+									</p:inputText>
+									<p:message for="txtCorreo" display="icon" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+				<!-- TERMINA INFORMACION DE FACTURA -->
+
+
+				<!-- EMPIEZA BDETALLE -->
+
+				<!-- TABLA DEL DETALLE -->
+				<p:dataTable id="det" style="width:810px;"
+					value="#{ingresoNotasAutoBean.listaComprobanteDet}" var="d"
+					widgetVar="accionTabla" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+					<p:column headerText="Codigo Banco" style="text-align: justify"
+						sortBy="#{d.recaudaciondetalle.recaudacion.codigobanco}">
+						<h:outputLabel
+							value="#{d.recaudaciondetalle.recaudacion.codigobanco}" />
+					</p:column>
+
+					<p:column headerText="Servicio"
+						style="text-align: justify;width:400px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.nombre}">
+						<h:outputLabel value="#{d.recaudaciondetalle.recaudacion.nombre}" />
+					</p:column>
+
+					<p:column headerText="Cantidad" style="text-align: justify"
+						sortBy="#{d.cantidad}">
+						<h:outputLabel value="#{d.cantidad}" />
+					</p:column>
+					<p:column headerText="ValorCero" style="text-align: justify"
+						sortBy="#{d.valorcero}">
+						<h:outputLabel value="#{d.valorcero}" />
+					</p:column>
+					<p:column headerText="ValorIva" style="text-align: justify"
+						sortBy="#{d.valoriva}">
+						<h:outputLabel value="#{d.valoriva}" />
+					</p:column>
+					<p:column headerText="Subtotal" style="text-align: justify"
+						sortBy="#{d.subtotal}">
+						<h:outputLabel value="#{d.subtotal}" />
+					</p:column>
+					<p:column>
+						<p:commandLink styleClass="fa fa-fw fa-trash"
+							action="#{ingresoNotasAutoBean.eliminarCompDetalle(index)}"
+							ajax="true" update="ingFacturas:det,ingFacturas:valorfact">
+						</p:commandLink>
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{ingresoNotasAutoBean.totaldet}">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+				<!-- TERMINA DETALLE				 -->
+
+
+				<!-- CAMPO DETALLE				 -->
+				<p:panel>
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Detalle: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:row>
+								<p:inputText value="#{ingresoNotasAutoBean.comprobante.detalle}"
+									style="width:700px;" />
+							</p:row>
+						</p:column>
+					</p:row>
+				</p:panel>
+				<p:separator />
+<!-- Botones -->
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:commandButton icon="ui-icon-newwin" id="btnNuevo" value="Nuevo"
+							onclick="location.reload()">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							actionListener="#{ingresoNotasAutoBean.registrarNotaCreditoAut()}"
+							process="@form"
+							update="ingFacturas:btnEnviar,ingFacturas:numfact,ingFacturas:clavefact,ingFacturas:xmlfact,ingFacturas:det, @this"
+							disabled="#{ingresoNotasAutoBean.estadeshabilitado}">
+						</p:commandButton>
+						<p:commandButton icon=" ui-icon-circle-arrow-n" id="btnEnviar"
+							value="Enviar"
+							action="#{sRIBean.enviar(ingresoNotasAutoBean.comprobantetmp.id)}"
+							process="@form"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact , @this"
+							disabled="#{sRIBean.estadeshabilitadoEnv}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnAutorizar"
+							value="Autorizar"
+							action="#{sRIBean.autorizar(ingresoNotasAutoBean.comprobantetmp.id)}"
+							process="@form"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact, @this"
+							disabled="#{sRIBean.estadeshabilitadoAut}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-print" id="btnImprimir"
+							value="Imprimir" style="margin-right:10px;" ajax="false"
+							target="_blank"
+							actionListener="#{imprimirFacturaBean.imprimirNotas(ingresoNotasAutoBean.comprobantetmp)}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
+							value="Correo" ajax="false"
+							action="#{enviarCorreoComprobantesBean.eviarCorreo(ingresoNotasAutoBean.comprobantetmp.id,'C')}">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+
+				<!-- INFORMACIÓN SRI -->
+
+				<p:panel>
+					<p:fieldset legend="Información SRI" tyle="width:70%">
+						<p:panelGrid>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Clave Acceso: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="clavefact" size="30" disabled="true"
+										value="#{ingresoNotasAutoBean.claveA}" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlfact" size="30" disabled="true"
+										value="#{sRIBean.comprobante.xml}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="Mensajefact" size="30"
+										value="#{sRIBean.mensajeSri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlSrifact" size="30" disabled="true"
+										value="#{sRIBean.comprobante.xmlsri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="MensajeErrorfact" size="30"
+										value="#{sRIBean.mensajeSriError}" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+				<p:separator />
+				
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

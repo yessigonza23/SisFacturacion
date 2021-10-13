@@ -1,0 +1,810 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingFacturas"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">MODIFICACIÓN DE
+					FACTURAS</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<!-- VALOR, FECHA, ESTADOS -->
+				<p:fieldset legend="Información General" tyle="width:60%">
+					<p:panelGrid columns="4"
+						columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+						contentStyleClass="ui-fluid">
+						<font></font>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Punto Recaudación: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtPunto" size="25"
+									value="#{comprobanteModificaBean.comprobante.puntoRecaudacion.nombre}"
+									disabled="true" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="numfact" size="5"
+									value="#{comprobanteModificaBean.comprobante.numero}"
+									disabled="true" />
+							</p:column>
+						</p:row>
+
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">Fecha Emisión: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtFechaEmision" size="5"
+									value="#{comprobanteModificaBean.comprobante.fechaemision}"
+									style="width:200px;" disabled="true" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="valorfact" size="5"
+									value="#{comprobanteModificaBean.totaldet}" disabled="true" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="estado"
+									value="#{comprobanteModificaBean.estadoAnterior}"
+									required="true" style="width:100px" disabled="false">
+									<f:selectItem itemLabel="Válida" itemValue="A" />
+									<f:selectItem itemLabel="Anulada" itemValue="N" />
+									<f:selectItem itemLabel="Nota de Crédito" itemValue="C" />
+									<p:ajax event="valueChange"
+										listener="#{comprobanteModificaBean.cambioEstado(comprobanteModificaBean.estadoAnterior)}">
+									</p:ajax>
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">Fecha Anulación: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtFechaAnulacion" size="5"
+									value="#{comprobanteModificaBean.comprobante.fechaanulacion}"
+									style="width:200px;" disabled="true" />
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+					<p:separator />
+					<p:panelGrid columns="2">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">Autorización: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="autfact" size="5"
+									value="#{comprobanteModificaBean.comprobante.autorizacion}"
+									style="width:420px;" disabled="true" />
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">Fecha Autorización: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="fechaAutfact" size="5"
+									value="#{comprobanteModificaBean.comprobante.autorizacionfecha}"
+									style="width:300px;" disabled="true" />
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">Estado SRI: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="txtEstadoSRI"
+									value="#{comprobanteModificaBean.comprobante.estadosri}"
+									effect="fade" converter="omnifaces.SelectItemsConverter"
+									filter="true" disabled="true">
+									<f:selectItem itemLabel="Pendiente de Envío" itemValue="P" />
+									<f:selectItem itemLabel="Envío al SRI" itemValue="E" />
+									<f:selectItem itemLabel="Autorizado por el SRI" itemValue="A" />
+									<f:selectItem itemLabel="Notificado al correo" itemValue="N" />
+									<f:selectItem itemLabel="Autorizado Pendiente SRI"
+										itemValue="Z" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">Estado Error: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="txtEstadoError" editable="false"
+									value="#{comprobanteModificaBean.comprobante.estadoerror}"
+									effect="fade" converter="omnifaces.SelectItemsConverter"
+									filter="true" disabled="true">
+									<f:selectItem itemLabel="Sin Error" itemValue="S" />
+									<f:selectItem itemLabel="Con Error" itemValue="C" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:fieldset>
+
+				<!-- EMPIEZA CLIENTE -->
+				<p:layout id="capaDatosClienteFactura"
+					style="width: 100%;height: 130px;">
+					<p:layoutUnit id="datosCliente" position="center"
+						style="padding: 5px; text-align: justify; font-sizw: 14px;"
+						size="100">
+
+						<p:panelGrid columns="2" id="cliente"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCi" maxlength="13"
+										placeholder="cedula cliente"
+										onkeypress="return deshabilitarEnter(event);"
+										value="#{comprobanteModificaBean.cliente.ci}"
+										disabled="#{comprobanteModificaBean.estadeshabilitado}">
+										<p:ajax event="valueChange"
+											listener="#{comprobanteModificaBean.buscarClientes()}"
+											update="txtTipo, txtNombres, txtDireccion, txtTelefono, txtCorreo" />
+									</p:inputText>
+									<p:message for="txtCi" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Tipo Identificación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtTipo"
+										value="#{comprobanteModificaBean.cliente.tipoid}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true"
+										disabled="#{comprobanteModificaBean.estadeshabilitado}">
+
+										<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+										<f:selectItem itemLabel="Cédula" itemValue="C" />
+										<f:selectItem itemLabel="RUC" itemValue="R" />
+										<f:selectItem itemLabel="Pasaporte" itemValue="P" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Apellidos y Nombres: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtNombres"
+										disabled="#{comprobanteModificaBean.validador}"
+										value="#{comprobanteModificaBean.cliente.nombre}"
+										required="true" requiredMessage="Requerido Nombres"
+										style="width:200px;" />
+									<p:message for="txtNombres" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Direccion: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDireccion"
+										disabled="#{comprobanteModificaBean.validador}"
+										value="#{comprobanteModificaBean.cliente.direccion}"
+										required="true" requiredMessage="Dirección Requerida"
+										style="width:300px;" />
+									<p:message for="txtDireccion" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtTelefono"
+										disabled="#{comprobanteModificaBean.validador}"
+										value="#{comprobanteModificaBean.cliente.telefono}"
+										required="true" requiredMessage="Teléfono requerido"
+										style="width:100px;" />
+									<p:message for="txtTelefono" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Correo: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCorreo"
+										disabled="#{comprobanteModificaBean.validador}"
+										value="#{comprobanteModificaBean.cliente.correo}"
+										required="true" requiredMessage="Requerido Correo electronico"
+										style="width:300px;" />
+									<p:message for="txtCorreo" display="icon" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:layoutUnit>
+				</p:layout>
+
+				<!-- BOTON AGREGAR  -->
+
+				<p:commandButton value="Agregar Detalle"
+					actionListener="#{comprobanteModificaBean.limpiarControles()}"
+					process="@this" oncomplete="PF('registraDetalle').show();"
+					update="dialogo" icon="ui-icon-tasks">
+
+					<p:confirm header="Confirmación Agregar Detalle"
+						message="Se agregará el detalle tendrá que verificar toda la información y luego guardar, desea agregar"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+				<!-- TABLA DEL DETALLE -->
+				<p:dataTable id="det" style="width:900px;"
+					value="#{comprobanteModificaBean.listaComprobanteDet}" var="d"
+					widgetVar="accionTabla" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:15px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+
+					<p:column headerText="Codigo Banco"
+						style="text-align: justify;width:40px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.codigobanco}">
+						<h:outputLabel
+							value="#{d.recaudaciondetalle.recaudacion.codigobanco}" />
+					</p:column>
+
+					<p:column headerText="Servicio"
+						style="text-align: justify;width:400px;"
+						sortBy="#{d.recaudaciondetalle.nombre}">
+						<h:outputLabel value="#{d.recaudaciondetalle.nombre}" />
+					</p:column>
+
+					<p:column headerText="Cant."
+						style="text-align: justify;width:30px;" sortBy="#{d.cantidad}">
+						<h:outputLabel value="#{d.cantidad}" />
+					</p:column>
+					<p:column headerText="ValorCero"
+						style="text-align: justify;width:60px;" sortBy="#{d.valorcero}">
+						<h:outputLabel value="#{d.valorcero}">
+							<f:convertNumber pattern="###,##0.00" />
+						</h:outputLabel>
+					</p:column>
+					<p:column headerText="ValorIva"
+						style="text-align: justify;width:60px;" sortBy="#{d.valoriva}">
+						<h:outputLabel value="#{d.valoriva}">
+							<f:convertNumber pattern="###,##0.00" />
+						</h:outputLabel>
+					</p:column>
+					<p:column headerText="Subtotal"
+						style="text-align: justify;width:60px;" sortBy="#{d.subtotal}">
+						<h:outputLabel value="#{d.cantidad * d.valorcero}">
+							<f:convertNumber pattern="###,##0.00" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column>
+						<p:commandLink styleClass="fa fa-fw fa-edit"
+							actionListener="#{comprobanteModificaBean.mostrarDetalle(d)}"
+							oncomplete="PF('registraDetalle').show()"
+							update="ingFacturas:dialogo" immediate="true" process="@this"
+							disabled="#{comprobanteModificaBean.estadeshabilitado}">
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:20px;">
+
+						<p:commandLink styleClass="fa fa-fw fa-trash" id="linkDetalle"
+							action="#{comprobanteModificaBean.eliminarCompDetalle(d)}"
+							ajax="true" update="@form" process="@form"
+							disabled="#{comprobanteModificaBean.estadeshabilitado}">
+							<p:confirm header="Confirmación"
+								message="Se eliminará el detalle, tendrá que verificar toda la información y luego guardar, desea eliminar"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Si" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{comprobanteModificaBean.totaldet}">
+										<f:convertNumber pattern="###,##0.00" />
+
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+				<!-- TERMINA DETALLE				 -->
+
+				<!-- BOTON AGREGAR  -->
+
+				<p:commandButton value="Agregar Deposito"
+					actionListener="#{comprobanteModificaBean.limpiarControlesDep()}"
+					process="@this" oncomplete="PF('registraDeposito').show();"
+					update="dialogodep" icon="ui-icon-tasks">
+					<p:confirm header="Confirmación Agregar Depósitos"
+						message="Se agregará el deposito tendrá que verificar toda la información y luego guardar, desea agregar"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+				<!-- TABLA DEPOSITO DE DE FACTURA				 -->
+				<p:dataTable id="dep" style="width:900px;"
+					value="#{comprobanteModificaBean.listaComprobanteDep}" var="d"
+					widgetVar="accionTablaDep" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:20px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+					<p:column style="text-align: justify ;width:120px;">
+						<f:facet name="header">
+							<h:outputText value="Origen" style="text-align: justify" />
+						</f:facet>
+						<h:selectOneMenu id="origen" disabled="true" value="#{d.origen}">
+							<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+							<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column style="text-align: justify ;width:150px;">
+						<f:facet name="header">
+							<h:outputText value="Tipo Transacción"
+								style="text-align: justify" />
+						</f:facet>
+						<h:selectOneMenu id="tipotransaccion" disabled="true"
+							value="#{d.tipotransaccion}" required="true" style="width:100px">
+							<f:selectItem itemLabel="Intermático" itemValue="I" />
+							<f:selectItem itemLabel="Depósito" itemValue="D" />
+							<f:selectItem itemLabel="Transferencia" itemValue="T" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column headerText="Nro. Depósito"
+						style="text-align: justify ;width:80px;"
+						sortBy="#{d.num_deposito}">
+						<h:outputLabel value="#{d.num_deposito}" />
+					</p:column>
+
+					<p:column headerText="Fecha Depósito"
+						style="text-align: justify ;width:80px;" sortBy="#{d.fecha}">
+						<h:outputLabel value="#{d.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+					</p:column>
+					<p:column headerText="Valor Depósito"
+						style="text-align: justify ;width:80px;" sortBy="#{d.valor}">
+						<h:outputLabel value="#{d.valor}">
+							<f:convertNumber pattern="###,##0.00" />
+						</h:outputLabel>
+					</p:column>
+
+					<p:column>
+						<p:commandLink styleClass="fa fa-fw fa-edit"
+							actionListener="#{comprobanteModificaBean.mostrarDeposito(d)}"
+							oncomplete="PF('registraDeposito').show()"
+							update="ingFacturas:dialogodep" immediate="true" process="@this"
+							disabled="#{comprobanteModificaBean.estadeshabilitado}">
+						</p:commandLink>
+
+					</p:column>
+					<p:column>
+						<p:commandLink styleClass="fa fa-fw fa-trash" id="linkDeposito"
+							style="text-align: justify;width:20px;"
+							action="#{comprobanteModificaBean.eliminarCompDeposito(d,index)}"
+							ajax="true" update="ingFacturas:dep"
+							disabled="#{comprobanteModificaBean.estadeshabilitado}">
+							<p:confirm header="Confirmación Depósitos"
+								message="Se eliminará el deposito tendrá que verificar toda la información y luego guardar, desea eliminar"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Si" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{comprobanteModificaBean.totaldep}">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+
+
+				<!-- CAMPO DETALLE				 -->
+				<br />
+				<p:row style="border-style: hidden;">
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Detalle: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:row>
+							<p:inputText
+								value="#{comprobanteModificaBean.comprobante.detalle}"
+								style="width:700px;" />
+						</p:row>
+					</p:column>
+				</p:row>
+				<p:separator />
+
+				<!-- Botones -->
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							action="#{comprobanteModificaBean.modificarComprobante()}"
+							process="@this"
+							update="ingFacturas:btnGuardar,ingFacturas:estado"
+							disabled="#{comprobanteModificaBean.estadeshabilitado}">
+
+						</p:commandButton>
+						<p:commandButton icon=" ui-icon-circle-arrow-n" id="btnEnviar"
+							value="Enviar"
+							action="#{comprobanteModificaBean.enviar(comprobanteModificaBean.comprobante.id)}"
+							process="@this"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact , @this"
+							disabled="#{comprobanteModificaBean.estadeshabilitadoEnv}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnAutorizar"
+							value="Autorizar"
+							action="#{comprobanteModificaBean.autorizar(comprobanteModificaBean.comprobante.id)}"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact, @this"
+							disabled="#{comprobanteModificaBean.estadeshabilitadoAut}"
+							process="@this">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-print" id="btnImprimir"
+							value="Imprimir" style="margin-right:10px;" ajax="false"
+							target="_blank"
+							actionListener="#{imprimirFacturaBean.imprimirFactura(comprobanteModificaBean.comprobante)}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
+							value="Correo"
+							action="#{comprobanteModificaBean.eviarCorreo(comprobanteModificaBean.comprobante.id,'F')}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnBorrarSri"
+							value="Borrar SRI" process="@this"
+							actionListener="#{comprobanteModificaBean.validaFacturaAutorizacion()}"
+							disabled="#{comprobanteModificaBean.estadeshabilitadoA}"
+							update="ingFacturas:btnGuardar,ingFacturas:btnEnviar,ingFacturas:btnAutorizar,ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+
+					</p:panelGrid>
+				</p:panel>
+				<!-- INFORMACIÓN SRI -->
+
+				<p:panel>
+					<p:fieldset legend="Información SRI" tyle="width:70%">
+						<p:panelGrid>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Clave Acceso: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="clavefact" size="30" disabled="true"
+										value="#{comprobanteModificaBean.comprobante.claveacceso}" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlfact" size="30" disabled="true"
+										value="#{comprobanteModificaBean.comprobante.xml}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="Mensajefact" size="30"
+										value="#{comprobanteModificaBean.mensajeSri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlSrifact" size="30" disabled="true"
+										value="#{comprobanteModificaBean.comprobante.xmlsri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="MensajeErrorfact" size="30"
+										value="#{comprobanteModificaBean.mensajeSriError}" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+				<!-- EMPIEZA DIALOGO DETALLE -->
+				<p:dialog id="dialogo" widgetVar="registraDetalle" resizable="false"
+					width="900" draggable="false" modal="true" position="center"
+					closeOnEscape="true">
+					<h2 style="color: #003778; text-align: center">INFORMACIÓN DE
+						SERVICIO</h2>
+					<p:panelGrid>
+						<p:row>
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden;  width:130px;">Servicio: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="cboServicio"
+									value="#{comprobanteModificaBean.comprobanteDetalle.recaudaciondetalle}"
+									converter="omnifaces.SelectItemsConverter" autoWidth="false"
+									style="width:500px;" filter="true">
+									<p:ajax event="valueChange" process="@this"
+										listener="#{comprobanteModificaBean.cargaRecaudacion()}"
+										update="ingFacturas:NumCantidad,ingFacturas:NumValCero,ingFacturas:NumValIva" />
+
+									<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+									<f:selectItems
+										value="#{comprobanteModificaBean.listaRecaudacionDetalle}"
+										var="r" itemLabel="#{r.recaudacion.codigobanco} #{r.nombre}"
+										itemValue="#{r}" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Cantidad: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="NumCantidad" type="number"
+									value="#{comprobanteModificaBean.comprobanteDetalle.cantidad}"
+									style="width:200px; color: red;">
+									<p:ajax event="valueChange"
+										listener="#{comprobanteModificaBean.calculaSubtotalDetalle(comprobanteModificaBean.comprobanteDetalle.cantidad, comprobanteModificaBean.comprobanteDetalle.valorcero, comprobanteModificaBean.comprobanteDetalle.valoriva)}"
+										update="ingFacturas:NumValCero,ingFacturas:NumValIva,det:total" />
+									<p:ajax event="change"
+										listener="#{comprobanteModificaBean.validaCantidad}"
+										process="@this"
+										update="ingFacturas:NumValCero,ingFacturas:NumValIva" />
+
+								</p:inputText>
+								<p:message for="txtNombres" display="icon" />
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">ValorCero: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="NumValCero"
+									value="#{comprobanteModificaBean.comprobanteDetalle.valorcero}"
+									style="width:200px; color: red;"
+									disabled="#{ingresoFactura.validadorValor}">
+								</p:inputNumber>
+								<p:message for="NumValCero" display="icon" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor Iva: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="NumValIva"
+									disabled="#{ingresoFactura.validadorValorIva}"
+									value="#{comprobanteModificaBean.comprobanteDetalle.valoriva}"
+									style="width:200px; color: red;">
+								</p:inputNumber>
+								<p:message for="NumValIva" display="icon" />
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+
+					<h:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+
+						<p:commandButton value="Registrar" icon="ui-icon-disk"
+							id="btnGuardarDet"
+							actionListener="#{comprobanteModificaBean.operarDet('R')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDetalle').hide()"
+							update="ingFacturas:det,@form"
+							rendered="#{comprobanteModificaBean.tipoDialog == 'Nuevo'}">
+
+						</p:commandButton>
+						<p:commandButton value="Modificar" icon="ui-icon-disk"
+							id="btnRegistrarDet"
+							actionListener="#{comprobanteModificaBean.operarDet('M')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDetalle').hide()"
+							update="ingFacturas:det,ingFacturas:valorfact,ingFacturas:det,@form"
+							process="@form"
+							rendered="#{comprobanteModificaBean.tipoDialog == 'Modificar'}">
+
+						</p:commandButton>
+
+
+						<p:commandButton icon="fa fa-fw fa-remove" value="Cancelar"
+							oncomplete="PF('registraDetalle').hide();">
+						</p:commandButton>
+					</h:panelGrid>
+				</p:dialog>
+				<!-- TERMINA DIALOGO -->
+
+				<!-- DIALOGO DE DEPOSITO -->
+				<p:dialog id="dialogodep" widgetVar="registraDeposito"
+					resizable="false" width="900" draggable="false" modal="true"
+					position="center" closeOnEscape="true">
+
+					<h2 style="color: #003778; text-align: center">Registro de
+						Depósitos</h2>
+
+					<p:panelGrid>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Origen: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="origen"
+									value="#{comprobanteModificaBean.comprobanteDepositos.origen}"
+									style="width:100px">
+									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+									<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo Transacción: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="tipotransaccion"
+									value="#{comprobanteModificaBean.comprobanteDepositos.tipotransaccion}"
+									style="width:100px">
+									<f:selectItem itemLabel="Intermático" itemValue="I" />
+									<f:selectItem itemLabel="Depósito" itemValue="D" />
+									<f:selectItem itemLabel="Transferencia" itemValue="T" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">No. Depósito: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtNumeroDeposito" maxlength="10"
+									placeholder="Numero del Deposito"
+									value="#{comprobanteModificaBean.comprobanteDepositos.num_deposito}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Depósito: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
+									mask="true"
+									value="#{comprobanteModificaBean.comprobanteDepositos.fecha}">
+								</p:calendar>
+								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="numValor"
+									value="#{comprobanteModificaBean.comprobanteDepositos.valor}">
+								</p:inputNumber>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<h:panelGrid id="pgBotonesDep" columns="3" style="margin-left: 35%">
+
+						<p:commandButton value="Registrar" icon="ui-icon-disk"
+							id="btnGuardarDep"
+							actionListener="#{comprobanteModificaBean.operarDep('R')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDeposito').hide()"
+							update="@form"
+							rendered="#{comprobanteModificaBean.tipoDialog == 'Nuevo'}">
+
+						</p:commandButton>
+						<p:commandButton value="Modificar" icon="ui-icon-disk"
+							id="btnRegistrarDep"
+							actionListener="#{comprobanteModificaBean.operarDep('M')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDeposito').hide()"
+							update="ingFacturas:det,@form"
+							rendered="#{comprobanteModificaBean.tipoDialog == 'Modificar'}">
+
+						</p:commandButton>
+
+
+						<p:commandButton icon="fa fa-fw fa-remove" value="Cancelar"
+							oncomplete="PF('registraDeposito').hide();">
+						</p:commandButton>
+					</h:panelGrid>
+
+				</p:dialog>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

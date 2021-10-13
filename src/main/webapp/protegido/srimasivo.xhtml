@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingSriMasivo"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">ENVÍO Y
+					AUTORIZACIÓN DE FORMA MASIVA</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<p:panel>
+					<p:panelGrid columns="4"
+						style="display:block; text-align:center; width:50%; margin:0px auto;"
+						columnClasses="centered">
+						<p:column exportable="false" style="width: 50px">
+							<p:commandButton actionListener="#{sRIMasivoBean.envioMasivo()}"
+								value="Enviar" disabled="#{sRIMasivoBean.estadeshabilitado}"
+								update="@this" />
+						</p:column>
+						<p:column exportable="false" style="width: 50px">
+							<p:commandButton
+								actionListener="#{sRIMasivoBean.autorizacionMasivo()}"
+								value="Autorizar" update="ingSriMasivo:fact,@this"
+								disabled="#{sRIMasivoBean.estadeshabilitadoA}" />
+						</p:column>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+				<p:dataTable id="fact" resizableColumns="true"
+					value="#{sRIMasivoBean.listaComprobante}" var="e" rows="15"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Numero" filterBy="#{e.numero}"
+						filterMatchMode="contains" style="text-align:center;width:80px;">
+						<p:outputLabel value="#{e.numero}" />
+					</p:column>
+					<p:column headerText="Cliente" filterBy="#{e.clientenombre}"
+						filterMatchMode="contains" style="text-align: center;width:300px;">
+						<p:outputLabel value="#{e.clientenombre}" />
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{e.valor}"
+						filterMatchMode="contains" style="text-align:center;width:100px;">
+						<p:outputLabel value="#{e.valor}">
+							<f:convertNumber pattern="###,##0.00" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Autorizacion"
+						style="text-align:center;width:150px;">
+						<p:outputLabel style="width:150px"
+							value="#{sRIMasivoBean.comprobante.autorizacion}" />
+					</p:column>
+
+					<p:column headerText="Fecha Autorizacion"
+						style="text-align:center;width:150px;">
+						<p:outputLabel id="txtautorizacion" style="width:150px"
+							value="#{sRIMasivoBean.comprobante.autorizacionfecha}" />
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total" value="#{sRIMasivoBean.total}$">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+							<p:column />
+
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+
+</body>
+</html>

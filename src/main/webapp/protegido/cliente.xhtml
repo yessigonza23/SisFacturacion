@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+
+			<h:form id="cliente" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+
+				<h2 style="color: #003778; text-align: center">CONSULTA DE
+					CLIENTES</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:dataTable id="dt" resizableColumns="true"
+					value="#{clienteBean.lista}" var="e" widgetVar="dt" rows="8"
+					paginator="true" editable="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+					<p:column style="width:35px" headerText="Editar">
+						<p:rowEditor />
+					</p:column>
+					<p:ajax event="rowEdit" listener="#{clienteBean.modificar(e)}" />
+
+					<p:column headerText="Ci/Ruc/Pasaporte" filterBy="#{e.ci}"
+						filterMatchMode="contains" style="width:130px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.ci}" maxlength="13" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText id="txtCi" maxlength="13" value="#{e.ci}"
+									style="width:120px">
+									<f:ajax event="keyup"
+										listener="#{clienteBean.verificarExistencia(clienteBean.cliente.ci)}"
+										process="@this" update="@this,dt" />
+									<f:ajax event="keyup"
+										listener="#{clienteBean.validaIdentificacion(e.ci,e.tipoid)}"
+										process="@this"
+										update="@this,dt" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Tipo Identif." style="width:100px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{e.tipoid}">
+									<f:converter converterId="tipoIdentificacion" />
+								</h:outputText>
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="txtTipo" value="#{e.tipoid}" effect="fade"
+									converter="omnifaces.SelectItemsConverter" filter="true">
+									<p:ajax event="valueChange"
+										listener="#{clienteBean.validaIdentificacion(e.ci,e.tipoid)}"
+										process="@this"
+										update="@this, dt:txtTipo, dt:txtNombres, dt:txtDireccion, dt:txtTelefono, dt:txtCorreo" />
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="false" />
+									<f:selectItem itemLabel="RUC" itemValue="R" />
+									<f:selectItem itemLabel="Cedula" itemValue="C" />
+									<f:selectItem itemLabel="Pasaporte" itemValue="P" />
+
+
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+
+					<p:column headerText="Apellidos y Nombres" filterBy="#{e.nombre}"
+						filterMatchMode="contains" style="width:350px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.nombre}"
+									style="width:300px;text-transform: uppercase" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText id="txtNombres" maxlength="150"
+									disabled="#{clienteBean.validador}" value="#{e.nombre}"
+									style="width:300px; text-transform: uppercase" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Dirección" filterBy="#{e.direccion}"
+						filterMatchMode="contains" style="width:350px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.direccion}"
+									style="width:300px;text-transform: uppercase" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText id="txtDireccion" maxlength="150"
+									disabled="#{clienteBean.validador}" value="#{e.direccion}"
+									style="width:300px;text-transform: uppercase" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Teléfono" filterBy="#{e.telefono}"
+						filterMatchMode="contains" style="width:100px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.telefono}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText id="txtTelefono" maxlength="10" style="width:90px"
+									onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+									disabled="#{clienteBean.validador}" value="#{e.telefono}"
+									required="true" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Correo Electrónico" filterBy="#{e.correo}"
+						filterMatchMode="contains" style="width:200px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.correo}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText id="txtCorreo" style="width:190px"
+									value="#{e.correo}" required="true" maxlength="50"
+									disabled="#{clienteBean.validador}"
+									requiredMessage="Requerido Correo electronico"
+									validatorMessage="Correo electrónico no es válido">
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

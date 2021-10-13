@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+		
+			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">REGISTRO DE
+					ROLES</h2>
+				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
+					showSummary="true" showDetail="true" />
+				<br />
+
+				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+					actionListener="#{rolBean.limpiarControles()}" update="frm:dlg"
+					process="@this" />
+
+				<p:dataTable id="dt" resizableColumns="true"
+					value="#{rolBean.lista}" var="e" widgetVar="estudiosTabla"
+					rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Tipo" filterBy="#{e.tipo}"
+						filterMatchMode="contains" style="width:50px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.tipo}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{e.tipo}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column  exportable="false"
+						style="width: 10px">
+						<p:commandLink actionListener="#{rolBean.mostrarData(e)}"
+							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
+							process="@this">
+							<i class="fa fa-fw fa-edit"></i>
+							<!-- <p:graphicImage library="images" name="edit.jpg" /> -->
+						</p:commandLink>
+					</p:column>
+					
+					
+					
+				</p:dataTable>
+
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="true">
+					<p:fieldset legend="#{rolBean.tipoDialog}" style="width:90%">
+
+						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo de Rol: </p:column>
+							<p:column style="border-style: hidden;">
+							<p:inputText id="txtTipo" value="#{rolBean.rol.tipo}"
+								required="true" />
+							<p:messages for="txtTipo" display="icon" />
+							</p:column>
+
+
+						</p:panelGrid>
+
+					</p:fieldset>
+					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+						<p:commandButton value="Registrar"
+							actionListener="#{rolBean.operar('R')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt" rendered="#{rolBean.tipoDialog == 'Nuevo Rol'}" />
+
+						<p:commandButton value="Modificar"
+							actionListener="#{rolBean.operar('M')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{rolBean.tipoDialog == 'Modificar Rol'}" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>
+

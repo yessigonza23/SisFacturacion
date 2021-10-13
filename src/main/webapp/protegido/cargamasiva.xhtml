@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingCarga" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CARGA ARCHIVO
+					PLANO - PAF</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<p:panel>
+					<p:panelGrid columns="4"
+						style="display:block; text-align:center; width:110%; margin:0px auto;"
+						columnClasses="centered">
+						<p:fileUpload id="cargaArchivo" value="#{cargaMasivaBean.file}"
+							immediate="true" label="1. Examinar Archivo..." mode="simple"
+							skinSimple="true" allowTypes="" />
+						<p:commandButton id="botonCargar" value="2. Guardar Archivo"
+							ajax="false" action="#{cargaMasivaBean.upload('P')}"
+							disabled="false" update="pnBotones">
+						</p:commandButton>
+						<p:commandButton value="3. Cargar información"
+							actionListener="#{cargaMasivaBean.importarCSV('P')}"
+							update="ingCarga:cargaMasiva,@form" />
+						<p:commandButton value="4. Generación de Facturas"
+							styleClass="width:100px;"
+							actionListener="#{cargaMasivaBean.generarFacturas('P')}"
+							process="@form" update="ingCarga:cargaMasiva,@this" />
+						<p:commandButton value="Eliminar carga de información"
+							actionListener="#{cargaMasivaBean.eliminarCarga('P')}"
+							process="@form" update="ingCarga:cargaMasiva,@this" />
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+				<p:dataTable id="cargaMasiva" resizableColumns="true"
+					value="#{cargaMasivaBean.listaCargaMasiva}" var="e" rows="15"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:40px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+					<p:column headerText="Depósito" filterBy="#{e.depositonumero}"
+						filterMatchMode="contains" style="width:50px;">
+						<p:outputLabel value="#{e.depositonumero}" />
+					</p:column>
+
+					<p:column headerText="Fecha Deposito" filterBy="#{e.depositofecha}"
+						filterMatchMode="contains" style="width:80px;">
+						<p:outputLabel value="#{e.depositofecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Valor" filterBy="#{e.valor}"
+						filterMatchMode="contains" style="width:50px;">
+						<div align="right">
+							<p:outputLabel value="#{e.valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Tipo Trámite" filterBy="#{e.tipotramite}"
+						filterMatchMode="contains" style="width:350px;">
+						<p:outputLabel value="#{e.tipotramite}" />
+					</p:column>
+
+					<p:column headerText="RUC" filterBy="#{e.ruc}"
+						filterMatchMode="contains" style="width:110px;">
+						<p:outputLabel value="#{e.ruc}" />
+					</p:column>
+
+					<p:column headerText="Cliente" filterBy="#{e.cliente}"
+						filterMatchMode="contains" style="width:300px;">
+						<p:outputLabel value="#{e.cliente}" />
+					</p:column>
+
+					<p:column headerText="Recaudacion" filterBy="#{e.recaudacion}"
+						filterMatchMode="contains" style="width:250px;">
+						<p:outputLabel value="#{e.recaudacion}" />
+					</p:column>
+
+					<p:column headerText="#Estab." filterBy="#{e.establecimiento}"
+						filterMatchMode="contains" style="width:50px;">
+						<p:outputLabel value="#{e.establecimiento}" />
+					</p:column>
+
+					<p:column headerText="Dirección" filterBy="#{e.direccion}"
+						filterMatchMode="contains" style="width:300px;">
+						<p:outputLabel value="#{e.direccion}" />
+					</p:column>
+
+					<p:column headerText="Provincia" filterBy="#{e.provincia}"
+						filterMatchMode="contains" style="width:100px;">
+						<p:outputLabel value="#{e.provincia}" />
+					</p:column>
+
+					<p:column headerText="Cantón" filterBy="#{e.canton}"
+						filterMatchMode="contains" style="width:100px;">
+						<p:outputLabel value="#{e.canton}" />
+					</p:column>
+
+					<p:column headerText="Teléfono" filterBy="#{e.telefono}"
+						filterMatchMode="contains" style="width:80px;">
+						<p:outputLabel value="#{e.telefono}" />
+					</p:column>
+
+					<p:column headerText="Correo" filterBy="#{e.correo}"
+						filterMatchMode="contains" style="width:250px;">
+						<p:outputLabel value="#{e.correo}" />
+					</p:column>
+
+					<p:column headerText="Codigo PAF" filterBy="#{e.codigopaf}"
+						filterMatchMode="contains" style="width:100px;">
+						<p:outputLabel value="#{e.codigopaf}" />
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total" value="#{cargaMasivaBean.total}$">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

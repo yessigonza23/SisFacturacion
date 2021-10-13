@@ -1,0 +1,586 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingFacturas"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">INGRESO DE
+					FACTURAS - SERVICIOS CYF</h2>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<!-- VALOR, FECHA, ESTADOS -->
+				<p:panel>
+					<p:fieldset legend="Información General" style="width:70%">
+						<p:panelGrid columns="5"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="ui-fluid">
+							<font></font>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPunto" size="25"
+										value="#{ingresoFacturaServiciosCyfBean.nombrePunto.nombre}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Numero: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="numfact" style="text-align:center" size="8"
+										value="#{ingresoFacturaServiciosCyfBean.num1}" disabled="true" />
+								</p:column>
+							</p:row>
+
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Emisión: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtFechaEmision" size="5"
+										value="#{ingresoFacturaServiciosCyfBean.fechaActual}"
+										style="width:200px;" disabled="true" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="valorfact" size="5"
+										value="#{ingresoFacturaServiciosCyfBean.totaldet}"
+										disabled="true" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:separator />
+						<p:panelGrid columns="2">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="autfact" size="5"
+										value="#{sRIBean.comprobante.autorizacion}"
+										style="width:300px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Fecha Autorización: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="fechaAutfact" size="5"
+										value="#{sRIBean.comprobante.autorizacionfecha}"
+										style="width:100px;" disabled="true" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Estado SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoSRI" disabled="true"
+										value="#{sRIBean.comprobante.estadosri}" effect="fade"
+										converter="omnifaces.SelectItemsConverter" filter="true">
+										<f:selectItem itemLabel="Pendiente de Envío" itemValue="P" />
+										<f:selectItem itemLabel="Envío al SRI" itemValue="E" />
+										<f:selectItem itemLabel="Clave ya registrada" itemValue="R" />
+										<f:selectItem itemLabel="Autorizado por el SRI" itemValue="A" />
+										<f:selectItem itemLabel="Notificado al correo" itemValue="N" />
+										<f:selectItem itemLabel="Autorizado Pendiente SRI"
+											itemValue="Z" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Estado Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstadoError" disabled="true"
+										value="#{sRIBean.comprobante.estadoerror}" effect="fade"
+										converter="omnifaces.SelectItemsConverter" filter="true">
+										<f:selectItem itemLabel="Sin Error" itemValue="S" />
+										<f:selectItem itemLabel="Con Error" itemValue="C" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+
+
+
+				<!-- EMPIEZA CLIENTE -->
+				<p:layout id="capaDatosClienteFactura"
+					style="width: 100%;height: 130px;">
+
+
+					<p:layoutUnit id="datosCliente" position="center"
+						style="padding: 5px; text-align: justify; font-sizw: 14px;"
+						size="100">
+
+						<p:panelGrid columns="2" id="cliente"
+							columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+							contentStyleClass="p-align-baseline ui-fluid">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCi" maxlength="13"
+										placeholder="cedula/RUC cliente"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
+										value="#{ingresoFacturaServiciosCyfBean.ruc}">
+										<p:ajax event="valueChange"
+											listener="#{ingresoFacturaServiciosCyfBean.buscarClientes()}"
+											update="txtTipo, txtNombres, txtDireccion, txtTelefono, txtCorreo" />
+									</p:inputText>
+									<p:message for="txtCi" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Tipo Identificación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtTipo"
+										value="#{ingresoFacturaServiciosCyfBean.cliente.tipoid}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}">
+										<p:ajax event="change"
+											listener="#{ingresoFacturaServiciosCyfBean.validaIdentificacion()}"
+											process="@this" update="ingFacturas:txtNombres" />
+										
+										<f:selectItem itemLabel="RUC" itemValue="R" />
+										<f:selectItem itemLabel="Cédula" itemValue="C" />
+										<f:selectItem itemLabel="Pasaporte" itemValue="P" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Apellidos y Nombres: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtNombres" maxlength="150"
+										value="#{ingresoFacturaServiciosCyfBean.nombre}"
+										required="true" requiredMessage="Requerido Nombres"
+										style="width:200px;text-transform: uppercase;"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}" />
+									<p:message for="txtNombres" display="icon" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Direccion: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDireccion" maxlength="150"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
+										value="#{ingresoFacturaServiciosCyfBean.cliente.direccion}"
+										required="true" requiredMessage="Dirección Requerida"
+										style="width:300px;text-transform: uppercase;" />
+									<p:message for="txtDireccion" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtTelefono" maxlength="10"
+										onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
+										value="#{ingresoFacturaServiciosCyfBean.cliente.telefono}"
+										required="true" requiredMessage="Teléfono requerido"
+										style="width:100px;" />
+									<p:message for="txtTelefono" display="icon" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Correo: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCorreo" maxlength="150"
+										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
+										value="#{ingresoFacturaServiciosCyfBean.cliente.correo}"
+										required="true" requiredMessage="Requerido Correo electronico"
+										style="width:300px;"
+										validatorMessage="Correo electrónico no es válido">
+										<f:validateRegex
+											pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+									</p:inputText>
+									<p:message for="txtCorreo" display="icon" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:layoutUnit>
+
+
+				</p:layout>
+				<!-- TERMINA CLIENTE -->
+
+				<!-- EMPIEZA BDETALLE -->
+				<!-- TABLA DEL DETALLE -->
+				<p:dataTable id="det" style="width:900px;"
+					value="#{ingresoFacturaServiciosCyfBean.listaComprobanteDetalle}"
+					var="d" widgetVar="accionTabla" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:15px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+					<p:column headerText="Codigo Banco"
+						style="text-align: justify;width:40px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.codigobanco}">
+						<h:outputLabel
+							value="#{d.recaudaciondetalle.recaudacion.codigobanco}" />
+					</p:column>
+
+					<p:column headerText="Servicio"
+						style="text-align: justify;width:400px;"
+						sortBy="#{d.recaudaciondetalle.recaudacion.nombre}">
+						<h:outputLabel
+							value="#{d.recaudaciondetalle.recaudacion.nombre} - #{d.recaudaciondetalle.codigo}" />
+					</p:column>
+
+					<p:column headerText="Cant."
+						style="text-align: justify;width:30px;" sortBy="#{d.cantidad}">
+						<h:outputLabel value="#{d.cantidad}" />
+					</p:column>
+					<p:column headerText="ValorCero"
+						style="text-align: justify;width:60px;" sortBy="#{d.valorcero}">
+						<h:outputLabel value="#{d.valorcero}" />
+					</p:column>
+					<p:column headerText="ValorIva"
+						style="text-align: justify;width:60px;" sortBy="#{d.valoriva}">
+						<h:outputLabel value="#{d.valoriva}" />
+					</p:column>
+					<p:column headerText="Subtotal"
+						style="text-align: justify;width:60px;" sortBy="#{d.subtotal}">
+						<h:outputLabel value="#{d.subtotal}" />
+					</p:column>
+					<p:column />
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{ingresoFacturaServiciosCyfBean.totaldet}$">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+				<!-- TERMINA DETALLE				 -->
+
+				<!-- BTN DE AGREGAR DEPOSITOS -->
+				<p:row style="border-style: hidden;">
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden;">
+						<p:commandButton value="Agregar Deposito"
+							actionListener="#{ingresoFacturaServiciosCyfBean.limpiarDialogoDep()}"
+							process="@this" oncomplete="PF('registraDeposito').show();"
+							update="dialogodep" icon="icon-list-ul">
+						</p:commandButton>
+					</p:column>
+				</p:row>
+				<!-- TABLA DEPOSITO DE DE FACTURA				 -->
+				<p:dataTable id="dep" style="width:900px;"
+					value="#{ingresoFacturaServiciosCyfBean.listaComprobanteDepositos}"
+					var="d" widgetVar="accionTablaDep" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:20px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+
+					<p:column headerText="Origen" style="width:120px">
+						<h:outputText value="#{d.origen}">
+							<f:converter converterId="origen" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Tipo Transacción"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.tipotransaccion}">
+							<f:converter converterId="tipoTransaccion" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Nro. Depósito"
+						style="text-align: justify ;width:80px;"
+						sortBy="#{d.num_deposito}">
+						<h:outputLabel value="#{d.num_deposito}" />
+					</p:column>
+
+					<p:column headerText="Fecha Depósito"
+						style="text-align: justify ;width:80px;" sortBy="#{d.fecha}">
+						<h:outputLabel value="#{d.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+					</p:column>
+					<p:column headerText="Valor Depósito"
+						style="text-align: justify ;width:80px;" sortBy="#{d.valor}">
+						<h:outputLabel value="#{d.valor}" />
+					</p:column>
+					<p:column>
+						<p:commandLink styleClass="fa fa-fw fa-trash"
+							style="text-align: justify;width:20px;"
+							disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
+							action="#{ingresoFacturaServiciosCyfBean.eliminarCompDeposito(index)}"
+							ajax="true" update="ingFacturas:dep">
+						</p:commandLink>
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column />
+							<p:column colspan="1" style="text-align:right"
+								footerText="Total:" />
+							<p:column style="text-align:right">
+								<f:facet name="footer">
+									<p:outputLabel id="total"
+										value="#{ingresoFacturaServiciosCyfBean.totaldep}$">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+							</p:column>
+							<p:column />
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+
+				<!-- CAMPO DETALLE				 -->
+				<p:panel>
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Detalle: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:row>
+								<p:inputText maxlength="500"
+									value="#{ingresoFacturaServiciosCyfBean.detalle}"
+									style="width:700px;" />
+							</p:row>
+						</p:column>
+					</p:row>
+				</p:panel>
+				<p:separator />
+
+				<!-- Botones -->
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							actionListener="#{ingresoFacturaServiciosCyfBean.registrarComprobante()}"
+							process="@form"
+							update="ingFacturas:numfact,ingFacturas:clavefact,ingFacturas:xmlfact, @form"
+							disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}">
+							<f:actionListener
+								binding="#{ingresoFacturaServiciosCyfBean.ejecutar(ingresoFacturaserviciosCyfBean.codigo,ingresoFacturaServiciosCyfBean.num)}" />
+						</p:commandButton>
+						<p:commandButton icon=" ui-icon-circle-arrow-n" id="btnEnviar"
+							value="Enviar"
+							action="#{sRIBean.enviar(ingresoFacturaServiciosCyfBean.comprobante.id)}"
+							process="@form"
+							update="ingFacturas:btnAutorizar,ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact , @this"
+							disabled="#{sRIBean.estadeshabilitadoEnv}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnAutorizar"
+							value="Autorizar"
+							action="#{sRIBean.autorizar(ingresoFacturaServiciosCyfBean.comprobante.id)}"
+							process="@form"
+							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact, @this"
+							disabled="#{sRIBean.estadeshabilitadoAut}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-print" id="btnImprimir"
+							value="Imprimir" style="margin-right:10px;" ajax="false"
+							target="_blank"
+							actionListener="#{imprimirFacturaBean.imprimirFactura(ingresoFacturaServiciosCyfBean.comprobante)}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
+							value="Correo"
+							action="#{ingresoFacturaServiciosCyfBean.eviarCorreo(ingresoFacturaServiciosCyfBean.comprobante.id,'F')}">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							actionListener="#{navegarBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+				<!-- INFORMACIÓN SRI -->
+
+				<p:panel>
+					<p:fieldset legend="Información SRI" tyle="width:70%">
+						<p:panelGrid>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Clave Acceso: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="clavefact" size="30" disabled="true"
+										value="#{ingresoFacturaServiciosCyfBean.claveA}" />
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlfact" size="30" disabled="true"
+										value="#{ingresoFacturaServiciosCyfBean.comprobante.xml}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="Mensajefact" size="30"
+										value="#{sRIBean.mensajeSri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">XML SRI: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="xmlSrifact" size="30" disabled="true"
+										value="#{sRIBean.comprobante.xmlsri}" />
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="MensajeErrorfact" size="30"
+										value="#{sRIBean.mensajeSriError}" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+				<p:separator />
+				<!-- 				DIALOGO DE DEPOSITO -->
+				<p:dialog id="dialogodep" widgetVar="registraDeposito"
+					resizable="false" width="900" draggable="false" modal="true"
+					position="center" closeOnEscape="true">
+					<h2 style="color: #003778; text-align: center">Registro de
+						Depósitos</h2>
+
+					<p:panelGrid>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Origen: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="origen"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.origen}"
+									required="true" style="width:100px">
+									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+									<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Tipo Transacción: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:selectOneMenu id="tipotransaccion"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.tipotransaccion}"
+									required="true" style="width:100px">
+									<f:selectItem itemLabel="Intermático" itemValue="I" />
+									<f:selectItem itemLabel="Depósito" itemValue="D" />
+									<f:selectItem itemLabel="Transferencia" itemValue="T" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">No. Depósito: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtNumeroDeposito" maxlength="10"
+									placeholder="Numero del Deposito"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.num_deposito}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Fecha Depósito: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
+									mask="true"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.fecha}">
+								</p:calendar>
+								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Valor: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputNumber id="numValor"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.valor}">
+								</p:inputNumber>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<h:panelGrid id="pgBotonesdep" columns="2" style="margin-left: 35%">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardartmpdep"
+							value="Agregar Deposito"
+							actionListener="#{ingresoFacturaServiciosCyfBean.registrarCompDeposito()}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('registraDeposito').hide()"
+							update="dep">
+
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-fw fa-remove" value="Cancelar"
+							oncomplete="PF('registraDeposito').hide();">
+						</p:commandButton>
+
+					</h:panelGrid>
+
+
+				</p:dialog>
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

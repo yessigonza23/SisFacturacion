@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<!-- <h:form id="frm" enctype="multipart/form-data"> -->
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">REGISTRO DE
+					DETALLE DE RECAUDACIÓN</h2>
+				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
+					showSummary="true" showDetail="true" />
+				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+					actionListener="#{recaudacionDetalleBean.limpiarControles()}"
+					update="frm:dlg" process="@this" />
+
+				<p:dataTable id="dt" resizableColumns="true"
+					value="#{recaudacionDetalleBean.lista}" var="e"
+					widgetVar="estudiosTabla" rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Codigo Banco" filterBy="#{e.recaudacion.codigobanco}"
+						filterMatchMode="contains" style="width:30px">
+						<p:outputLabel value="#{e.recaudacion.codigobanco}" />
+					</p:column>
+
+					<p:column headerText="Codigo" filterBy="#{e.codigo}"
+						filterMatchMode="contains" style="width:20px">
+						<p:outputLabel value="#{e.codigo}" />
+					</p:column>
+
+					<p:column headerText="Nombre" filterBy="#{e.nombre}"
+						style="width:200px" filterMatchMode="contains">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.nombre}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{e.nombre}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column exportable="false" style="width: 10px">
+						<p:commandLink
+							actionListener="#{recaudacionDetalleBean.mostrarData(e)}"
+							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
+							process="@this">
+							<i class="fa fa-fw fa-edit"></i>
+							<!-- <p:graphicImage library="images" name="edit.jpg" /> -->
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+				<br />
+
+				<!--<p:dialog id="dlg" widgetVar="wdlg" header="#{institucionBean.tipoDialog}" modal="true"  closeOnEscape="true" resizable="false" draggable="true">  -->
+				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+					closeOnEscape="true" resizable="false" draggable="true">
+					<p:fieldset legend="#{puntoRecaudacionBean.tipoDialog}"
+						style="width:90%">
+
+						<p:panelGrid id="pg" columns="4" tyle="margin-left: 35%">
+
+							<h:outputLabel value="Recaudacion" style="margin-left:5%;" />
+							<p:selectOneMenu id="categorie_article"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.recaudacion}"
+								effect="fade" converter="omnifaces.SelectItemsConverter"
+								filter="true" filterMatchMode="startsWith" style="width:500px">
+								<f:selectItem itemLabel="Select One" noSelectionOption="true" />
+								<f:selectItems value="#{recaudacionDetalleBean.listar}" var="e"
+									itemLabel="#{e.nombre}" itemValue="#{e}" />
+								<f:ajax render="selected_item" />
+							</p:selectOneMenu>
+							<p:messages for="cboRecaudacion" />
+							<h:column />
+
+							<p:outputLabel for="txtCodigo" value="Codigo" />
+							<p:inputText id="txtCodigo"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.codigo}"
+								required="true" />
+							<p:messages for="txtCodigo" display="icon" />
+							<h:column />
+
+							<p:outputLabel for="txtNombres" value="Nombre" />
+							<p:inputText id="txtNombres"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.nombre}"
+								required="true" />
+							<p:messages for="txtNombres" display="icon" />
+							<h:column />
+
+							<p:outputLabel for="@next" value="Estado" />
+							<p:selectOneMenu id="txtEstado"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.estado}"
+								required="true" style="width:100px">
+								<f:selectItem itemLabel="Activo" itemValue="A" />
+								<f:selectItem itemLabel="Inactivo" itemValue="I" />
+							</p:selectOneMenu>
+							<h:column />
+							<h:column />
+
+							<p:outputLabel for="txtFactor" value="Factor" />
+							<p:inputText id="txtFactor"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.factor}"
+								required="true" />
+							<p:messages for="txtFactor" display="icon" />
+							<h:column />
+
+							<p:outputLabel for="txtValor" value="Valor" />
+							<p:inputText id="txtValor"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.valor}"
+								required="true" />
+							<p:messages for="txtValor" display="icon" />
+							<h:column />
+
+							<p:outputLabel for="txtRangoInicial" value="Rango Inicial" />
+							<p:inputText id="txtRangoInicial"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.rangoinicial}"
+								required="true" />
+							<p:messages for="txtRangoInicial" display="icon" />
+							<h:column />
+
+							<p:outputLabel for="txtRangoFinal" value="Rango Final" />
+							<p:inputText id="txtRangoFinal"
+								value="#{recaudacionDetalleBean.recaudacionDetalle.rangofinal}"
+								required="true" />
+							<p:messages for="txtRangoFinal" display="icon" />
+							<h:column />
+
+						</p:panelGrid>
+
+					</p:fieldset>
+					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+						<p:commandButton value="Registrar"
+							actionListener="#{recaudacionDetalleBean.operar('R')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{recaudacionDetalleBean.tipoDialog == 'Nuevo Detalle'}" />
+
+						<p:commandButton value="Modificar"
+							actionListener="#{recaudacionDetalleBean.operar('M')}"
+							ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{recaudacionDetalleBean.tipoDialog == 'Modificar Detalle'}" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingConsolida" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CONSOLIDACIÓN
+					MANUAL</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="1"
+						style="display:block; text-align:center; width:50%; margin:0px auto;"
+						columnClasses="centered">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:40px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Año: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
+									placeholder="Año" value="#{consolidacionManualBean.anio}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:panel>
+				<p:panel header="Archivo Banco - Estado de cuenta">
+
+					<p:commandButton icon="ui-icon-disk" id="btnEstadoCuenta"
+						value="Consultar"
+						action="#{consolidacionManualBean.listarEstado(consolidacionManualBean.anio)}"
+						process="@form" update="ingConsolida:Res1">
+					</p:commandButton>
+
+					<p:commandButton value="Export as XLS" ajax="false">
+						<p:dataExporter type="xls" target="Res1" fileName="EstadoCuenta" />
+					</p:commandButton>
+
+					<p:dataTable id="Res1" resizableColumns="true"
+						value="#{consolidacionManualBean.listaEstadoCuenta}" var="e"
+						editable="true" rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						emptyMessage="No hay ningún registro con esa opción">
+
+						<p:column style="width:35px" headerText="Editar">
+							<p:rowEditor />
+						</p:column>
+
+						<p:ajax event="rowEdit"
+							listener="#{consolidacionManualBean.modificar(e.id,e.id_punto,e)}" />
+
+						<p:column headerText="Comprobante" filterBy="#{e.numtransaccion}"
+							filterMatchMode="contains" style="width:80px;">
+							<p:outputLabel value="#{e.numtransaccion}" />
+						</p:column>
+
+						<p:column headerText="Pto.Recaudación" style="width:370px;">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectOneMenu id="cboPuntoRecaudacion1" value="#{e.id_punto}"
+										converter="omnifaces.SelectItemsConverter" autoWidth="false"
+										style="width:350px;" filter="true" required="true"
+										requiredMessage="Requerido el Punto de Recaudacion" disabled="true">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems value="#{puntoRecaudacionBean.lista}" var="p"
+											itemLabel="#{p.nombre}" itemValue="#{p.id}" />
+										<p:ajax event="change"
+											listener="#{consolidacionManualBean.listarComprobanteRegional(e.id_punto) }"
+											update="Res1:comprobante" />
+									</p:selectOneMenu>
+
+								</f:facet>
+
+								<f:facet name="input">
+									<p:selectOneMenu id="cboPuntoRecaudacion" value="#{e.id_punto}"
+										converter="omnifaces.SelectItemsConverter" autoWidth="false"
+										style="width:350px;" filter="true" required="true"
+										requiredMessage="Requerido el Punto de Recaudacion">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems value="#{puntoRecaudacionBean.lista}" var="p"
+											itemLabel="#{p.nombre}" itemValue="#{p.id}" />
+										<p:ajax event="change"
+											listener="#{consolidacionManualBean.listarComprobanteRegional(e.id_punto) }"
+											update="Res1:comprobante" />
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Factura" style="width:120px">
+							<p:cellEditor id="comprobante">
+								<f:facet name="output">
+									<p:selectOneMenu id="outComprobante" disabled="true"
+										value="#{e.id_comprobante}"
+										converter="omnifaces.SelectItemsConverter"
+										style="width:100px;" filter="true">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems 
+											value="#{consolidacionManualBean.listaComprobante}" var="c"
+											itemLabel="#{c.numero}" itemValue="#{c.id}" />
+
+										
+									</p:selectOneMenu>
+								</f:facet>
+
+								<f:facet name="input">
+									<p:selectOneMenu id="inComprobante"
+										value="#{e.id_comprobante}"
+										converter="omnifaces.SelectItemsConverter"
+										style="width:100px;" filter="true">
+										<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+										<f:selectItems
+											value="#{consolidacionManualBean.listaComprobante}" var="c"
+											itemLabel="#{c.numero}" itemValue="#{c.id}" />
+
+										<p:ajax event="valueChange" process="@this"
+											listener="#{consolidacionManualBean.buscarFactura(e.id_comprobante)}"
+											update="@this,Res1:valorFactura,,Res1:facturafecha" />
+
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+
+						</p:column>
+						<p:column headerText="Valor Factura"
+							filterBy="#{consolidacionManualBean.comprobante.valor}"
+							filterMatchMode="contains" style="width:60px;">
+							<p:outputLabel
+								value="#{consolidacionManualBean.comprobante.valor}"
+								style="text-align:right" id="valorFactura">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Fecha"
+							filterBy="#{consolidacionManualBean.comprobante.fechaemision}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:outputLabel id="facturafecha"
+								value="#{consolidacionManualBean.comprobante.fechaemision}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Observación" style="width:200px">
+							<p:cellEditor id="observacion">
+								<f:facet name="output">
+									<h:outputText id="inobservacion" value="#{e.observacion}">
+
+									</h:outputText>
+								</f:facet>
+
+								<f:facet name="input">
+									<p:inputText id="outobservacion" value="#{e.observacion}">
+									
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+
+						</p:column>
+
+						<p:column headerText="Ruc Banco" filterBy="#{e.ruc}"
+							filterMatchMode="contains" style="width:100px;">
+							<p:outputLabel value="#{e.ruc}" />
+						</p:column>
+
+						<p:column headerText="Valor Banco" filterBy="#{e.valor}"
+							filterMatchMode="contains" style="width:60px;">
+							<p:outputLabel value="#{e.valor}" style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Saldo" style="width:50px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:outputLabel value="#{e.saldo}" style="text-align:right">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:outputLabel>
+								</f:facet>
+
+								<f:facet name="input">
+									<p:inputNumber value="#{e.saldo}" style="text-align:right">
+										<f:convertNumber pattern="###,##0.00" />
+									</p:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+
+						</p:column>
+
+						<p:column headerText="Servicio" filterBy="#{e.servicio}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:outputLabel value="#{e.servicio}" />
+						</p:column>
+
+						<p:column headerText="Cliente" filterBy="#{e.cliente}"
+							filterMatchMode="contains" style="width:250px;">
+							<p:outputLabel value="#{e.cliente}" />
+						</p:column>
+						<p:column headerText="Fecha" filterBy="#{e.fecha}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:outputLabel value="#{e.fecha}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Provincia" filterBy="#{e.provincia}"
+							filterMatchMode="contains" style="width:250px;">
+							<p:outputLabel value="#{e.provincia}" />
+						</p:column>
+
+						<p:column headerText="Fecha Carga" filterBy="#{e.fechacarga}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:outputLabel value="#{e.fechacarga}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+						
+						
+					</p:dataTable>
+				</p:panel>
+
+				<!-- REPORTE 2: VISTA DE COMPROBANTES DEPOSITO -->
+
+				<p:panel header="Depósitos de Facturas - Recaudaciones">
+
+					<p:commandButton icon="ui-icon-disk" id="btnCompDep"
+						value="Consultar"
+						action="#{consolidacionManualBean.listarVistaDepositos(consolidacionManualBean.anio)}"
+						process="@form" update="ingConsolida:Res2">
+					</p:commandButton>
+
+					<p:commandButton value="Export as XLS" ajax="false">
+						<p:dataExporter type="xls" target="Res2"
+							fileName="ComprobantesDepositos" />
+					</p:commandButton>
+
+					<p:dataTable id="Res2" resizableColumns="true"
+						value="#{consolidacionManualBean.listaVistaRecaudacionDepositoDTO}"
+						var="e" rows="5" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" sortOrder="descending"
+						paginatorPosition="top"
+						emptyMessage="No hay ningún registro con esa opción">
+
+						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
+							filterMatchMode="contains" style="width:60px;">
+							<p:outputLabel value="#{e.comp_numero}" />
+						</p:column>
+						<p:column headerText="No.Depósito" filterBy="#{e.deposito_numero}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:outputLabel value="#{e.deposito_numero}" />
+						</p:column>
+						<p:column headerText="Fecha Deposito"
+							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
+							style="width:70px;">
+							<p:outputLabel value="#{e.comp_fechaemision}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
+							filterMatchMode="contains" style="width:60px;">
+							<p:outputLabel value="#{e.deposito_valor}"
+								style="text-align:right">
+								<f:convertNumber pattern="###,##0.00" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Observacion"
+							filterBy="#{e.deposito_observacion}" filterMatchMode="contains"
+							style="width:70px;">
+							<p:outputLabel value="#{e.deposito_observacion}" />
+						</p:column>
+						<p:column headerText="Ruc" filterBy="#{e.cliente_ci}"
+							filterMatchMode="contains" style="width:100px;">
+							<p:outputLabel value="#{e.cliente_ci}" />
+						</p:column>
+						<p:column headerText="Punto Recaudación"
+							filterBy="#{e.punto_nombre}" filterMatchMode="contains"
+							style="width:250px;">
+							<p:outputLabel value="#{e.punto_nombre}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

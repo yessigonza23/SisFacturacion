@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingConsolida" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CONSOLIDACIÓN
+					MANUAL</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<p:panel>
+					<p:panelGrid columns="1"
+						style="display:block; text-align:center; width:50%; margin:0px auto;"
+						columnClasses="centered">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:40px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">
+								<b>Año:</b>
+							</p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
+									placeholder="Año" value="#{consolidacionManualBean.anio}">
+									<p:ajax event="valueChange"
+										listener="#{consolidacionManualBean.listarEstado(consolidacionManualBean.anio) }"
+										update="ingConsolida:cboEstadoCuenta" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:panel>
+				<p:panel>
+					<p:panelGrid columns="1"
+						style="display:block; text-align:center; width:100%; margin:0px auto;"
+						columnClasses="centered">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:50px;">
+								<b>Estado de Cuenta - No. Depósito:</b>
+							</p:column>
+							<p:selectOneMenu id="cboEstadoCuenta"
+								value="#{consolidacionManualBean.consolidaDepositos.estadoCuenta}"
+								converter="omnifaces.SelectItemsConverter" autoWidth="false"
+								style="width:350px;" filter="true" required="true"
+								requiredMessage="Requerido el Punto de Recaudacion">
+								<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+								<f:selectItems
+									value="#{consolidacionManualBean.listaEstadoCuenta}" var="p"
+									itemLabel="#{p.numtransaccion}" itemValue="#{p}" />
+								<p:ajax event="change"
+									listener="#{consolidacionManualBean.listarVistaDepositos(consolidacionManualBean.consolidaDepositos.estadoCuenta.numtransaccion,consolidacionManualBean.anio)}"
+									update="ingConsolida:cboComprobantes" />
+								<p:ajax event="change"
+									listener="#{consolidacionManualBean.cargarEstadoCuenta(consolidacionManualBean.consolidaDepositos.estadoCuenta.id)}"
+									update="@form" />
+							</p:selectOneMenu>
+						</p:row>
+
+						<p:panelGrid columns="3"
+							style="display:block; text-align:center; width:100%; margin:0px auto;"
+							columnClasses="centered">
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Valor: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtValor" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.valor}"
+										style="width:100px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Cliente: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCliente" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.cliente}"
+										style="width:350px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">RUC: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtRuc" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.ruc}"
+										style="width:160px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Provincia: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtProvincia" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.provincia}"
+										style="width:150px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Servicio: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtServicio" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.servicio}"
+										style="width:350px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Fecha Deposito: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtFecha" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.fecha}"
+										style="width:100px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+
+							<p:row style="border-style: hidden;">
+								<p:column style="border-style: hidden; width:30px;">Saldo: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtSaldo" size="20"
+										value="#{consolidacionManualBean.estadoCuenta.saldo}"
+										style="width:100px;" readonly="true" />
+
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panel>
+
+
+				<p:panelGrid columns="1"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden; width:50px;">
+							<b>Factura:</b>
+						</p:column>
+						<p:selectOneMenu id="cboComprobantes"
+							value="#{consolidacionManualBean.vistaRecaudacionDepositoDTO}"
+							converter="omnifaces.SelectItemsConverter" autoWidth="false"
+							style="width:350px;" filter="true" required="true"
+							requiredMessage="Requerido el Comprobante">
+							<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+							<f:selectItems
+								value="#{consolidacionManualBean.listaVistaRecaudacionDepositoDTO}"
+								var="c" itemLabel="#{c.comp_numero} - #{c.deposito_id}  "
+								itemValue="#{c}" />
+							<p:ajax event="change"
+								listener="#{consolidacionManualBean.cargarComprobanteDeposito(consolidacionManualBean.vistaRecaudacionDepositoDTO.deposito_id)}"
+								update="ingConsolida:txtValorF,ingConsolida:txtClienteF,ingConsolida:txtRucF,ingConsolida:txtFechaF" />
+						</p:selectOneMenu>
+					</p:row>
+
+					<p:panelGrid columns="3"
+						style="display:block; text-align:center; width:100%; margin:0px auto;"
+						columnClasses="centered">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">Valor: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtValorF" size="20"
+									value="#{consolidacionManualBean.vistaRecaudacionDepositoDTO.deposito_valor}"
+									style="width:100px;" readonly="true" />
+
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">Cliente: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtClienteF" size="20"
+									value="#{consolidacionManualBean.vistaRecaudacionDepositoDTO.cliente_nombre}"
+									style="width:350px;" readonly="true" />
+
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">RUC: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtRucF" size="20"
+									value="#{consolidacionManualBean.vistaRecaudacionDepositoDTO.cliente_ci}"
+									style="width:160px;" readonly="true" />
+
+							</p:column>
+						</p:row>
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">Fecha Depósito: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtFechaF" size="20"
+									value="#{consolidacionManualBean.vistaRecaudacionDepositoDTO.deposito_fecha}"
+									style="width:100px;" readonly="true" />
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panelGrid columns="3"
+						style="display:block; text-align:center; width:100%; margin:0px auto;"
+						columnClasses="centered">
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden; width:30px;">
+								<b>Observación: </b>
+							</p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtObservacion"
+									value="#{consolidacionManualBean.consolidaDepositos.observacion}"
+									style="width:500px;" required="true">
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Consolidar"
+							action="#{consolidacionManualBean.modificar(consolidacionManualBean.vistaRecaudacionDepositoDTO.deposito_id,consolidacionManualBean.consolidaDepositos.estadoCuenta.id )}"
+							process="@form">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-newwin" id="btnNuevo" value="Nuevo"
+							onclick="location.reload()">
+						</p:commandButton>
+					</p:panelGrid>
+				</p:panelGrid>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

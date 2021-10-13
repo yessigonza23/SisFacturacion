@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<!-- <h:form id="frm" enctype="multipart/form-data"> -->
+			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">PUNTOS DE
+					RECAUDACIÓN</h2>
+				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
+					showSummary="true" showDetail="true" />
+				<p:panelGrid columns="7" style="display:block; text-align:center"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{puntoRecaudacionBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+
+				<p:dataTable id="dt" resizableColumns="true"
+					value="#{puntoRecaudacionBean.lista}" var="e"
+					widgetVar="estudiosTabla" rows="15" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:column headerText="Nombre" filterBy="#{e.nombre}"
+						filterMatchMode="contains" style="width:250px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{e.nombre}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{e.nombre}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Sec Facturas" style="width:50px">
+						<p:outputLabel value="#{e.secuencialfactura}" />
+					</p:column>
+
+					<p:column headerText="Sec Notas Crédito" style="width:50px">
+						<p:outputLabel value="#{e.secuencialnotas}" />
+					</p:column>
+
+					<p:column exportable="false" style="width: 10px">
+						<p:commandLink
+							actionListener="#{puntoRecaudacionBean.mostrarData(e)}"
+							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
+							process="@this">
+							<i class="fa fa-fw fa-edit"></i>
+							<!-- <p:graphicImage library="images" name="edit.jpg" /> -->
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+				<br />
+
+				<!--<p:dialog id="dlg" widgetVar="wdlg" header="#{institucionBean.tipoDialog}" modal="true"  closeOnEscape="true" resizable="false" draggable="true">  -->
+			
+					<p:dialog id="dlg" widgetVar="wdlg" modal="true"
+						closeOnEscape="true"  draggable="true"
+						resizable="false" positionType="absolute">
+						
+						<p:fieldset legend="#{puntoRecaudacionBean.tipoDialog}"
+							style="width:90%">
+
+							<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Institución: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="cboInstitucion"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.institucion}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true" filterMatchMode="startsWith">
+										<f:selectItem itemLabel="Seleccione: ..."
+											noSelectionOption="true" />
+										<f:selectItems value="#{puntoRecaudacionBean.listai}" var="e"
+											itemLabel="#{e.nombre}" itemValue="#{e}" />
+										<f:ajax render="selected_item" />
+									</p:selectOneMenu>
+									<p:messages for="cboInstitucion" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Nombre PuntoRecaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtNombres"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.nombre}"
+										required="true" />
+									<p:messages for="txtNombres" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Dirección: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtDireccion"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.direccion}"
+										required="true" />
+									<p:messages for="txtDireccion" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Provincia: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="cboProvincia"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.provincia}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true" filterMatchMode="startsWith">
+										<f:selectItem itemLabel="Seleccione:..."
+											noSelectionOption="true" />
+										<f:selectItems value="#{puntoRecaudacionBean.listaProvincia}"
+											var="e" itemLabel="#{e.nombre}" itemValue="#{e}" />
+										<f:ajax render="selected_item" />
+									</p:selectOneMenu>
+									<p:messages for="cboProvincia" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtTelefono"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.telefono}"
+										required="true" />
+									<p:messages for="txtTelefono" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Responsable: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtResponsable"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.responsable}"
+										required="true" />
+									<p:messages for="txtResponsable" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Cargo: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtResponsableCargo"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.responsablecargo}"
+										required="true" />
+									<p:messages for="txtResponsableCargo" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Jefe: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtJefe"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.jefe}"
+										required="true" />
+									<p:messages for="txtJefe" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Jefe Cargo: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtJefeCargo"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.jefecargo}"
+										required="true" />
+									<p:messages for="txtJefeCargo" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Estado: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="txtEstado"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.estado}"
+										required="true" style="width:100px">
+										<f:selectItem itemLabel="Activo" itemValue="A" />
+										<f:selectItem itemLabel="Inactivo" itemValue="I" />
+									</p:selectOneMenu>
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Establecimiento: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtEstablecimiento"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.establecimiento}"
+										required="true" />
+									<p:messages for="txtEstablecimiento" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Punto Emisión: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtPuntoEmision"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.puntoemision}"
+										required="true" />
+									<p:messages for="txtPuntoEmision" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Secuencial Facturas: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="SecuencialFacturas"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.secuencialfactura}"
+										required="true" />
+									<p:messages for="SecuencialFacturas" display="icon" />
+								</p:column>
+
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Secuencial Notas Crédito: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputNumber id="SecuencialNotas"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.secuencialnotas}"
+										required="true" />
+									<p:messages for="SecuencialNotas" display="icon" />
+								</p:column>
+
+							</p:panelGrid>
+
+						</p:fieldset>
+						<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
+							<p:commandButton value="Registrar"
+								actionListener="#{puntoRecaudacionBean.operar('R')}" ajax="true"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+								update="pg, dt"
+								rendered="#{puntoRecaudacionBean.tipoDialog == 'Nuevo Punto de Recaudación'}" />
+
+							<p:commandButton value="Modificar"
+								actionListener="#{puntoRecaudacionBean.operar('M')}" ajax="true"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+								update="pg, dt"
+								rendered="#{puntoRecaudacionBean.tipoDialog == 'Modificar Punto de Recaudación'}" />
+						</p:panelGrid>
+					</p:dialog>
+				
+			</h:form>
+
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

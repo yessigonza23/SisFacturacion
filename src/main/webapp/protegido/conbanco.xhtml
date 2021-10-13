@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingCarga" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CARGAR ESTADO DE CUENTA - BANCO PACÍFICO</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true" />
+
+				<p:panelGrid columns="1" style="display:block; text-align:center; width:50%; margin:0px auto;"
+					columnClasses="centered">
+
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:40px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Año: </p:column>
+						<p:column style="border-style: hidden;" >
+							<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
+								placeholder="Año"
+								value="#{cargaBancoBean.anioext}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Mes: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:selectOneMenu id="txtMes" value="#{cargaBancoBean.mesext}"
+								effect="fade" converter="omnifaces.SelectItemsConverter"
+								filter="true">
+								<f:selectItem itemLabel="Seleccionar" noSelectionOption="true" />
+								<f:selectItem itemLabel="Enero" itemValue="1" />
+								<f:selectItem itemLabel="Febrero" itemValue="2" />
+								<f:selectItem itemLabel="Marzo" itemValue="3" />
+								<f:selectItem itemLabel="Abril" itemValue="4" />
+								<f:selectItem itemLabel="Mayo" itemValue="5" />
+								<f:selectItem itemLabel="Junio" itemValue="6" />
+								<f:selectItem itemLabel="Julio" itemValue="7" />
+								<f:selectItem itemLabel="Agosto" itemValue="7" />
+								<f:selectItem itemLabel="Septiembre" itemValue="9" />
+								<f:selectItem itemLabel="Octubre" itemValue="10" />
+								<f:selectItem itemLabel="Noviembre" itemValue="11" />
+								<f:selectItem itemLabel="Diciembre" itemValue="12" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Fecha de Carga: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:calendar id="txtFechaCarga" pattern="dd/MM/yyyy" mask="true"
+								value="#{cargaBancoBean.fechaext}" style="width:50px;">
+							</p:calendar>
+							<p:watermark for="txtFechaCarga" value="dd/mm/aaaa" />
+						</p:column>
+					</p:row>
+					<p:commandButton value="Subir"
+						actionListener="#{cargaBancoBean.importarCSV()}" />
+					<p:commandButton value="Consolidar"
+						actionListener="#{cargaBancoBean.consolida(cargaBancoBean.anioext)}" />	
+						
+				</p:panelGrid>
+
+
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
