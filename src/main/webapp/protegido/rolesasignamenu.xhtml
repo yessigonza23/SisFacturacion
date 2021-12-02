@@ -8,7 +8,8 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
-			<h:form id="asignaMenu" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="asignaMenu"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 
 				<h2 style="color: #003778; text-align: center">ASIGNACIÓN DE
 					MENÚ AL ROL</h2>
@@ -17,6 +18,16 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
+				<p:panel>
+					<p:panelGrid columns="3"
+						style="display:block; text-align:center; width:100%; margin:0px auto;"
+						columnClasses="centered">
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
 				<h:panelGrid columns="2" columnClasses="topAligned">
 					<p:fieldset legend="Menús Asignados" tyle="width:50%">
 						<p:dataTable id="menuasignado" resizableColumns="true"
@@ -35,7 +46,7 @@
 								<p:commandButton id="btnQuitaMenu" value="Quitar"
 									action="#{asignarMenuRolBean.quitar(e.menu.id,e.rol.id)}"
 									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
-									
+
 								</p:commandButton>
 							</p:column>
 
@@ -59,7 +70,7 @@
 								<p:commandButton id="btnAsignaMenu" value="Asignar"
 									action="#{asignarMenuRolBean.asignar(e.id,asignarMenuRolBean.rol.id)}"
 									update="asignaMenu:menuasignado,asignaMenu:menupendiente">
-									
+
 								</p:commandButton>
 							</p:column>
 						</p:dataTable>

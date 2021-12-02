@@ -51,9 +51,9 @@ public class EnviarCorreoOlvidoContrasenia implements Serializable {
 		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
-		props.put("mail.smtp.auth", "true"); // Usar autenticacin mediante usuario y clave
-		props.put("mail.smtp.starttls.enable", "true"); // Para conectar de manera segura al servidor SMTP
-		props.put("mail.smtp.port", "587"); // El puerto SMTP seguro de Google
+		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor SMTP
+		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
 	
 		
@@ -88,16 +88,16 @@ public class EnviarCorreoOlvidoContrasenia implements Serializable {
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
-			transport.connect("mail.ministeriodegobierno.gob.ec", institucion.getUsuariocorreo(),
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
 					institucion.getClavecorreo());
 			transport.sendMessage(message, message.getAllRecipients());
-			System.out.println("2" );
+			
 			transport.close();
-			System.out.println("3" );
+			
 			
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se envió con éxito", "Aviso"));
-			System.out.println("4" );
+			
 			return true;
 		} catch (Exception e) {
 			System.out.println("Error " + e);

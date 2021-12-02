@@ -99,7 +99,7 @@ public class Fin_Importaciones_DTODAOImpl implements IFin_Importaciones_DTODAO, 
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Importaciones_DTO> consultas = new ArrayList<>();
 		try {
-			Query q = em.createNativeQuery("SELECT * FROM Fin_Importaciones WHERE Cod_entidad=?1 and aux is null "); 
+			Query q = em.createNativeQuery("SELECT cod_entidad,nom_entidad,ruc,num_solicitud,valor_pago,fob,tipo FROM Fin_Importaciones WHERE Cod_entidad=?1 and aux is null "); 
 			q.setParameter(1, codigo);
 			lista = q.getResultList();
 			lista.forEach(x -> {

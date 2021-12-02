@@ -54,11 +54,11 @@ public class Sanciones_Admin_DTODAOImpl implements ISanciones_Admin_DTODAO, Seri
 		List<Object[]> lista = new ArrayList<>();
 		List<Sanciones_Admin_DTO> consultas = new ArrayList<>();
 		try {
-			Query q = em.createNativeQuery("SELECT DISTINCT codigo, ruc, nombre  FROM V_CON_SANCIONES_ADMIN ORDER BY Nombre");
+			Query q = em.createNativeQuery("SELECT DISTINCT codigo_empresa, ruc, nombre  FROM V_CON_SANCIONES_ADMIN ORDER BY Nombre");
 			lista =  q.getResultList();
 			lista.forEach(x -> {
 				Sanciones_Admin_DTO f = new Sanciones_Admin_DTO();
-				f.setCodigo(Integer.parseInt(String.valueOf(x[0])));
+				f.setCodigo_empresa((String.valueOf(x[0])));
 				f.setRuc(String.valueOf(x[1]));				
 				f.setNombre(String.valueOf(x[2]));							
 				consultas.add(f);

@@ -91,7 +91,7 @@ public class GuiasBean implements Serializable {
 
 	// IR A INGRESO DE FACTURAS SERVICIOS CYF
 	public String irGenerarFacturas(String codigo) {
-		System.out.println("ir a facturar codigo " + codigo);
+//		System.out.println("ir a facturar codigo " + codigo);
 		String tipo = "G";
 		final FacesContext context = FacesContext.getCurrentInstance();
 		final Flash flash = context.getExternalContext().getFlash();

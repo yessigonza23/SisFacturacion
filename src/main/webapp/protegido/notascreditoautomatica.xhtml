@@ -357,7 +357,7 @@
 						</p:commandButton>
 						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
 							value="Correo" ajax="false"
-							action="#{enviarCorreoComprobantesBean.eviarCorreo(ingresoNotasAutoBean.comprobantetmp.id,'C')}">
+							actionListener="#{ingresoNotasAutoBean.eviarCorreo(ingresoNotasAutoBean.comprobantetmp.id,'C')}">
 						</p:commandButton>
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"

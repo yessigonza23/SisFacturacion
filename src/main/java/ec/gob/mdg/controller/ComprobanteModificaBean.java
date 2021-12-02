@@ -387,15 +387,14 @@ public class ComprobanteModificaBean implements Serializable {
 		dep.setValor(comprobanteDepositos.getValor());
 		listaComprobanteDep.add(dep);
 		totalDeposito();
-		
+
 		if (comprobante.getAutorizacion() != null && valorAnterior != totaldep) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Factura autorizada, el valor total de la factura no puede ser diferente al valor de depositos", "ERROR"));
-		}		
-		else {
+					"Factura autorizada, el valor total de la factura no puede ser diferente al valor de depositos",
+					"ERROR"));
+		} else {
 			serviceComprobanteDepositos.registrar(dep);
 		}
-		
 
 		//// AUDITORIA TABLA COMPROBANTE DEPOSITO
 
@@ -533,13 +532,13 @@ public class ComprobanteModificaBean implements Serializable {
 				try {
 					c.setComprobante(comprobante);
 					serviceComprobanteDepositos.modificar(c);
-					
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Si realizó cambio en depósitos se grabó con éxito", "Aviso"));
 			//// AUDITORIA TABLA COMPROBANTE DEPOSITO
@@ -591,7 +590,7 @@ public class ComprobanteModificaBean implements Serializable {
 	@Transactional
 	public void modificarComprobante() {
 		try {
-			
+
 			modificarComprobanteDeposito();
 			if (comprobante.getAutorizacion() != null && estadoAnterior == comprobante.getEstado()) {
 				estadeshabilitado = true;
@@ -599,7 +598,7 @@ public class ComprobanteModificaBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No puede realizar cambios la factura ya esta autorizada por el SRI, para el caso de cambios en los depósitos se grabó con éxito",
 						"Error"));
-			}else if ((comprobante.getAutorizacion() != null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
+			} else if ((comprobante.getAutorizacion() != null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
 				comprobante.setEstado(estadoAnterior);
 				comprobante.setFechaanulacion(fechaActual);
 				serviceComprobante.modificar(comprobante);
@@ -614,9 +613,8 @@ public class ComprobanteModificaBean implements Serializable {
 						fechaActual, estadoAnterior, comprobante.getEstado(), comprobante.getId());
 			} else if ((comprobante.getAutorizacion() == null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"No puede cambiar el estado de la factura, no se encuentra autorizada",
-						"Error"));
-			}else if (comprobante.getAutorizacion() == null) {
+						"No puede cambiar el estado de la factura, no se encuentra autorizada", "Error"));
+			} else if (comprobante.getAutorizacion() == null) {
 				validaestado = true;
 				totalDetalle();
 				totalDeposito();
@@ -806,7 +804,7 @@ public class ComprobanteModificaBean implements Serializable {
 					}
 				}
 			}
-		}else {
+		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "No puede eliminar", "Factura autorizada"));
 		}
@@ -818,8 +816,8 @@ public class ComprobanteModificaBean implements Serializable {
 	public void eliminarCompDeposito(ComprobanteDepositos comprobanteDepositos, int index) {
 		this.serviceComprobanteDepositos.eliminarComprobanteDeposito(comprobanteDepositos.getId());
 		this.listaComprobanteDep = this.serviceComprobanteDepositos.listarComDepPorIdComp(comprobante.getId());
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Se elimina con éxito, recuerde que debe guardar", "Aviso"));
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Se elimina con éxito, recuerde que debe guardar", "Aviso"));
 		totalDeposito();
 
 		//// AUDITORIA TABLA COMPROBANTE DEPOSITO
@@ -1139,9 +1137,10 @@ public class ComprobanteModificaBean implements Serializable {
 		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
-		props.put("mail.smtp.auth", "true"); // Usar autenticacin mediante usuario y clave
-		props.put("mail.smtp.starttls.enable", "true"); // Para conectar de manera segura al servidor SMTP
-		props.put("mail.smtp.port", "587"); // El puerto SMTP seguro de Google
+		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor
+																			// SMTP
+		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
 
 		@SuppressWarnings("resource")
@@ -1160,7 +1159,7 @@ public class ComprobanteModificaBean implements Serializable {
 				+ String.valueOf(obj.format("%09d", comprobante.getNumero())) + ", con fecha: "
 				+ comprobante.getFechaemision()
 				+ ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
-				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
+				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
 		session.setDebug(true);
@@ -1177,7 +1176,7 @@ public class ComprobanteModificaBean implements Serializable {
 					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
 			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
 
-			//// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+//// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
@@ -1189,18 +1188,18 @@ public class ComprobanteModificaBean implements Serializable {
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
-			transport.connect("mail.ministeriodegobierno.gob.ec", institucion.getUsuariocorreo(),
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
 					institucion.getClavecorreo());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se envió con éxito", "Aviso"));
-//			return true;
+
 		} catch (Exception e) {
 			System.out.println("Error " + e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR: No se Envió por correo", "ERROR"));
-//			return false;
+
 		}
 	}
 

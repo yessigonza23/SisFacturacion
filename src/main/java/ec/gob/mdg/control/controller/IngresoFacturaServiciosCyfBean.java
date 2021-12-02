@@ -380,7 +380,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 			double valor = valorcero * f.getCantidad();
 			valor = Math.round(valor * 100.0) / 100.0;
 
-			det.setValorcero(valor);
+			det.setValorcero(valorcero);
 			det.setValoriva(0.00);
 			det.setCantidad(f.getCantidad());
 
@@ -399,7 +399,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		nombre = datosEntidadSanciones.getNombre();
 		tipoIdentificacion = "R";
 
-		this.listaSanciones = this.serviceSancionesAdmin.listarSancionesPorCodigo(ruc);
+		this.listaSanciones = this.serviceSancionesAdmin.listarSancionesPorCodigoFact(ruc, idPunto);
 		this.listaSancionesRec = this.serviceSancionesAdmin.listarSancionesPorCodigoFactRec(ruc, idPunto);
 		for (Sanciones_Admin_DTO f : listaSancionesRec) {
 			total = total + (f.getValor() * f.getCantidad());
@@ -418,8 +418,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 		for (Sanciones_Admin_DTO f : listaSanciones) {
 			detalle = detalle + f.getNumero_juicio() + ", ";
-		}
-		;
+		};
 		for (Sanciones_Admin_DTO f : listaSancionesRec) {
 			ComprobanteDetalle det = new ComprobanteDetalle();
 			this.recaudacionDetalle = serviceRecaudacionDetalle
@@ -649,7 +648,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		totalDetalle();
 	}
 
-	/// LISTAR SERVICIOS DE LICENCIAS DE EXPORTACION
+	/// LISTAR SERVICIOS DE REPRESENTANTES TECNICOS
 	public void listarServicioRepTecnicos() {
 		param2 = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("paramidtec");
 		idtec = Integer.parseInt(param2);
@@ -879,42 +878,45 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	@Transactional
 	public void ejecutar(Integer codigo, String factura) throws Exception {
-		System.out.println("Factura antes de todo " + factura);
+		
 		if (contador > 0) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Error, debe realizar el cierre del día anterior, no podrá facturar", "Error"));
 		} else {
-			if (paramtipo2 == "C") {
+			int factura_int = Integer.parseInt(factura);
+			System.out.println("entra a seleccionar el servicio factura numero: " + factura);
+			if (paramtipo2 == "C" && factura_int!=0) {
 				factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 						+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
 				dbcyf.actualiza("A", Integer.parseInt(param2), factura, 0, "null");
-			} else if (paramtipo2 == "E") {
+			} else if (paramtipo2 == "E" && factura_int!=0) {
 				for (Fin_Exportaciones_DTO exp : listaExportaciones) {
 					dbcyf.actualiza("E", exp.getCod_entidad(), factura, 0, exp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "S") {
+			} else if (paramtipo2 == "S" && factura_int!=0) {
 				for (Sanciones_Admin_DTO s : listaSanciones) {
 					dbsanciones.actualiza("S", s.getCodigo_empresa(), factura, s.getNumero_juicio());
 				}
-			} else if (paramtipo2 == "I") {
+			} else if (paramtipo2 == "I" && factura_int!=0) {
 				for (Fin_Importaciones_DTO imp : listaImportaciones) {
 					dbcyf.actualiza("I", imp.getCod_entidad(), factura, 0, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "N") {
+			} else if (paramtipo2 == "N" && factura_int!=0) {
 				for (Fin_Importaciones_No_DTO imp : listaImportacionesNo) {
+					System.out.println("entra a no controlados factura numero: " + factura);
 					dbcyf.actualizaimpno("N", imp.getCod_entidad(), factura, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "G") {
+			} else if (paramtipo2 == "G" && factura_int!=0) {
 				for (Fin_Guias_DTO imp : listaGuias) {
 					dbcyf.actualiza("G", imp.getCod_entidad(), factura, 0, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "R") {
+			} else if (paramtipo2 == "R" && factura_int!=0) {
 				for (Fin_Cal_Ren_DTO emp : listaCalRen) {
 					factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 							+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
 					dbcyf.actualiza("R", emp.getCodigo(), factura, emp.getCodigo_renovacion(), null);
 				}
-			} else if (paramtipo2 == "T") {
+			} else if (paramtipo2 == "T" && factura_int!=0) {
 				for (Fin_Reptecnicos_DTO rt : listaCalRenRepTecnicos) {
 					factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 							+ StringUtils.leftPad(String.valueOf(factura), 9, "0");

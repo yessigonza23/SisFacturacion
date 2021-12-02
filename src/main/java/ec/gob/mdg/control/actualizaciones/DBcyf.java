@@ -378,7 +378,7 @@ public class DBcyf implements Serializable {
 	public void actualizaGuiasAuxNull(Integer codentidad, Integer punto) throws Exception {
 		try {
 			Query query = em.createNativeQuery(
-					"UPDATE si_guias SET aux=null,punto=null,fecha=SYSDATE WHERE cod_entidad=?1 and aux =?2 and numero_recibo is null and punto =?3");
+					"UPDATE si_guias SET aux=null,punto=null,fecha_f=SYSDATE WHERE cod_entidad=?1 and aux =?2 and numero_recibo is null and punto =?3");
 
 			query.setParameter(1, codentidad);
 			query.setParameter(2, "S");
@@ -396,7 +396,7 @@ public class DBcyf implements Serializable {
 	public void actualizaGuiasAux(Integer codentidad, String numsolicitud, Integer punto) throws Exception {
 		try {
 			Query query = em.createNativeQuery(
-					"UPDATE si_guias SET aux=?1, punto=?2,fecha=SYSDATE WHERE cod_entidad=?3 and codigo_guia=?4  and numero_recibo is null");
+					"UPDATE si_guias SET aux=?1, punto=?2,fecha_f=SYSDATE WHERE cod_entidad=?3 and codigo_guia=?4  and numero_recibo is null");
 			query.setParameter(1, "S");
 			query.setParameter(2, punto);
 			query.setParameter(3, codentidad);

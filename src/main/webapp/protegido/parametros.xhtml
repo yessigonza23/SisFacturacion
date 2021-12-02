@@ -9,15 +9,24 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<!-- <h:form id="frm" enctype="multipart/form-data"> -->
-			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">REGISTRO DE
 					PARAMETROS INICIALES</h2>
 				<p:growl id="growl" autoUpdate="true" showDetail="true"
 					sticky="true" />
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{parametrosBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
 
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{parametrosBean.limpiarControles()}"
-					update="frm:dlg" process="@this" />
 
 				<p:dataTable id="dt" resizableColumns="true"
 					value="#{parametrosBean.lista}" var="e" widgetVar="parametrosTabla"
@@ -69,20 +78,18 @@
 
 					</p:fieldset>
 					<p:panelGrid id="pgBotones" columns="3" style="margin-left: 35%">
-					
+
 						<p:commandButton value="Registrar"
-							actionListener="#{parametrosBean.operar('R')}" 
-							ajax="true"
-							 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
-							update="pg, dt"							
-							rendered="#{parametrosBean.tipoDialog == 'Nuevo Parametro'}"/>
+							actionListener="#{parametrosBean.operar('R')}" ajax="true"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
+							update="pg, dt"
+							rendered="#{parametrosBean.tipoDialog == 'Nuevo Parametro'}" />
 
 						<p:commandButton value="Modificar"
-							actionListener="#{parametrosBean.operar('M')}"  
-							ajax="true"
+							actionListener="#{parametrosBean.operar('M')}" ajax="true"
 							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('wdlg').hide()"
-							update="pg, dt"		
-							rendered="#{parametrosBean.tipoDialog == 'Modificar Parametro'}"/>			
+							update="pg, dt"
+							rendered="#{parametrosBean.tipoDialog == 'Modificar Parametro'}" />
 					</p:panelGrid>
 				</p:dialog>
 			</h:form>

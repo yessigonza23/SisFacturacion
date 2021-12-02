@@ -156,7 +156,7 @@ public class Fin_Importaciones_No_DTODAOImpl implements IFin_Importaciones_No_DT
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Importaciones_No_DTO> consultas = new ArrayList<>();
 		try {
-			Query q = em.createNativeQuery("SELECT * FROM Fin_Importaciones_No WHERE Cod_entidad=?1 and Aux ='S' and punto=?2 "); // query de la entidad del model
+			Query q = em.createNativeQuery("SELECT * FROM Fin_Importaciones_No WHERE Cod_entidad=?1 and Aux ='S' and punto=?2  and fecha = (select max(fecha) from Fin_importaciones_no where  Cod_entidad=?1 and Aux ='S' and punto =?2)   "); // query de la entidad del model
 			q.setParameter(1, codigo);
 			q.setParameter(2, punto);
 			lista =  q.getResultList();
@@ -187,7 +187,7 @@ public class Fin_Importaciones_No_DTODAOImpl implements IFin_Importaciones_No_DT
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Importaciones_No_DTO> consultas = new ArrayList<>();
 		try {
-			Query q = em.createNativeQuery("SELECT cod_entidad,nom_entidad,ruc,valor_pago,recaudacion,sum(cantidad) cantidad FROM Fin_Importaciones_no WHERE Cod_entidad=?1 and Aux ='S' and punto = ?2 GROUP BY cod_entidad,nom_entidad,ruc,valor_pago,recaudacion"); 
+			Query q = em.createNativeQuery("SELECT cod_entidad,nom_entidad,ruc,valor_pago,recaudacion,sum(cantidad) cantidad FROM Fin_Importaciones_no WHERE Cod_entidad=?1 and Aux ='S' and punto = ?2 and fecha = (select max(fecha) from Fin_importaciones_no where  Cod_entidad=?1 and Aux ='S' and punto =?2) GROUP BY cod_entidad,nom_entidad,ruc,valor_pago,recaudacion"); 
 			q.setParameter(1, codigo);
 			q.setParameter(2, punto);
 			lista =  q.getResultList();

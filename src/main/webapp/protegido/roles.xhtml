@@ -8,17 +8,26 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
-		
-			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">REGISTRO DE
 					ROLES</h2>
 				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
 					showSummary="true" showDetail="true" />
 				<br />
 
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{rolBean.limpiarControles()}" update="frm:dlg"
-					process="@this" />
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{rolBean.limpiarControles()}" update="frm:dlg"
+						process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
 
 				<p:dataTable id="dt" resizableColumns="true"
 					value="#{rolBean.lista}" var="e" widgetVar="estudiosTabla"
@@ -41,8 +50,7 @@
 						</p:cellEditor>
 					</p:column>
 
-					<p:column  exportable="false"
-						style="width: 10px">
+					<p:column exportable="false" style="width: 10px">
 						<p:commandLink actionListener="#{rolBean.mostrarData(e)}"
 							oncomplete="PF('wdlg').show()" update="frm:dlg" immediate="true"
 							process="@this">
@@ -50,9 +58,9 @@
 							<!-- <p:graphicImage library="images" name="edit.jpg" /> -->
 						</p:commandLink>
 					</p:column>
-					
-					
-					
+
+
+
 				</p:dataTable>
 
 				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
@@ -64,9 +72,9 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Tipo de Rol: </p:column>
 							<p:column style="border-style: hidden;">
-							<p:inputText id="txtTipo" value="#{rolBean.rol.tipo}"
-								required="true" />
-							<p:messages for="txtTipo" display="icon" />
+								<p:inputText id="txtTipo" value="#{rolBean.rol.tipo}"
+									required="true" />
+								<p:messages for="txtTipo" display="icon" />
 							</p:column>
 
 

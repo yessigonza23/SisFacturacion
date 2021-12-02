@@ -593,79 +593,7 @@ public class ingresoFactura implements Serializable {
 		}
 	}
 
-//	////// REGISTRO DE NOTAS DE CREDITO DE MANERA AUTOMATICO
-//	@Transactional
-//	public void registrarNotaCreditoAut() {
-//		try {
-//
-//			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
-//			// saca el secuencial +1
-//			num1 = (Integer) fun.secNotas(usuPunto);
-//			Comprobante comp = new Comprobante();
-//			comp.setNumero(num1);
-//			comp.setClienteruc(comprobantetmp.getClienteruc());
-//			comp.setClientenombre(comprobantetmp.getClientenombre());
-//			comp.setClientedireccion(comprobantetmp.getClientedireccion());
-//			comp.setClientetelefono(comprobantetmp.getClientetelefono());
-//			comp.setValor(comprobante.getValor());
-//			fechaActual = UtilsDate.fechaActual();
-//			comp.setFechaemision(fechaActual);
-//
-//			comp.setDetalle(comprobante.getDetalle());
-//			comp.setCliente(comprobantetmp.getCliente());
-//			comp.setUsuarioPunto(usuPunto);
-//			comp.setTipocomprobante("C");
-//			comp.setValor(totaldet);
-//			comp.setPuntoRecaudacion(punto);
-//
-//			comp.setComprobantemod(comprobante.getComprobantemod());
-//			comp.setFechacomprmodificado(comprobante.getFechacomprmodificado());
-//			comp.setMotivonotacredito(comprobante.getMotivonotacredito());
-//			comp.setComprobantepto(comprobante.getComprobantepto());
-//
-//			//// GENERAR CLAVE ACCESO
-//			Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-//			calendar.setTime(fechaActual);
-//			String anio = String.valueOf(calendar.get(Calendar.YEAR));
-//			String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
-//			String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-//
-//			if (calendar.get(Calendar.MONTH) < 10) {
-//				mes = "0" + mes;
-//			}
-//
-//			if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
-//				dia = "0" + dia;
-//			}
-//			claveA = dia + mes + anio + "01" + institucion.getRuc() + institucion.getAmbiente()
-//					+ punto.getEstablecimiento() + punto.getPuntoemision()
-//					+ StringUtils.leftPad(String.valueOf(num1), 9, "0") + "12345678" + "1";
-//			String verificador = String.valueOf(ValorMod11.mod11(claveA));
-//			claveA = claveA + verificador;
-//			comp.setClaveacceso(claveA);
-//
-//			////////////////////////////////////////////
-//			id_comprobante = serviceComprobante.registrar(comp);
-//
-//			// actualiza la secuencia
-//			fun.actualizaSecuencialNotas(usuPunto, num1);
-//
-//			comprobantetmp = serviceComprobante.listarComprobanteNotaPorId(id_comprobante);
-//
-//			/// GENERAR XML PARA LA FACTURA
-//			genNotasXml.generarXmlArchivo(punto.getId(), num1);
-//
-//			mostrarNota();
-//			estadeshabilitado = true;
-//			estadeshabilitadoEnv = false;
-//
-//			FacesContext.getCurrentInstance().addMessage(null,
-//					new FacesMessage(FacesMessage.SEVERITY_INFO, "se grabó con éxito", "Aviso"));
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+
 
 	// BUSCAR FACTURA PARA DESPLEGAR INFORMACIoN EN LA NOTA DE CRéDITO
 	public void buscarFactura(Integer id_punto, Integer numero) {
@@ -697,9 +625,9 @@ public class ingresoFactura implements Serializable {
 		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
-		props.put("mail.smtp.auth", "true"); // Usar autenticacin mediante usuario y clave
-		props.put("mail.smtp.starttls.enable", "true"); // Para conectar de manera segura al servidor SMTP
-		props.put("mail.smtp.port", "587"); // El puerto SMTP seguro de Google
+		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor SMTP
+		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
 
 		@SuppressWarnings("resource")
@@ -718,7 +646,7 @@ public class ingresoFactura implements Serializable {
 				+ String.valueOf(obj.format("%09d", comprobante.getNumero())) + ", con fecha: "
 				+ comprobante.getFechaemision()
 				+ ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
-				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
+				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
 		session.setDebug(true);
@@ -747,7 +675,7 @@ public class ingresoFactura implements Serializable {
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
-			transport.connect("mail.ministeriodegobierno.gob.ec", institucion.getUsuariocorreo(),
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
 					institucion.getClavecorreo());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();

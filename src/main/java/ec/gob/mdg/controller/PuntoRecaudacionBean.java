@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,9 +55,44 @@ public class PuntoRecaudacionBean implements Serializable {
 	public void operar(String accion) {
 		try {
 			if(accion.equalsIgnoreCase("R")) {
-				this.service.registrar(this.puntoRecaudacion);
+				PuntoRecaudacion p = new PuntoRecaudacion();
+				p.setId(puntoRecaudacion.getId());
+				p.setInstitucion(puntoRecaudacion.getInstitucion());
+				p.setNombre(puntoRecaudacion.getNombre().toUpperCase());
+				p.setProvincia(puntoRecaudacion.getProvincia());
+				p.setTelefono(puntoRecaudacion.getTelefono());
+				p.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
+				p.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
+				p.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
+				p.setJefe(puntoRecaudacion.getJefe().toUpperCase());
+				p.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
+				p.setEstado(puntoRecaudacion.getEstado());
+				p.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
+				p.setPuntoemision(puntoRecaudacion.getPuntoemision());
+				p.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
+				p.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
+				this.service.registrar(p);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Se grabó con éxito", "Satisfactoriamente"));
 			}else if(accion.equalsIgnoreCase("M")) {
-				this.service.modificar(this.puntoRecaudacion);
+				PuntoRecaudacion p = new PuntoRecaudacion();
+				p.setInstitucion(puntoRecaudacion.getInstitucion());
+				p.setNombre(puntoRecaudacion.getNombre().toUpperCase());
+				p.setProvincia(puntoRecaudacion.getProvincia());
+				p.setTelefono(puntoRecaudacion.getTelefono());
+				p.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
+				p.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
+				p.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
+				p.setJefe(puntoRecaudacion.getJefe().toUpperCase());
+				p.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
+				p.setEstado(puntoRecaudacion.getEstado());
+				p.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
+				p.setPuntoemision(puntoRecaudacion.getPuntoemision());
+				p.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
+				p.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
+				this.service.modificar(p);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Se grabó con éxito", "Satisfactoriamente"));
 			}
 			this.listar();
 		} catch (Exception e) {

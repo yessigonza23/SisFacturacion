@@ -15,9 +15,19 @@
 					de Recaudaciones</h2>
 				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
 					showSummary="true" showDetail="true" />
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{recaudacionBean.limpiarControles()}"
-					update="frm:dlg" process="@this" />
+
+
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{recaudacionBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
 
 				<p:dataTable id="dt" resizableColumns="true"
 					value="#{recaudacionBean.lista}" var="e" widgetVar="estudiosTabla"
@@ -136,8 +146,9 @@
 									effect="fade" converter="omnifaces.SelectItemsConverter"
 									filter="true" filterMatchMode="startsWith">
 									<f:selectItem itemLabel="Seleccionar" noSelectionOption="true" />
-									<f:selectItems value="#{recaudacionBean.listaPlanPresupuetario}"
-										var="e" itemLabel="#{e.codigo} - #{e.nombre}" itemValue="#{e}" />
+									<f:selectItems
+										value="#{recaudacionBean.listaPlanPresupuetario}" var="e"
+										itemLabel="#{e.codigo} - #{e.nombre}" itemValue="#{e}" />
 									<f:ajax render="selected_item" />
 								</p:selectOneMenu>
 								<p:messages for="cboProceso" />

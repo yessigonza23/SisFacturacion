@@ -3,14 +3,26 @@ package ec.gob.mdg.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +46,7 @@ import ec.gob.mdg.service.IInstitucionService;
 import ec.gob.mdg.service.IPuntoRecaudacionService;
 import ec.gob.mdg.service.IRecaudacionDetalleService;
 import ec.gob.mdg.service.IUsuarioPuntoService;
+import ec.gob.mdg.util.UtilsArchivos;
 import ec.gob.mdg.util.UtilsDate;
 import ec.gob.mdg.util.ValorMod11;
 import ec.gob.mdg.validaciones.Funciones;
@@ -110,7 +123,7 @@ public class IngresoNotasAutoBean implements Serializable {
 	Integer idcomprobante = 0;
 	Integer idcomprobantedet = 0;
 	Integer id_comprobante = 0;
-	Integer id_punto=0;
+	Integer id_punto = 0;
 
 	@PostConstruct
 	public void init() {
@@ -132,7 +145,6 @@ public class IngresoNotasAutoBean implements Serializable {
 		}
 	}
 
-	
 	// SUMAR TOTAL DETALLE
 	public void totalDetalle() {
 		totaldet = 0.00;
@@ -185,12 +197,12 @@ public class IngresoNotasAutoBean implements Serializable {
 		vaciarLista();
 		try {
 			this.comprobantetmp = serviceComprobante.comprobantePorPtoPorId(id_punto, numero);
-			
+
 			// LISTA DETALLE DE NOTA DE CREDITO A PARTIR DE LA INF DE LA FACTURA
 			// SELECCIONADA
 			this.listaComprobanteDetNot = serviceComprobanteDetalle.listarComDetPorPtoNumComp(id_punto, numero);
 			totaldet = 0.0;
-			
+
 			for (ComprobanteDetalle det1 : listaComprobanteDetNot) {
 				ComprobanteDetalle det = new ComprobanteDetalle();
 
@@ -210,14 +222,14 @@ public class IngresoNotasAutoBean implements Serializable {
 			// TODO: handle exception
 		}
 	}
-	
-	///VACIAR LA LISTA CUANDO CAMBIEN DE FACTURA
+
+	/// VACIAR LA LISTA CUANDO CAMBIEN DE FACTURA
 	public void vaciarLista() {
 		listaComprobanteDet = new ArrayList<>();
 	}
 
 	//// LISTAR COMPROBANTES POR REGIONAL PARA LA NOTA DE CREDITO
-	public void listarComprobanteRegional() {		
+	public void listarComprobanteRegional() {
 		this.listaComprobante = serviceComprobante.listarCompPorIdPtoNotas(punto.getId());
 	}
 
@@ -290,33 +302,30 @@ public class IngresoNotasAutoBean implements Serializable {
 			fun.actualizaSecuencialNotas(usuPunto, num1);
 			try {
 				for (ComprobanteDetalle det : listaComprobanteDet) {
-			
-				ComprobanteDetalle compdet = new ComprobanteDetalle();
-				
-				//det.setId(null);
-				compdet.setCantidad(det.getCantidad());
-				compdet.setValorcero(det.getValorcero());
-				compdet.setValoriva(det.getValoriva());
-				compdet.setComprobante(comp);
-				compdet.setRecaudaciondetalle(det.getRecaudaciondetalle());
-				compdet.setSubtotal(det.getSubtotal());
-				compdet.setId_tmp(det.getId_tmp());
-				
-				idcomprobantedet = serviceComprobanteDetalle.registrar(compdet);
-				comprobantetmp.setEstado("C");
-				serviceComprobante.modificar(comprobantetmp);
-			
-			}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+					ComprobanteDetalle compdet = new ComprobanteDetalle();
+
+					// det.setId(null);
+					compdet.setCantidad(det.getCantidad());
+					compdet.setValorcero(det.getValorcero());
+					compdet.setValoriva(det.getValoriva());
+					compdet.setComprobante(comp);
+					compdet.setRecaudaciondetalle(det.getRecaudaciondetalle());
+					compdet.setSubtotal(det.getSubtotal());
+					compdet.setId_tmp(det.getId_tmp());
+
+					idcomprobantedet = serviceComprobanteDetalle.registrar(compdet);
+					comprobantetmp.setEstado("C");
+					serviceComprobante.modificar(comprobantetmp);
+
 				}
-			
-			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			comprobantetmp = serviceComprobante.listarComprobanteNotaPorId(idcomprobante);
-			
-			
-			
+
 			/// GENERAR XML PARA LA FACTURA
 			genNotasXml.generarXmlArchivo(punto.getId(), num1);
 
@@ -330,9 +339,90 @@ public class IngresoNotasAutoBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+//////////////////ENVIAR CORREO
+
+	public void eviarCorreo(Integer id_comprobante, String tipo) {
+
+		institucion = institucionService.institucionActiva();
+
+		if (tipo.equals("F")) {
+			comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
+		} else {
+			comprobante = serviceComprobante.listarComprobanteNotaPorId(id_comprobante);
+		}
+
+		Properties props = System.getProperties();
+		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
+		props.put("mail.smtp.user", institucion.getUsuariocorreo());
+		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
+		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor
+																			// SMTP
+		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
+		props.put("mail.smtp.ssl.trust", "*");
+
+		@SuppressWarnings("resource")
+		Formatter obj = new Formatter();
+		String asuntoMensaje = "Comprobante Electrónico - Ministerio de Gobierno - "
+				+ comprobante.getPuntoRecaudacion().getEstablecimiento() + "- "
+				+ comprobante.getPuntoRecaudacion().getPuntoemision() + "- "
+				+ String.valueOf(obj.format("%09d", comprobante.getNumero()));
+
+		String cuerpoMensaje = "<html><head><title></title></head><body>" + "Estimado (a) "
+				+ comprobante.getClientenombre();
+
+		cuerpoMensaje += "<br><br>Le informamos que tiene un comprobante electr&oacute;nico No.  "
+				+ comprobante.getPuntoRecaudacion().getEstablecimiento() + "- "
+				+ comprobante.getPuntoRecaudacion().getPuntoemision() + "- "
+				+ String.valueOf(obj.format("%09d", comprobante.getNumero())) + ", con fecha: "
+				+ comprobante.getFechaemision()
+				+ ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
+				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
+
+		Session session = Session.getInstance(props, null);
+		session.setDebug(true);
+
+		try {
+			MimeBodyPart textoMensaje = new MimeBodyPart();
+			textoMensaje.setContent(cuerpoMensaje, "text/html");
+
+			BodyPart adjunto = new MimeBodyPart();
+
+			String pathFirmados = UtilsArchivos.getRutaFirmados();
+
+			adjunto.setDataHandler(
+					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
+			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
+
+          //// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+
+			MimeMultipart multiParte = new MimeMultipart();
+			multiParte.addBodyPart(textoMensaje);
+			multiParte.addBodyPart(adjunto);
+
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(institucion.getUsuariocorreo(), institucion.getNombre()));
+			message.addRecipients(Message.RecipientType.TO, comprobante.getCliente().getCorreo());
+			message.setSubject(asuntoMensaje);
+			message.setContent(multiParte);
+			Transport transport = session.getTransport("smtp");
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
+					institucion.getClavecorreo());
+			transport.sendMessage(message, message.getAllRecipients());
+			transport.close();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se envió con éxito", "Aviso"));
+
+		} catch (Exception e) {
+			System.out.println("Error " + e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR: No se Envió por correo", "ERROR"));
+
+		}
+	}
+
+////////////////////////////////////////////////
 
 //	Getters y Setters
 	public Cliente getCliente() {
@@ -607,16 +697,12 @@ public class IngresoNotasAutoBean implements Serializable {
 		this.id_comprobante = id_comprobante;
 	}
 
-
 	public Integer getId_punto() {
 		return id_punto;
 	}
 
-
 	public void setId_punto(Integer id_punto) {
 		this.id_punto = id_punto;
 	}
-	
-	
 
 }

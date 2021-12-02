@@ -9,19 +9,29 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<!-- <h:form id="frm" enctype="multipart/form-data"> -->
-			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">REGISTRO DE
 					OPCIONES DE MENÚ</h2>
 				<p:growl id="growl" autoUpdate="true" showDetail="true"
 					sticky="true" />
 
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{menuDinamicoBean.limpiarControles()}" update="frm:dlg"
-					process="@this" />
 
+
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{menuDinamicoBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
 				<p:dataTable id="dt" resizableColumns="true"
-					value="#{menuDinamicoBean.listaMenu}" var="e" widgetVar="estudiosTabla"
-					rows="15" paginator="true"
+					value="#{menuDinamicoBean.listaMenu}" var="e"
+					widgetVar="estudiosTabla" rows="15" paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					rowsPerPageTemplate="10,15,20" sortOrder="descending"
 					paginatorPosition="top"
@@ -63,7 +73,8 @@
 				<p:dialog id="dlg" widgetVar="wdlg" modal="true"
 					closeOnEscape="true" resizable="false" draggable="false"
 					width="700" position="center">
-					<p:fieldset legend="#{menuDinamicoBean.tipoDialog}" style="width:80%">
+					<p:fieldset legend="#{menuDinamicoBean.tipoDialog}"
+						style="width:80%">
 
 						<p:panelGrid id="pg" columns="3" tyle="margin-left: 35%">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
@@ -77,16 +88,18 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Nombre Menú: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:inputText id="txtNombre" value="#{menuDinamicoBean.menu.nombre}"
-									required="true" style="width:300px" />
+								<p:inputText id="txtNombre"
+									value="#{menuDinamicoBean.menu.nombre}" required="true"
+									style="width:300px" />
 								<p:messages for="txtNombre" display="icon" />
 							</p:column>
 
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Tipo: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:selectOneMenu id="txtEstado" value="#{menuDinamicoBean.menu.tipo}"
-									required="true" style="width:100px">
+								<p:selectOneMenu id="txtEstado"
+									value="#{menuDinamicoBean.menu.tipo}" required="true"
+									style="width:100px">
 									<f:selectItem itemLabel="Principal" itemValue="S" />
 									<f:selectItem itemLabel="Submenú" itemValue="I" />
 								</p:selectOneMenu>

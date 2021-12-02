@@ -18,8 +18,8 @@
 				</p:growl>
 
 				<p:panel>
-					<p:panelGrid columns="1"
-						style="display:block; text-align:center; width:50%; margin:0px auto;"
+					<p:panelGrid columns="3"
+						style="display:block; text-align:center; width:75%; margin:0px auto;"
 						columnClasses="centered">
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:40px;"></p:column>
@@ -35,6 +35,10 @@
 								</p:inputText>
 							</p:column>
 						</p:row>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
 					</p:panelGrid>
 				</p:panel>
 				<p:panel>

@@ -18,7 +18,7 @@
 				</p:growl>
 
 				<p:panel>
-					<p:panelGrid columns="1"
+					<p:panelGrid columns="3"
 						style="display:block; text-align:center; width:50%; margin:0px auto;"
 						columnClasses="centered">
 						<p:row style="border-style: hidden;">
@@ -54,7 +54,10 @@
 								</p:selectOneMenu>
 							</p:column>
 						</p:row>
-
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
 					</p:panelGrid>
 				</p:panel>
 				<p:panel header="Archivo Banco - Estado de cuenta">
@@ -121,17 +124,20 @@
 							<p:selectOneMenu id="cboComprobante" disabled="true"
 								value="#{e.id_comprobante}" style="width:85px;">
 								<f:selectItem itemLabel="Sin Consolidar" itemValue="" />
-								<f:selectItems value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
+								<f:selectItems
+									value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
 									itemLabel="#{p.numero}" itemValue="#{p.id}" />
 							</p:selectOneMenu>
 						</p:column>
-						
-						<p:column headerText="Fecha Factura" filterBy="#{e.id_comprobante}"
-							filterMatchMode="contains" style="width:110px;">
+
+						<p:column headerText="Fecha Factura"
+							filterBy="#{e.id_comprobante}" filterMatchMode="contains"
+							style="width:110px;">
 							<p:selectOneMenu id="cboComprobanteFecha" disabled="true"
 								value="#{e.id_comprobante}" style="width:90px;">
 								<f:selectItem itemLabel="Sin Consolidar" itemValue="" />
-								<f:selectItems value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
+								<f:selectItems
+									value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
 									itemLabel="#{p.fechaemision}" itemValue="#{p.id}" />
 							</p:selectOneMenu>
 						</p:column>

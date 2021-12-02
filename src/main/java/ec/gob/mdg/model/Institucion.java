@@ -71,12 +71,32 @@ public class Institucion implements Serializable {
 	@Column(name = "rutaarchivo")
 	private String rutaarchivo;
 	
+	@Column(name = "auth")
+	private Boolean auth;
+	
+	public Boolean getAuth() {
+		return auth;
+	}
+	public void setAuth(Boolean auth) {
+		this.auth = auth;
+	}
+	public Boolean getStarttls() {
+		return starttls;
+	}
+	public void setStarttls(Boolean starttls) {
+		this.starttls = starttls;
+	}
+	@Column(name = "starttls")
+	private Boolean starttls;
+	
 	public String getRutaarchivo() {
 		return rutaarchivo;
 	}
 	public void setRutaarchivo(String rutaarchivo) {
 		this.rutaarchivo = rutaarchivo;
 	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

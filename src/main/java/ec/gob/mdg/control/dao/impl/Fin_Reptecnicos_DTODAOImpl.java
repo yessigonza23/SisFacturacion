@@ -43,7 +43,7 @@ public class Fin_Reptecnicos_DTODAOImpl implements IFin_Reptecnicos_DTODAO, Seri
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Reptecnicos_DTO> consultas = new ArrayList<>();
 		try {		
-			Query q = em.createNativeQuery("SELECT *  FROM Fin_Reptecnicos"); 
+			Query q = em.createNativeQuery("SELECT idtec,cedulatec,nombrestec,codigo_calren,recaudacion,cantidad,tipo,punto  FROM Fin_Reptecnicos"); 
 			lista =  q.getResultList();
 			lista.forEach(x -> {
 				Fin_Reptecnicos_DTO f = new Fin_Reptecnicos_DTO();				

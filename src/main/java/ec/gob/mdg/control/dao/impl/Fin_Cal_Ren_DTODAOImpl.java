@@ -97,7 +97,7 @@ public class Fin_Cal_Ren_DTODAOImpl implements IFin_Cal_Ren_DTODAO, Serializable
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Cal_Ren_DTO> consultas = new ArrayList<>();
 		try {
-			Query q = em.createNativeQuery("SELECT *  FROM Fin_Cal_Ren WHERE codigo=?1"); 
+			Query q = em.createNativeQuery("SELECT codigo,nombre,ruc,codigo_renovacion,tipo,actividades,codigo_recaudacion,cantidad  FROM Fin_Cal_Ren WHERE codigo=?1"); 
 			q.setParameter(1, codigo);			
 			lista =  q.getResultList();
 			lista.forEach(x -> {

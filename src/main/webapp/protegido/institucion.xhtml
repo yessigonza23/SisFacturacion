@@ -9,16 +9,26 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
-			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">REGISTRO DE
 					INSTITUCIÓN</h2>
 
 				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
 					showSummary="true" showDetail="true" />
 
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{institucionBean.limpiarControles()}"
-					update="frm:dlg" process="@this" />
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{institucionBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+
 
 
 				<p:dataTable id="dt" resizableColumns="true" var="e"

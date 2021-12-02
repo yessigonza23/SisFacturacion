@@ -14,13 +14,9 @@ import javax.persistence.Table;
 @Table(name = "puntorecaudacion", schema = "financiero")
 public class PuntoRecaudacion implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2769951967698491816L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne

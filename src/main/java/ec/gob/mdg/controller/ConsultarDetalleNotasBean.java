@@ -66,7 +66,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 
 	@Inject
 	private IInstitucionService institucionService;
-	
+
 	@Inject
 	private IComprobanteService serviceComprobante;
 
@@ -222,9 +222,9 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
 		System.out.println("pasa firmando");
 		String xml64 = converBase64(xmlSigned);
-		//GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
+		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());
-		//GUARDA EL DOCUMENTO XML EN EL PATH DE FIRMADOS
+		// GUARDA EL DOCUMENTO XML EN EL PATH DE FIRMADOS
 		FileUtil.writeSignedXml(c, xmlSigned);
 
 		return xml64;
@@ -243,16 +243,17 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		} else {
 			System.out.println("entra a firmar " + comprobanteNotas.getNumero());
 
-			//estadeshabilitadoEnv = false;
+			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
 
-				////AMBIENTE DE PRUEBAS
+			//// AMBIENTE DE PRUEBAS
 			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 			String host = "celcer.sri.gob.ec";
 
-			////AMBIENTE DE PRODUCCIoN
-			//String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-			//String host = "cel.sri.gob.ec";
+			//// AMBIENTE DE PRODUCCIoN
+			// String url =
+			//// "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
+			// String host = "cel.sri.gob.ec";
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobanteNotas);
@@ -338,7 +339,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		}
 	}
 
-		///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
 	public void autorizar(Integer id_comprobante) {
 		comprobanteNotas = serviceComprobante.listarComprobantePorId(id_comprobante);
 
@@ -348,15 +349,16 @@ public class ConsultarDetalleNotasBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-				//	estadeshabilitadoA = false;
+			// estadeshabilitadoA = false;
 			SoapAutorizacion n = new SoapAutorizacion();
 
-			///AMBIENTE DE PRUEBAS
+			/// AMBIENTE DE PRUEBAS
 			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 			String host = "celcer.sri.gob.ec";
 
-			///AMBIENTE DE PRODUCCIóN
-			// String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
+			/// AMBIENTE DE PRODUCCIóN
+			// String url =
+			/// "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 			// String host = "cel.sri.gob.ec";
 			try {
 				URL oURL = new URL(url);
@@ -439,7 +441,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		}
 	}
 
-//////////////////ENVIAR CORREO
+        //////////////////ENVIAR CORREO
 
 	public void eviarCorreo(Integer id_comprobante, String tipo) {
 
@@ -455,9 +457,10 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
-		props.put("mail.smtp.auth", "true"); 
-		props.put("mail.smtp.starttls.enable", "true"); // Para conectar de manera segura al servidor SMTP
-		props.put("mail.smtp.port", "587"); // El puerto SMTP seguro de Google
+		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor
+																			// SMTP
+		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
 
 		@SuppressWarnings("resource")
@@ -474,8 +477,9 @@ public class ConsultarDetalleNotasBean implements Serializable {
 				+ comprobante.getPuntoRecaudacion().getEstablecimiento() + "- "
 				+ comprobante.getPuntoRecaudacion().getPuntoemision() + "- "
 				+ String.valueOf(obj.format("%09d", comprobante.getNumero())) + ", con fecha: "
-				+ comprobante.getFechaemision() + ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
-				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
+				+ comprobante.getFechaemision()
+				+ ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
+				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
 		session.setDebug(true);
@@ -492,7 +496,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
 			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
 
-			//// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+         //// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
@@ -500,11 +504,11 @@ public class ConsultarDetalleNotasBean implements Serializable {
 
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(institucion.getUsuariocorreo(), institucion.getNombre()));
-			message.addRecipients(Message.RecipientType.TO, comprobante.getCliente().getCorreo()); 
+			message.addRecipients(Message.RecipientType.TO, comprobante.getCliente().getCorreo());
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
-			transport.connect("mail.ministeriodegobierno.gob.ec", institucion.getUsuariocorreo(),
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
 					institucion.getClavecorreo());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
@@ -763,5 +767,4 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		MensajeSriError = mensajeSriError;
 	}
 
-	
 }

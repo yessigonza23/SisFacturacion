@@ -15,9 +15,19 @@
 					DETALLE DE RECAUDACIÓN</h2>
 				<p:growl id="mensaje" autoUpdate="false" severity="info, fatal"
 					showSummary="true" showDetail="true" />
-				<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
-					actionListener="#{recaudacionDetalleBean.limpiarControles()}"
-					update="frm:dlg" process="@this" />
+
+
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:100%; margin:0px auto;"
+					columnClasses="centered">
+					<p:commandButton value="Nuevo" oncomplete="PF('wdlg').show()"
+						actionListener="#{recaudacionDetalleBean.limpiarControles()}"
+						update="frm:dlg" process="@this" />
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
 
 				<p:dataTable id="dt" resizableColumns="true"
 					value="#{recaudacionDetalleBean.lista}" var="e"
@@ -27,8 +37,9 @@
 					paginatorPosition="top"
 					emptyMessage="No hay ningún registro con esa opción">
 
-					<p:column headerText="Codigo Banco" filterBy="#{e.recaudacion.codigobanco}"
-						filterMatchMode="contains" style="width:30px">
+					<p:column headerText="Codigo Banco"
+						filterBy="#{e.recaudacion.codigobanco}" filterMatchMode="contains"
+						style="width:30px">
 						<p:outputLabel value="#{e.recaudacion.codigobanco}" />
 					</p:column>
 

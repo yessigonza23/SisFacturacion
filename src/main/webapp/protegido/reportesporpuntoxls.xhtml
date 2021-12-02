@@ -45,7 +45,13 @@
 								<p:messages for="txtFechaFin" />
 							</p:column>
 						</p:row>
-
+						<p:row></p:row>
+						<p:row></p:row>
+						<p:row></p:row>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
 					</p:panelGrid>
 				</p:panel>
 
@@ -244,13 +250,13 @@
 							filterMatchMode="contains" style="width:150px;">
 							<p:outputLabel value="#{e.usuario_nombre}" />
 						</p:column>
-						
+
 						<p:column headerText="Punto Recaudación"
 							filterBy="#{e.punto_nombre}" filterMatchMode="contains"
 							style="width:150px;">
 							<p:outputLabel value="#{e.punto_nombre}" />
 						</p:column>
-						
+
 
 						<p:columnGroup type="footer">
 							<p:row>
@@ -310,7 +316,7 @@
 							<h:outputText value="#{index + 1}" />
 						</p:column>
 
-						
+
 
 						<p:column headerText="No. Cierre" filterBy="#{e.id_cierre}"
 							filterMatchMode="contains" style="width:80px;">
@@ -343,7 +349,7 @@
 							filterMatchMode="contains" style="width:80px;">
 							<p:outputLabel value="#{e.estado}" />
 						</p:column>
-						
+
 						<p:column headerText="Punto Recaudación"
 							filterBy="#{e.puntoRecaudacion}" filterMatchMode="contains"
 							style="width:200px;">

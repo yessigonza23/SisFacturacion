@@ -95,10 +95,19 @@
 								</p:column>
 
 								<p:column style="border-style: hidden;width:50px;"></p:column>
-								<p:column style="border-style: hidden; width:130px;">Nombre PuntoRecaudación: </p:column>
+								<p:column style="border-style: hidden; width:130px;">Nombre Punto Recaudación: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtNombres"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.nombre}"
+										required="true" style="width:200px; text-transform: uppercase" />
+									<p:messages for="txtNombres" display="icon" />
+								</p:column>
+								
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Código Punto Recaudación: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:inputText id="txtCodigo"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.id}"
 										required="true" />
 									<p:messages for="txtNombres" display="icon" />
 								</p:column>
@@ -108,7 +117,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtDireccion"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.direccion}"
-										required="true" />
+										required="true" style="width:200px; text-transform: uppercase" />
 									<p:messages for="txtDireccion" display="icon" />
 								</p:column>
 
@@ -133,7 +142,8 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtTelefono"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.telefono}"
-										required="true" />
+										required="true" maxlength="10"
+									onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;" />
 									<p:messages for="txtTelefono" display="icon" />
 								</p:column>
 
@@ -142,7 +152,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtResponsable"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.responsable}"
-										required="true" />
+										required="true" style="width:200px; text-transform: uppercase"/>
 									<p:messages for="txtResponsable" display="icon" />
 								</p:column>
 
@@ -151,7 +161,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtResponsableCargo"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.responsablecargo}"
-										required="true" />
+										required="true" style="width:200px; text-transform: uppercase"/>
 									<p:messages for="txtResponsableCargo" display="icon" />
 								</p:column>
 
@@ -160,7 +170,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtJefe"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.jefe}"
-										required="true" />
+										required="true" style="width:200px; text-transform: uppercase"/>
 									<p:messages for="txtJefe" display="icon" />
 								</p:column>
 
@@ -189,7 +199,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtEstablecimiento"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.establecimiento}"
-										required="true" />
+										required="true" maxlength="3" />
 									<p:messages for="txtEstablecimiento" display="icon" />
 								</p:column>
 
@@ -198,25 +208,25 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtPuntoEmision"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.puntoemision}"
-										required="true" />
+										required="true" maxlength="3"/>
 									<p:messages for="txtPuntoEmision" display="icon" />
 								</p:column>
 
 								<p:column style="border-style: hidden;width:50px;"></p:column>
 								<p:column style="border-style: hidden; width:130px;">Secuencial Facturas: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputNumber id="SecuencialFacturas"
+									<p:inputText id="SecuencialFacturas"  type="number"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.secuencialfactura}"
-										required="true" />
+										required="true" maxlength="9" />
 									<p:messages for="SecuencialFacturas" display="icon" />
 								</p:column>
 
 								<p:column style="border-style: hidden;width:50px;"></p:column>
 								<p:column style="border-style: hidden; width:130px;">Secuencial Notas Crédito: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputNumber id="SecuencialNotas"
+									<p:inputText id="SecuencialNotas" type="number"
 										value="#{puntoRecaudacionBean.puntoRecaudacion.secuencialnotas}"
-										required="true" />
+										required="true" maxlength="9" />
 									<p:messages for="SecuencialNotas" display="icon" />
 								</p:column>
 
