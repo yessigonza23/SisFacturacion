@@ -52,6 +52,9 @@ public class ComprobanteDepositos implements Serializable {
 	
 	@Column(name = "origen")
 	private String origen;
+	
+	@Column(name = "identificacion")
+	private String identificacion;
 
 	public Integer getId() {
 		return id;
@@ -141,6 +144,14 @@ public class ComprobanteDepositos implements Serializable {
 
 	public void setOrigen(String origen) {
 		this.origen = origen;
+	}
+
+	public String getIdentificacion() {
+		return identificacion;
+	}
+
+	public void setIdentificacion(String identificacion) {
+		this.identificacion = identificacion;
 	}
 
 

@@ -122,7 +122,7 @@ public class GenerarDOMBean implements Serializable {
 		facturas.appendChild(infoTributaria);
 
 		Element ambiente = document.createElement("ambiente");
-		ambiente.appendChild(document.createTextNode("1"));
+		ambiente.appendChild(document.createTextNode(institucion.getAmbiente()));
 		infoTributaria.appendChild(ambiente);
 
 		Element tipoEmision = document.createElement("tipoEmision");

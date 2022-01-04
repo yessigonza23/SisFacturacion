@@ -266,7 +266,7 @@ public class IngresoNotasAutoBean implements Serializable {
 			comp.setFechacomprmodificado(comprobantetmp.getFechaemision());
 			comp.setMotivonotacredito(comprobante.getMotivonotacredito());
 			comp.setComprobantepto(punto.getId());
-			comp.setEstado("N");
+			comp.setEstado("C");
 
 			//// GENERAR CLAVE ACCESO
 			Calendar calendar = Calendar.getInstance(TimeZone.getDefault());

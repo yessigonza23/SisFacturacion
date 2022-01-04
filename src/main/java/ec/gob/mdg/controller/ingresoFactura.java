@@ -373,6 +373,7 @@ public class ingresoFactura implements Serializable {
 		ComprobanteDepositos dep = new ComprobanteDepositos();
 		dep.setOrigen(comprobanteDepositos.getOrigen());
 		dep.setTipotransaccion(comprobanteDepositos.getTipotransaccion());
+		dep.setIdentificacion(comprobanteDepositos.getIdentificacion());
 		dep.setComprobante(comprobante);
 		dep.setNum_deposito(comprobanteDepositos.getNum_deposito());
 		dep.setFecha(comprobanteDepositos.getFecha());
@@ -516,8 +517,15 @@ public class ingresoFactura implements Serializable {
 								String clave = this.cliente.getCi();
 								String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
 								c.setClave(claveHash);
+								cliente.setDireccion(cliente.getDireccion().toUpperCase());
+								cliente.setNombre(cliente.getNombre().toUpperCase());
+								cliente.setCorreo(cliente.getCorreo().toLowerCase());
+								
 								serviceCliente.registrar(c);
 							} else {
+								cliente.setDireccion(cliente.getDireccion().toUpperCase());
+								cliente.setNombre(cliente.getNombre().toUpperCase());
+								cliente.setCorreo(cliente.getCorreo().toLowerCase());
 								serviceCliente.modificar(cliente);
 							}
 							usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);

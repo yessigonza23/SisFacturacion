@@ -440,6 +440,7 @@ public class CargaMasivaAcuerdoBean implements Serializable {
 						dep.setValor(c.getValor());
 						dep.setOrigen("P");
 						dep.setTipotransaccion("D");
+						dep.setIdentificacion(c.getRuc());
 						serviceComprobanteDepositos.registrar(dep);
 
 						/// GENERAR XML PARA LA FACTURA

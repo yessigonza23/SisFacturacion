@@ -62,7 +62,7 @@ public class ClienteRegistroBean implements Serializable {
 		c.setDireccion(cliente.getDireccion().toUpperCase());
 		c.setNombre(cliente.getNombre().toUpperCase());
 		c.setTelefono(cliente.getTelefono());
-		c.setCorreo(cliente.getCorreo());
+		c.setCorreo(cliente.getCorreo().toLowerCase());
 		try {
 			this.service.registrar(c);
 			estadeshabilitado =true;

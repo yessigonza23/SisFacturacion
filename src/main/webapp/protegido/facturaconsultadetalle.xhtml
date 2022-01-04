@@ -16,14 +16,14 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-				
+
 				<!-- VALOR, FECHA, ESTADOS -->
 
 				<p:fieldset legend="Información General" tyle="width:60%">
 					<p:panelGrid columns="4"
 						columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
 						contentStyleClass="ui-fluid">
-						
+
 
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
@@ -332,7 +332,11 @@
 							<f:selectItem itemLabel="Transferencia" itemValue="T" />
 						</h:selectOneMenu>
 					</p:column>
-
+					<p:column headerText="Identificacion"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.identificacion}">
+						</h:outputText>
+					</p:column>
 					<p:column headerText="Nro. Depósito"
 						style="text-align: justify ;width:80px;"
 						sortBy="#{d.num_deposito}">
@@ -386,7 +390,7 @@
 				</p:row>
 				<p:separator />
 
-<!-- Botones -->
+				<!-- Botones -->
 				<p:panel>
 					<p:panelGrid columns="7" style="display:block; text-align:center"
 						columnClasses="centered">
@@ -412,6 +416,12 @@
 						<p:commandButton icon="ui-icon-mail-closed" id="btnCorreo"
 							value="Correo"
 							action="#{comprobanteModificaBean.eviarCorreo(comprobanteModificaBean.comprobante.id,'F')}">
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnBorrarSri"
+							value="Borrar SRI" process="@this"
+							actionListener="#{comprobanteModificaBean.validaFacturaAutorizacion()}"
+							disabled="#{comprobanteModificaBean.estadeshabilitadoA}"
+							update="ingFacturas:btnEnviar,ingFacturas:btnAutorizar,ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact">
 						</p:commandButton>
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
@@ -443,7 +453,7 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="Mensajefact" size="30" 
+									<p:inputText id="Mensajefact" size="30"
 										value="#{comprobanteModificaBean.mensajeSri}" />
 								</p:column>
 							</p:row>
@@ -459,7 +469,7 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="MensajeErrorfact" size="30" 
+									<p:inputText id="MensajeErrorfact" size="30"
 										value="#{comprobanteModificaBean.mensajeSriError}" />
 								</p:column>
 							</p:row>

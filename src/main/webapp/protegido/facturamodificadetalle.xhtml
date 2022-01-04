@@ -416,6 +416,11 @@
 						</h:selectOneMenu>
 					</p:column>
 
+					<p:column headerText="Identificacion"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.identificacion}">
+						</h:outputText>
+					</p:column>
 					<p:column headerText="Nro. Depósito"
 						style="text-align: justify ;width:80px;"
 						sortBy="#{d.num_deposito}">
@@ -734,6 +739,17 @@
 									<f:selectItem itemLabel="Depósito" itemValue="D" />
 									<f:selectItem itemLabel="Transferencia" itemValue="T" />
 								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte Depositante: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
+									placeholder="Ci/RUC/Pasaporte del Deposito"
+									value="#{comprobanteModificaBean.comprobanteDepositos.identificacion}">
+								</p:inputText>
 							</p:column>
 						</p:row>
 

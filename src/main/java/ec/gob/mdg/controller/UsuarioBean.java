@@ -195,7 +195,7 @@ public class UsuarioBean implements Serializable {
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
-			transport.connect(institucion.getNombre(), institucion.getUsuariocorreo(),
+			transport.connect(institucion.getServidorcorreo(), institucion.getUsuariocorreo(),
 					institucion.getClavecorreo());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();

@@ -381,6 +381,7 @@ public class ComprobanteModificaBean implements Serializable {
 		ComprobanteDepositos dep = new ComprobanteDepositos();
 		dep.setOrigen(comprobanteDepositos.getOrigen());
 		dep.setTipotransaccion(comprobanteDepositos.getTipotransaccion());
+		dep.setIdentificacion(comprobanteDepositos.getIdentificacion());
 		dep.setComprobante(comprobante);
 		dep.setNum_deposito(comprobanteDepositos.getNum_deposito());
 		dep.setFecha(comprobanteDepositos.getFecha());

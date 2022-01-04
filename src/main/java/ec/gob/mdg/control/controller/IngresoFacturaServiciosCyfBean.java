@@ -746,6 +746,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		ComprobanteDepositos dep = new ComprobanteDepositos();
 		dep.setComprobante(comprobante);
 		dep.setNum_deposito(comprobanteDepositos.getNum_deposito());
+		dep.setIdentificacion(comprobanteDepositos.getIdentificacion());
 		dep.setFecha(comprobanteDepositos.getFecha());
 		dep.setValor(comprobanteDepositos.getValor());
 		dep.setTipotransaccion(comprobanteDepositos.getTipotransaccion());

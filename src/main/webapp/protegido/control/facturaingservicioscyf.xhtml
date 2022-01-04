@@ -251,7 +251,7 @@
 						style="text-align: justify;width:400px;"
 						sortBy="#{d.recaudaciondetalle.recaudacion.nombre}">
 						<h:outputLabel
-							value="#{d.recaudaciondetalle.recaudacion.nombre} - #{d.recaudaciondetalle.codigo}" />
+							value="#{d.recaudaciondetalle.nombre} - #{d.recaudaciondetalle.codigo}" />
 					</p:column>
 
 					<p:column headerText="Cant."
@@ -529,6 +529,17 @@
 								<p:inputText id="txtNumeroDeposito" maxlength="10"
 									placeholder="Numero del Deposito"
 									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.num_deposito}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+						
+						<p:row style="border-style: hidden;">
+							<p:column style="border-style: hidden;width:50px;"></p:column>
+							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte Depositante: </p:column>
+							<p:column style="border-style: hidden;">
+								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
+									placeholder="Ci/RUC/Pasaporte del Deposito"
+									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>
 						</p:row>
