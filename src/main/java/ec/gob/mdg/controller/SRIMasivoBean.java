@@ -67,6 +67,9 @@ public class SRIMasivoBean implements Serializable {
 	boolean estadeshabilitadoAut;
 	String MensajeSri;
 	String MensajeSriError;
+	String ambiente;
+	String url;
+	String host;
 
 	public static XML_Utilidades xml_utilidades = new XML_Utilidades();
 
@@ -139,7 +142,7 @@ public class SRIMasivoBean implements Serializable {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void enviar(Integer id_comprobante) {// GEN-FIRST:event_btnEnviarActionPerformed
-		
+
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
 
 		if (comprobante.getAutorizacion() != null) {
@@ -152,14 +155,18 @@ public class SRIMasivoBean implements Serializable {
 
 			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
+			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
+			if (ambiente.equals("1")) {
 
-			//// AMBIENTE DE PRUEBAS
-			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-			String host = "celcer.sri.gob.ec";
+				//// AMBIENTE DE PRUEBAS
+				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
+				host = "celcer.sri.gob.ec";
+			} else if (ambiente.equals("2")) {
 
-			//// AMBIENTE DE PRODUCCIoN
-//				String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-//				String host = "cel.sri.gob.ec";
+				//// AMBIENTE DE PRODUCCIoN
+				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
+				host = "cel.sri.gob.ec";
+			}
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobante);
@@ -480,4 +487,30 @@ public class SRIMasivoBean implements Serializable {
 		SRIMasivoBean.xml_utilidades = xml_utilidades;
 	}
 
+	public String getAmbiente() {
+		return ambiente;
+	}
+
+	public void setAmbiente(String ambiente) {
+		this.ambiente = ambiente;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	
+	
 }

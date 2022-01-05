@@ -387,6 +387,7 @@ public class ingresoFactura implements Serializable {
 		totaldet = 0.00;
 		for (ComprobanteDetalle det : listaComprobanteDet) {
 			totaldet = totaldet + det.getSubtotal();
+			totaldet=FunValidaciones.formatearDecimales(totaldet, 2);
 		}
 	}
 
@@ -395,6 +396,7 @@ public class ingresoFactura implements Serializable {
 		totaldep = 0.00;
 		for (ComprobanteDepositos dep : listaComprobanteDep) {
 			totaldep = totaldep + dep.getValor();
+			totaldep = FunValidaciones.formatearDecimales(totaldep, 2);
 		}
 	}
 

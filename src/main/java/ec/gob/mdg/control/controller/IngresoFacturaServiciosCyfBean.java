@@ -698,6 +698,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		totaldet = 0.00;
 		for (ComprobanteDetalle det : listaComprobanteDetalle) {
 			totaldet = totaldet + det.getSubtotal();
+			totaldet = FunValidaciones.formatearDecimales(totaldet, 2);
 		}
 	}
 
@@ -760,6 +761,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		totaldep = 0.00;
 		for (ComprobanteDepositos dep : listaComprobanteDepositos) {
 			totaldep = totaldep + dep.getValor();
+			totaldep = FunValidaciones.formatearDecimales(totaldep, 2);
 		}
 	}
 
