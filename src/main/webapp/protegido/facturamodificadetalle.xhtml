@@ -82,11 +82,15 @@
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden; width:50px;">Fecha Anulación: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:inputText id="txtFechaAnulacion" size="5"
-									value="#{comprobanteModificaBean.comprobante.fechaanulacion}"
-									style="width:200px;" disabled="false" />
+							<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{comprobanteConsultaModificaBean.fecha_inicio}">
+
+								</p:calendar>
+								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
 							</p:column>
 						</p:row>
+						
+						
 
 					</p:panelGrid>
 					<p:separator />

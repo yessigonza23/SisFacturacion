@@ -396,16 +396,16 @@
 						columnClasses="centered">
 						<p:commandButton icon=" ui-icon-circle-arrow-n" id="btnEnviar"
 							value="Enviar"
-							action="#{comprobanteModificaBean.enviar(comprobanteModificaBean.comprobante.id)}"
+							action="#{consultarDetalleFacturaBean.enviar(comprobanteModificaBean.comprobante.id)}"
 							process="@this"
 							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact , @this"
-							disabled="#{comprobanteModificaBean.estadeshabilitadoEnv}">
+							disabled="#{consultarDetalleFacturaBean.estadeshabilitadoEnv}">
 						</p:commandButton>
 						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnAutorizar"
 							value="Autorizar"
-							action="#{comprobanteModificaBean.autorizar(comprobanteModificaBean.comprobante.id)}"
+							action="#{consultarDetalleFacturaBean.autorizar(comprobanteModificaBean.comprobante.id)}"
 							update="ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact, @this"
-							disabled="#{comprobanteModificaBean.estadeshabilitadoAut}"
+							disabled="#{consultarDetalleFacturaBean.estadeshabilitadoAut}"
 							process="@this">
 						</p:commandButton>
 						<p:commandButton icon="ui-icon-print" id="btnImprimir"
@@ -419,8 +419,8 @@
 						</p:commandButton>
 						<p:commandButton icon="ui-icon-circle-arrow-s" id="btnBorrarSri"
 							value="Borrar SRI" process="@this"
-							actionListener="#{comprobanteModificaBean.validaFacturaAutorizacion()}"
-							disabled="#{comprobanteModificaBean.estadeshabilitadoA}"
+							actionListener="#{consultarDetalleFacturaBean.validaFacturaAutorizacion()}"
+							disabled="#{consultarDetalleFacturaBean.estadeshabilitadoA}"
 							update="ingFacturas:btnEnviar,ingFacturas:btnAutorizar,ingFacturas:txtEstadoSRI,ingFacturas:txtEstadoError,ingFacturas:Mensajefact,ingFacturas:MensajeErrorfact,ingFacturas:autfact,ingFacturas:fechaAutfact,ingFacturas:xmlSrifact">
 						</p:commandButton>
 						<p:commandButton id="btnRegresar" value="Principal"
@@ -454,7 +454,7 @@
 								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="Mensajefact" size="30"
-										value="#{comprobanteModificaBean.mensajeSri}" />
+										value="#{consultarDetalleFacturaBean.mensaje_Sri}" />
 								</p:column>
 							</p:row>
 
@@ -470,7 +470,7 @@
 								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="MensajeErrorfact" size="30"
-										value="#{comprobanteModificaBean.mensajeSriError}" />
+										value="#{consultarDetalleFacturaBean.mensaje_SriError}" />
 								</p:column>
 							</p:row>
 
