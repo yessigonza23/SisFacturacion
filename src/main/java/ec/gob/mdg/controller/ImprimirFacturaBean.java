@@ -105,6 +105,9 @@ public class ImprimirFacturaBean implements Serializable {
 			stream.flush();
 			stream.close();
 			FacesContext.getCurrentInstance().responseComplete();
+			if (conn != null) {
+				conn.close();
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -158,6 +161,9 @@ public class ImprimirFacturaBean implements Serializable {
 			stream.flush();
 			stream.close();
 			FacesContext.getCurrentInstance().responseComplete();
+			if (conn != null) {
+				conn.close();
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

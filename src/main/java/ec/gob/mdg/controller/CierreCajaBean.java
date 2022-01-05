@@ -302,6 +302,9 @@ public class CierreCajaBean implements Serializable {
 			stream.close();
 
 			FacesContext.getCurrentInstance().responseComplete();
+			if (conn != null) {
+				conn.close();
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

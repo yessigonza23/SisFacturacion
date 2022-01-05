@@ -159,6 +159,9 @@ public class ReportesNacionalBean implements Serializable {
 
 			stream.flush();
 			stream.close();
+			if (conn != null) {
+				conn.close();
+			}
 
 			FacesContext.getCurrentInstance().responseComplete();
 		} catch (Exception e) {
