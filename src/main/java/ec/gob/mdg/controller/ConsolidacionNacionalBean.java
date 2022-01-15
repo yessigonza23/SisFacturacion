@@ -42,6 +42,8 @@ public class ConsolidacionNacionalBean implements Serializable {
 	
 	@Inject
 	private IComprobanteService serviceComprobante;
+	
+	private EstadoCuenta estadoCuenta =new EstadoCuenta();
 
 	private List<EstadoCuenta> listaEstadoCuenta = new ArrayList<EstadoCuenta>();
 	private List<VistaRecaudacionDepositoDTO> listaVistaRecaudacionDepositoDTO = new ArrayList<>();
@@ -79,6 +81,10 @@ public class ConsolidacionNacionalBean implements Serializable {
 	
 		listaVistaRecaudacionDepositoDTO = serviceVistaRecaudacionDepositoDTO.listarVista(anio, mes);
 	}
+	
+    public void liberarDeposito(Integer id_estadoCuenta) {
+    	
+    }
 
 	
 	///LISTAR COMPROBANTES
@@ -162,6 +168,14 @@ public class ConsolidacionNacionalBean implements Serializable {
 
 	public void setListaComprobantes(List<Comprobante> listaComprobantes) {
 		this.listaComprobantes = listaComprobantes;
+	}
+
+	public EstadoCuenta getEstadoCuenta() {
+		return estadoCuenta;
+	}
+
+	public void setEstadoCuenta(EstadoCuenta estadoCuenta) {
+		this.estadoCuenta = estadoCuenta;
 	}
 
 

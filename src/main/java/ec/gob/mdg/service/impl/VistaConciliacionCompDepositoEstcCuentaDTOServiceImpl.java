@@ -56,4 +56,10 @@ public class VistaConciliacionCompDepositoEstcCuentaDTOServiceImpl
 		return dao.listarConsolidados(id_punto, anio, mes);
 	}
 
+	@Override
+	public List<VistaConciliacionCompDepositoEstcCUentaDTO> listaConsolidaDepositos(Integer anio, Integer mes) {
+		// TODO Auto-generated method stub
+		return dao.listaConsolidaDepositos(anio, mes);
+	}
+
 }

@@ -76,4 +76,25 @@ public class ConsolidaDepositosDAOImpl implements IConsolidaDepositosDAO,Seriali
 		return t;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ConsolidaDepositos listarPorId(Integer id) {
+		ConsolidaDepositos c = new ConsolidaDepositos();
+		List<ConsolidaDepositos> lista = new ArrayList<>();
+		try {
+			Query query = em.createQuery("FROM ConsolidaDepositos c where c.id =?1");
+			query.setParameter(1, id);
+
+			lista = (List<ConsolidaDepositos>) query.getResultList();
+
+			if (lista != null && !lista.isEmpty()) {
+				c = lista.get(0);
+			}
+
+		} catch (Exception e) {
+			throw e;
+		}
+		return c;
+	}
+
 }

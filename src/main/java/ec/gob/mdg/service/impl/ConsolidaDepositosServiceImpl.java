@@ -42,4 +42,10 @@ public class ConsolidaDepositosServiceImpl implements IConsolidaDepositosService
 	public ConsolidaDepositos listarPorId(ConsolidaDepositos t) throws Exception {
 		return dao.listarPorId(t);
 	}
+
+	@Override
+	public ConsolidaDepositos listarPorId(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.listarPorId(id);
+	}
 }

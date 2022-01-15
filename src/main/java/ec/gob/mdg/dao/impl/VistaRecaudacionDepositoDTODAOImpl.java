@@ -289,11 +289,10 @@ public class VistaRecaudacionDepositoDTODAOImpl implements IVistaRecaudacionDepo
 			Query q = em.createNativeQuery(
 					"SELECT c.punto_nombre,c.comp_anio,c.comp_mes,c.comp_numero,c.comp_fechaemision,c.cliente_nombre,c.cliente_ci,c.deposito_numero,c.deposito_fecha,c.deposito_valor,c.usuario_nombre FROM financiero.vista_recaudacion_deposito c "
 							+ "WHERE c.punto_id=?1 and c.comp_anio =?2 and c.comp_mes=?3 AND "
-							+ "c.deposito_numero not in (SELECT numtransaccion FROM financiero.estadocuenta WHERE anio=?4) ORDER BY 4");
+							+ "c.deposito_id_tmp is null ORDER BY 4");
 			q.setParameter(1, id_punto);
 			q.setParameter(2, anioS);
 			q.setParameter(3, mesS);
-			q.setParameter(4, anio);
 
 			lista = q.getResultList();
 			lista.forEach(x -> {
@@ -560,11 +559,10 @@ public class VistaRecaudacionDepositoDTODAOImpl implements IVistaRecaudacionDepo
 			Query q = em.createNativeQuery(
 					"SELECT c.punto_nombre,c.comp_anio,c.comp_mes,c.comp_numero,c.comp_fechaemision,c.cliente_nombre,c.cliente_ci,c.deposito_numero,c.deposito_fecha,c.deposito_valor,c.usuario_nombre FROM financiero.vista_recaudacion_deposito c "
 							+ "WHERE c.comp_anio =?1 and c.comp_mes=?2 AND "
-							+ "c.deposito_numero not in (SELECT numtransaccion FROM financiero.estadocuenta WHERE anio=?3) ORDER BY 4");
+							+ "c.deposito_id_tmp is null ORDER BY 4");
 		
 			q.setParameter(1, anioS);
 			q.setParameter(2, mesS);
-			q.setParameter(3, anio);
 
 			lista = q.getResultList();
 			lista.forEach(x -> {

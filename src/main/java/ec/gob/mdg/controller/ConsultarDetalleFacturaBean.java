@@ -20,7 +20,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
+
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.TimeZone;
 
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
@@ -44,6 +48,7 @@ import ec.gob.mdg.sri.sign.XadesSign;
 import ec.gob.mdg.sri.util.FileUtil;
 import ec.gob.mdg.sri.util.XML_Utilidades;
 import ec.gob.mdg.util.UtilsDate;
+import ec.gob.mdg.util.ValorMod11;
 import ec.gob.mdg.validaciones.Funciones;
 
 @Named
@@ -72,7 +77,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 
 	@Inject
 	private IUsuarioPuntoService serviceUsuPunto;
-	
+
 	@Inject
 	private IMensajeService serviceMensaje;
 
@@ -88,10 +93,10 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 	private List<ComprobanteDepositos> listaComprobanteDep;
 	private List<RecaudacionDetalle> listaRecaudacionDetalle;
 	private UsuarioPunto usuPunto = new UsuarioPunto();
-	
+
 	boolean estadeshabilitadoEnv;
 	boolean estadeshabilitadoAut;
-	
+
 	private Mensaje mensaje = new Mensaje();
 	String el_cliente = "";
 
@@ -111,11 +116,11 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 	boolean estadeshabilitadoA = false;
 	Date fechaActual;
 	String autorizacion;
-	
+
 	String ambiente;
 	String url;
 	String host;
-	
+
 	String mensaje_Sri;
 	String mensaje_SriError;
 
@@ -212,6 +217,27 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 						"No puede realizar cambios la factura ya esta autorizada por el SRI", "Error"));
 
 			} else if (comprobante.getAutorizacion() == null) {
+
+				//// GENERAR CLAVE ACCESO
+				Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+				calendar.setTime(comprobante.getFechaemision());
+				String anio = String.valueOf(calendar.get(Calendar.YEAR));
+				String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+				String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+				if (calendar.get(Calendar.MONTH) < 10) {
+					mes = "0" + mes;
+				}
+				if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
+					dia = "0" + dia;
+				}
+				claveA = dia + mes + anio + "01" + institucion.getRuc() + institucion.getAmbiente()
+						+ punto.getEstablecimiento() + punto.getPuntoemision()
+						+ StringUtils.leftPad(String.valueOf(comprobante.getNumero()), 9, "0") + "12345678" + "1";
+				String verificador = String.valueOf(ValorMod11.mod11(claveA));
+				claveA = claveA + verificador;
+				comprobante.setClaveacceso(claveA);
+				serviceComprobante.modificar(comprobante);
+				
 				genXml.generarXmlArchivo(comprobante.getPuntoRecaudacion().getId(), comprobante.getNumero());
 
 				estadeshabilitado = true;
@@ -259,7 +285,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-			
+
 			SoapRecepcion n = new SoapRecepcion();
 
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
@@ -278,8 +304,6 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 				host = "cel.sri.gob.ec";
 
 			}
-
-
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobante);
@@ -317,15 +341,15 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 							comprobante.setEstadosri("E");
 							comprobante.setEstadoerror("S");
 							serviceComprobante.modificar(comprobante);
-							
+
 							estadeshabilitadoEnv = true; // PARA DESHABILITAR EL BOTON ENVIAR EN LA FACTURA
-							
+
 							estadeshabilitadoAut = false;
 							estadeshabilitado = true;
 
 							mensaje_Sri = "Enviado con Exito";
 							mensaje_SriError = "Sin errores";
-							
+
 						} catch (Exception e) {
 							// TODO: handle exception
 							System.out.println("ERROR " + e);
@@ -414,7 +438,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 				con.setRequestProperty("Host", host);
 				OutputStream reqStreamOut = con.getOutputStream();
 				reqStreamOut.write(n.formatSendPost(comprobante.getClaveacceso()).getBytes());
-				
+
 				java.io.BufferedReader rd = new java.io.BufferedReader(
 						new java.io.InputStreamReader(con.getInputStream(), "UTF8"));
 				String line = "";
@@ -751,8 +775,6 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 		this.host = host;
 	}
 
-	
-
 	public Mensaje getMensaje() {
 		return mensaje;
 	}
@@ -785,5 +807,4 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 		ConsultarDetalleFacturaBean.xml_utilidades = xml_utilidades;
 	}
 
-	
 }

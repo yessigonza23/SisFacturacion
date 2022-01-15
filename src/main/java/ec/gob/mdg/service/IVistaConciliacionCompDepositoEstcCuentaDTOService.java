@@ -8,4 +8,5 @@ public interface IVistaConciliacionCompDepositoEstcCuentaDTOService
 		extends IService<VistaConciliacionCompDepositoEstcCUentaDTO> {
 	// LISTAR CONSOLIDACIÓN
 	List<VistaConciliacionCompDepositoEstcCUentaDTO> listarConsolidados(Integer id_punto, Integer anio, Integer mes);
+	List<VistaConciliacionCompDepositoEstcCUentaDTO> listaConsolidaDepositos(Integer anio, Integer mes);
 }

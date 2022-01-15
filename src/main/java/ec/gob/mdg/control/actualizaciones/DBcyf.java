@@ -65,7 +65,7 @@ public class DBcyf implements Serializable {
 				}else if (f.getCodigo_recaudacion().equals("Q5")) {
 					actualizaSucursales(codigoEntidad, numeroFactura);
 				}else if (f.getCodigo_recaudacion().substring(0, 2).equals("RV")
-						|| f.getCodigo_recaudacion().substring(0, 0).equals("C")) {
+						|| f.getCodigo_recaudacion().substring(0, 1).equals("C")) {
 					actualizaActividades(codigoEntidad, numeroFactura);
 				} else if (f.getCodigo_recaudacion().substring(0, 3).equals("RAC")
 						|| f.getCodigo_recaudacion().substring(0, 2).equals("AC")) {

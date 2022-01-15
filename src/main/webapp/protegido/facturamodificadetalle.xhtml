@@ -193,7 +193,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtNombres"
 										disabled="#{comprobanteModificaBean.validador}"
-										value="#{comprobanteModificaBean.cliente.nombre}"
+										value="#{comprobanteModificaBean.comprobante.clientenombre}"
 										required="true" requiredMessage="Requerido Nombres"
 										style="width:200px;" />
 									<p:message for="txtNombres" display="icon" />
@@ -500,7 +500,7 @@
 					<p:column style="border-style: hidden;">
 						<p:row>
 							<p:inputText
-								value="#{comprobanteModificaBean.comprobante.detalle}"
+								value="#{comprobanteModificaBean.detalle_comprobante}"
 								style="width:700px;" />
 						</p:row>
 					</p:column>
@@ -516,7 +516,7 @@
 							value="Guardar"
 							action="#{comprobanteModificaBean.modificarComprobante()}"
 							process="@this"
-							update="ingFacturas:btnGuardar,ingFacturas:estado"
+							update="ingFacturas:btnGuardar,ingFacturas:estado,ingFacturas:clavefact,ingFacturas:xmlfact"
 							disabled="#{comprobanteModificaBean.estadeshabilitado}">
 
 						</p:commandButton>

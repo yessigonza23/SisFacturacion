@@ -161,6 +161,9 @@ public class CargaBancoBean implements Serializable {
 			fun.consolidaDepositosE5(anio,id_usuario);
 			fun.consolidaDepositosE4(anio,id_usuario);
 			fun.consolidaDepositosE3(anio,id_usuario);
+			fun.consolidaDepositos7(anio,id_usuario);
+			fun.consolidaDepositos6(anio,id_usuario);
+			fun.consolidaDepositos5(anio,id_usuario);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

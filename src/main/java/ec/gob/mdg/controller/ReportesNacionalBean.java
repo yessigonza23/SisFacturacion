@@ -185,7 +185,7 @@ public class ReportesNacionalBean implements Serializable {
 	}
 	////////////////////////
 
-	public void listarVistaRecaudacionDeposito(Date fecha_inicio, Date fecha_fin) {
+	public void listarVistaRecaudacionDeposito(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
 		this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
 				.listarRecaudacionDepositoNac(fecha_inicio, fecha_fin);
 		this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturasNac(fecha_inicio, fecha_fin);

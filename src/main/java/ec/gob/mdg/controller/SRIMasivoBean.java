@@ -49,6 +49,9 @@ public class SRIMasivoBean implements Serializable {
 	private IUsuarioPuntoService serviceUsuPunto;
 	private List<Comprobante> listaComprobante;
 
+	@Inject
+	private GenerarDOMBean genXml;
+
 	double total = 0.0;
 
 	@Inject
@@ -108,6 +111,9 @@ public class SRIMasivoBean implements Serializable {
 	}
 
 	public void envioMasivo() throws Exception {
+		for (Comprobante c : listaComprobante) {
+			genXml.generarXmlArchivo(punto.getId(), c.getNumero());
+		}
 		for (Comprobante c : listaComprobante) {
 			/// FIRMAR Y ENVIAR
 			enviar(c.getId());
@@ -204,9 +210,9 @@ public class SRIMasivoBean implements Serializable {
 							comprobante.setEstadosri("E");
 							comprobante.setEstadoerror("S");
 							serviceComprobante.modificar(comprobante);
-							System.out.println("deshabilita booton enviar");
+							// System.out.println("deshabilita booton enviar");
 							estadeshabilitadoEnv = true; // PARA DESHABILITAR EL BOTON ENVIAR EN LA FACTURA
-							System.out.println("habilita booton autorizar");
+							// System.out.println("habilita booton autorizar");
 							estadeshabilitadoAut = false;
 							estadeshabilitado = true;
 
@@ -263,17 +269,24 @@ public class SRIMasivoBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
+
+			// System.out.println("entra a no autorizados "+ambiente);
 			// estadeshabilitadoA = false;
 			SoapAutorizacion n = new SoapAutorizacion();
 
-			/// AMBIENTE DE PRUEBAS
-			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-			String host = "celcer.sri.gob.ec";
+			if (ambiente.equals("1")) {
 
-			/// AMBIENTE DE PRODUCCIoN
-			// String url =
-			/// "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-			// String host = "cel.sri.gob.ec";
+				//// AMBIENTE DE PRUEBAS
+				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
+				host = "celcer.sri.gob.ec";
+			} else if (ambiente.equals("2")) {
+
+				//// AMBIENTE DE PRODUCCIoN
+				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
+				host = "cel.sri.gob.ec";
+
+			}
+
 			try {
 				URL oURL = new URL(url);
 				HttpURLConnection con = (HttpURLConnection) oURL.openConnection(Proxy.NO_PROXY);
@@ -298,6 +311,8 @@ public class SRIMasivoBean implements Serializable {
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 //			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
+
+				System.out.println("estado " + estado);
 
 				if (estado.equals("AUTORIZADO")) {
 					try {
@@ -511,6 +526,4 @@ public class SRIMasivoBean implements Serializable {
 		this.host = host;
 	}
 
-	
-	
 }

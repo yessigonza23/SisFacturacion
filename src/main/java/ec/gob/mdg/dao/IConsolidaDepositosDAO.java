@@ -6,5 +6,5 @@ import ec.gob.mdg.model.ConsolidaDepositos;
 
 @Local
 public interface IConsolidaDepositosDAO extends ICRUD<ConsolidaDepositos> {
-
+	ConsolidaDepositos listarPorId(Integer id);
 }

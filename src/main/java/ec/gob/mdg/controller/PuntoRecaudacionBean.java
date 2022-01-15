@@ -75,22 +75,22 @@ public class PuntoRecaudacionBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Se grabó con éxito", "Satisfactoriamente"));
 			}else if(accion.equalsIgnoreCase("M")) {
-				PuntoRecaudacion p = new PuntoRecaudacion();
-				p.setInstitucion(puntoRecaudacion.getInstitucion());
-				p.setNombre(puntoRecaudacion.getNombre().toUpperCase());
-				p.setProvincia(puntoRecaudacion.getProvincia());
-				p.setTelefono(puntoRecaudacion.getTelefono());
-				p.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
-				p.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
-				p.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
-				p.setJefe(puntoRecaudacion.getJefe().toUpperCase());
-				p.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
-				p.setEstado(puntoRecaudacion.getEstado());
-				p.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
-				p.setPuntoemision(puntoRecaudacion.getPuntoemision());
-				p.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
-				p.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
-				this.service.modificar(p);
+				//PuntoRecaudacion p = puntoRecaudacion;
+				puntoRecaudacion.setInstitucion(puntoRecaudacion.getInstitucion());
+				puntoRecaudacion.setNombre(puntoRecaudacion.getNombre().toUpperCase());
+				puntoRecaudacion.setProvincia(puntoRecaudacion.getProvincia());
+				puntoRecaudacion.setTelefono(puntoRecaudacion.getTelefono());
+				puntoRecaudacion.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
+				puntoRecaudacion.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
+				puntoRecaudacion.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
+				puntoRecaudacion.setJefe(puntoRecaudacion.getJefe().toUpperCase());
+				puntoRecaudacion.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
+				puntoRecaudacion.setEstado(puntoRecaudacion.getEstado());
+				puntoRecaudacion.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
+				puntoRecaudacion.setPuntoemision(puntoRecaudacion.getPuntoemision());
+				puntoRecaudacion.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
+				puntoRecaudacion.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
+				this.service.modificar(puntoRecaudacion);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Se grabó con éxito", "Satisfactoriamente"));
 			}

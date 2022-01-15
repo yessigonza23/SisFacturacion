@@ -34,9 +34,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.primefaces.model.UploadedFile;
 import org.w3c.dom.Document;
+
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.TimeZone;
 
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
@@ -66,6 +70,7 @@ import ec.gob.mdg.sri.util.XML_Utilidades;
 import ec.gob.mdg.util.CedulaRuc;
 import ec.gob.mdg.util.UtilsArchivos;
 import ec.gob.mdg.util.UtilsDate;
+import ec.gob.mdg.util.ValorMod11;
 import ec.gob.mdg.validaciones.FunValidaciones;
 import ec.gob.mdg.validaciones.Funciones;
 
@@ -164,6 +169,7 @@ public class ComprobanteModificaBean implements Serializable {
 	Integer rd;
 	Integer id_comprobante = 0;
 	String tipo_proceso = null;
+	String detalle_comprobante;
 	Integer id = 0;
 	String param2;
 	Integer id_compDetalle;
@@ -212,7 +218,6 @@ public class ComprobanteModificaBean implements Serializable {
 			// LLENAR CON LOS DATOS DE BD
 			this.comprobante = serviceComprobante.listarComprobantePorId(id);
 			estadoAnterior = comprobante.getEstado();
-
 			valorAnterior = comprobante.getValor();
 
 			this.cliente = this.serviceCliente.ClientePorCiParametro(comprobante.getClienteruc());
@@ -229,7 +234,7 @@ public class ComprobanteModificaBean implements Serializable {
 
 		try {
 			this.comprobante = serviceComprobante.listarComprobantePorId(id);
-
+			detalle_comprobante = comprobante.getDetalle();
 			this.listaComprobanteDet = this.serviceComprobanteDetalle.listarComDetPorIdComp(id);
 			this.listaComprobanteDep = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
 
@@ -285,11 +290,15 @@ public class ComprobanteModificaBean implements Serializable {
 						"No puede borrar la Información del SRI, el comprobante se encuentra autorizado", "Error"));
 			} else if (!comprobante.getNumero().equals(factura)) {
 				try {
-					fun.borraSRI(comprobante.getId());
+
 					// CAMPO comprobante.getAutorizacion)
 					serviceAuditoria.insertaModificacion("Comprobante", "autorizacion", "D",
 							usuPunto.getUsuario().getUsername(), fechaActual, autorizacion,
 							comprobante.getAutorizacion(), comprobante.getId());
+
+					comprobante.setAutorizacion(null);
+					comprobante.setAutorizacionfecha(null);
+					serviceComprobante.modificar(comprobante);
 
 					estadeshabilitado = false;
 					estadeshabilitadoA = false;
@@ -540,8 +549,8 @@ public class ComprobanteModificaBean implements Serializable {
 				}
 			}
 
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Si realizó cambio en depósitos se grabó con éxito", "Aviso"));
+//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+//					"Si realizó cambio en depósitos se grabó con éxito", "Aviso"));
 			//// AUDITORIA TABLA COMPROBANTE DEPOSITO
 			for (ComprobanteDepositos c : listaComprobanteDep) {
 				if (c.getId() != null) {
@@ -593,26 +602,38 @@ public class ComprobanteModificaBean implements Serializable {
 		try {
 
 			modificarComprobanteDeposito();
-			if (comprobante.getAutorizacion() != null && estadoAnterior == comprobante.getEstado()) {
-				estadeshabilitado = true;
-				estadeshabilitadoA = true;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"No puede realizar cambios la factura ya esta autorizada por el SRI, para el caso de cambios en los depósitos se grabó con éxito",
-						"Error"));
-			} else if ((comprobante.getAutorizacion() != null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
-				comprobante.setEstado(estadoAnterior);
-				comprobante.setFechaanulacion(fechaActual);
-				serviceComprobante.modificar(comprobante);
-				validaestado = false;
-				estadeshabilitado = true;
-				estadeshabilitadoA = true;
+			System.out.println("despues de actualizar depositos ");
+			System.out.println("autorizacion " + comprobante.getAutorizacion());
+			System.out.println("estadoAnterior " + estadoAnterior);
+			System.out.println("comprobante.getEstado() " + comprobante.getEstado());
 
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"se grabó con éxito, el cambio de estado y si realizó cambios de depósitos", "Aviso"));
-				// CAMPO comprobante.getEstado())
-				serviceAuditoria.insertaModificacion("Comprobante", "estado", "U", usuPunto.getUsuario().getUsername(),
-						fechaActual, estadoAnterior, comprobante.getEstado(), comprobante.getId());
-			} else if ((comprobante.getAutorizacion() == null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
+			if ((comprobante.getAutorizacion() != null)) {
+				if (estadoAnterior == comprobante.getEstado()) {
+					System.out.println("entra para no realizar ningun cambio");
+					estadeshabilitado = true;
+					estadeshabilitadoA = true;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"No puede realizar cambios la factura ya esta autorizada por el SRI, para el caso de cambios en los depósitos se grabó con éxito",
+							"Error"));
+				}else if ((!estadoAnterior.equals(comprobante.getEstado()))) {
+
+					comprobante.setEstado(estadoAnterior);
+					comprobante.setFechaanulacion(fechaActual);
+
+					serviceComprobante.modificar(comprobante);
+
+					validaestado = false;
+					estadeshabilitado = true;
+					estadeshabilitadoA = true;
+
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"se grabó con éxito, el cambio de estado y si realizó cambios de depósitos", "Aviso"));
+					// CAMPO comprobante.getEstado())
+					serviceAuditoria.insertaModificacion("Comprobante", "estado", "U", usuPunto.getUsuario().getUsername(),
+							fechaActual, estadoAnterior, comprobante.getEstado(), comprobante.getId());
+				}
+
+			}  else if ((comprobante.getAutorizacion() == null) && (!estadoAnterior.equals(comprobante.getEstado()))) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No puede cambiar el estado de la factura, no se encuentra autorizada", "Error"));
 			} else if (comprobante.getAutorizacion() == null) {
@@ -621,7 +642,12 @@ public class ComprobanteModificaBean implements Serializable {
 				totalDeposito();
 				if (totaldet == totaldep) {
 					// VALIDAR CLIENTE
+					System.out.println("entra");
+					System.out.println("entr cuando la autorización es null " + cliente.getNombre());
+
 					Long a = fun.buscarCliente(cliente);
+					System.out.println("longitud a " + a);
+
 					if (a == 0) {
 						Cliente c = new Cliente();
 						c = cliente;
@@ -630,6 +656,10 @@ public class ComprobanteModificaBean implements Serializable {
 						c.setClave(claveHash);
 						serviceCliente.registrar(c);
 					} else {
+						System.out.println("entra a modificar el cliente");
+						System.out.println("nuevo cliente nombre " + cliente.getNombre());
+						cliente.setNombre(cliente.getNombre());
+						System.out.println("despuesd " + cliente.getNombre());
 						serviceCliente.modificar(cliente);
 					}
 					/// MODIFICAR COMPROBANTE
@@ -641,8 +671,28 @@ public class ComprobanteModificaBean implements Serializable {
 					comprobante.setEstado(comprobante.getEstado());
 					comprobante.setValor(totaldet);
 					comprobante.setDetalle(comprobante.getDetalle());
-					serviceComprobante.modificar(comprobante);
 
+					//// GENERAR CLAVE ACCESO
+					Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+					calendar.setTime(comprobante.getFechaemision());
+					String anio = String.valueOf(calendar.get(Calendar.YEAR));
+					String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+					String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+					if (calendar.get(Calendar.MONTH) < 10) {
+						mes = "0" + mes;
+					}
+					if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
+						dia = "0" + dia;
+					}
+					claveA = dia + mes + anio + "01" + institucion.getRuc() + institucion.getAmbiente()
+							+ punto.getEstablecimiento() + punto.getPuntoemision()
+							+ StringUtils.leftPad(String.valueOf(comprobante.getNumero()), 9, "0") + "12345678" + "1";
+					String verificador = String.valueOf(ValorMod11.mod11(claveA));
+					claveA = claveA + verificador;
+					comprobante.setClaveacceso(claveA);
+
+					serviceComprobante.modificar(comprobante);
+					genXml.generarXmlArchivo(punto.getId(), comprobante.getNumero());
 					//// AUDITORIA TABLA COMPROBANTE
 					// CAMPO comprobante.getCliente().getCi())
 
@@ -1032,14 +1082,6 @@ public class ComprobanteModificaBean implements Serializable {
 				host = "cel.sri.gob.ec";
 			}
 
-			/// AMBIENTE DE PRUEBAS
-//			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-//			String host = "celcer.sri.gob.ec";
-
-			/// AMBIENTE DE PRODUCCIN
-			// String url =
-			/// "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-			// String host = "cel.sri.gob.ec";
 			try {
 				URL oURL = new URL(url);
 				HttpURLConnection con = (HttpURLConnection) oURL.openConnection(Proxy.NO_PROXY);
@@ -1051,20 +1093,23 @@ public class ComprobanteModificaBean implements Serializable {
 				con.setRequestProperty("Host", host);
 				OutputStream reqStreamOut = con.getOutputStream();
 				reqStreamOut.write(n.formatSendPost(comprobante.getClaveacceso()).getBytes());
-				System.out.println("2");
+
 				java.io.BufferedReader rd = new java.io.BufferedReader(
 						new java.io.InputStreamReader(con.getInputStream(), "UTF8"));
+
 				String line = "";
 				StringBuilder sb = new StringBuilder();
+
 				while ((line = rd.readLine()) != null) {
 					sb.append(line);
+
 				}
 
-				System.out.println(sb.toString());
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
+
 //			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
-
+				System.out.println("6 estado: " + estado);
 				if (estado.equals("AUTORIZADO")) {
 					try {
 						String fa = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "fechaAutorizacion",
@@ -1110,7 +1155,6 @@ public class ComprobanteModificaBean implements Serializable {
 					this.mensaje.setInformacionAdicional(informacionAdicional);
 					this.mensaje.setTipo(tipo);
 					serviceMensaje.registrar(this.mensaje);
-
 					MensajeSri = mensaje;
 					MensajeSriError = informacionAdicional;
 					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
@@ -1662,6 +1706,14 @@ public class ComprobanteModificaBean implements Serializable {
 
 	public void setValorAnterior(double valorAnterior) {
 		this.valorAnterior = valorAnterior;
+	}
+
+	public String getDetalle_comprobante() {
+		return detalle_comprobante;
+	}
+
+	public void setDetalle_comprobante(String detalle_comprobante) {
+		this.detalle_comprobante = detalle_comprobante;
 	}
 
 }

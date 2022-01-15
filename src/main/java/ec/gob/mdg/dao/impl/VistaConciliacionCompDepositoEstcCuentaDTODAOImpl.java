@@ -101,4 +101,49 @@ public class VistaConciliacionCompDepositoEstcCuentaDTODAOImpl implements IVista
 		return listaFin;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<VistaConciliacionCompDepositoEstcCUentaDTO> listaConsolidaDepositos(Integer anio, Integer mes) {
+		
+		List<Object[]> lista = new ArrayList<>();
+		List<VistaConciliacionCompDepositoEstcCUentaDTO> listaFin = new ArrayList<>();
+		
+		try {
+			Query q = em.createNativeQuery("SELECT v.comp_numero,v.comp_fechaemision,comp_valor,comp_estado,"
+					+ " v.deposito_numero,v.deposito_fecha,v.deposito_valor,v.consdepositos_tipoconciliaciondesc ,v.punto_nombre,v.cliente_nombre,v.cliente_ci, "
+					+ " v.estcuenta_valor,v.estcuenta_saldo,v.estcuenta_id,v.deposito_id,v.consdepositos_id"
+					+ " FROM financiero.Vista_Conciliacion_CompDeposito_EstCUenta v WHERE  v.estado_anio=?1 AND v.estado_mes=?2");
+			
+			q.setParameter(1, anio);
+			q.setParameter(2, mes);
+						
+			lista = q.getResultList();
+			lista.forEach(x -> {
+				VistaConciliacionCompDepositoEstcCUentaDTO v = new VistaConciliacionCompDepositoEstcCUentaDTO();
+				v.setComp_numero(Integer.parseInt(String.valueOf(x[0])));
+				v.setComp_fechaemision(String.valueOf(x[1]));
+				v.setComp_valor(Double.parseDouble(String.valueOf(x[2])));
+				v.setComp_estado((String.valueOf(x[3])));
+		        v.setDeposito_numero((String.valueOf(x[4])));
+		        v.setDeposito_fecha((String.valueOf(x[5])));
+		        v.setDeposito_valor(Double.parseDouble(String.valueOf(x[6])));
+		        v.setConsdepositos_tipoconciliaciondesc(String.valueOf(x[7]));
+		        v.setPunto_nombre(String.valueOf(x[8]));
+		        v.setCliente_nombre(String.valueOf(x[9]));
+		        v.setCliente_ci(String.valueOf(x[10]));
+		        v.setEstadocuenta_valor(Double.parseDouble(String.valueOf(x[11])));
+		        v.setEstadocuenta_saldo(Double.parseDouble(String.valueOf(x[12])));
+		        v.setEstado_id(Integer.parseInt(String.valueOf(x[13])));
+		        v.setDeposito_id(Integer.parseInt(String.valueOf(x[14])));
+		        v.setConsdepositos_id(Integer.parseInt(String.valueOf(x[15])));
+				listaFin.add(v);
+			});
+		
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return listaFin;
+	}
+
 }

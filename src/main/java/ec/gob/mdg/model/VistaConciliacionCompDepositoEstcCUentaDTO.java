@@ -104,6 +104,12 @@ public class VistaConciliacionCompDepositoEstcCUentaDTO implements Serializable{
 	@Column(name = "estadocuenta_saldo")
 	private Double estadocuenta_saldo;
 	
+	@Column(name = "estado_anio")
+	private Integer estado_anio;
+	
+	@Column(name = "estado_mes")
+	private Integer estado_mes;
+	
 	@Column(name = "consdepositos_id")
 	private Integer consdepositos_id;
 	
