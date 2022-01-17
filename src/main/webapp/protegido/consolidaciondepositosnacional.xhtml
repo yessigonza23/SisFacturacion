@@ -117,13 +117,13 @@
 							</p:outputLabel>
 						</p:column>
 
-					
+
 
 						<p:column>
 							<p:commandButton icon="ui-icon-disk" id="btnGuardar"
 								value="Reversar"
-								action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id)}"
-								process="@form">
+								action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id,consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
+								update="ingConsolida:Res1">
 							</p:commandButton>
 
 						</p:column>

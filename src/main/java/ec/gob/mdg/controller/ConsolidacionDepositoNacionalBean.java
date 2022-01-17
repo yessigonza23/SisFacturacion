@@ -39,23 +39,22 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 
 	@Inject
 	private IComprobanteDepositosService serviceComprobanteDepositos;
-	
+
 	@Inject
 	private IEstadoCuentaService serviceEstadoCuenta;
-	
+
 	@Inject
 	private IConsolidaDepositosService serviceConsolidaDeposito;
-	
+
 	@Inject
 	private IVistaConciliacionCompDepositoEstcCuentaDTOService vistaConciliacionCompDepositoEstcCuentaDTOService;
-	
-	private EstadoCuenta estadoCuenta =new EstadoCuenta();
-	private ComprobanteDepositos comprobanteDepositos = new ComprobanteDepositos() ;
+
+	private EstadoCuenta estadoCuenta = new EstadoCuenta();
+	private ComprobanteDepositos comprobanteDepositos = new ComprobanteDepositos();
 	private ConsolidaDepositos consolidaDepositos = new ConsolidaDepositos();
-	
+
 	private List<VistaConciliacionCompDepositoEstcCUentaDTO> listaVistaConciliacionCompDepositoEstcCUentaDTOs = new ArrayList<>();
 
-	 
 	PuntoRecaudacion punto;
 	PuntoRecaudacion nombre;
 
@@ -65,67 +64,70 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 	Integer anio;
 	Integer mes;
 
-	
 	@PostConstruct
 	public void init() {
 		try {
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 			punto = usuPunto.getPuntoRecaudacion();
 			nombre = servicePuntoRecaudacion.listarPorId(punto);
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
 
-		
-	////LISTAR COMPROBANTE DEPOSITO
-	public void listarVistaConsolidaDepositos(Integer anio, Integer mes) {	
-		try {
-			listaVistaConciliacionCompDepositoEstcCUentaDTOs = vistaConciliacionCompDepositoEstcCuentaDTOService.listaConsolidaDepositos(anio, mes);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	//// LISTAR COMPROBANTE DEPOSITO
+	public void listarVistaConsolidaDepositos(Integer anio, Integer mes) {
+
+		if (anio != null && mes != null)
+			try {
+				listaVistaConciliacionCompDepositoEstcCUentaDTOs = vistaConciliacionCompDepositoEstcCuentaDTOService
+						.listaConsolidaDepositos(anio, mes);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Aviso", "Faltan parametros para la consulta"));
 		}
 	}
-	
 
-    public void actualizaEstadoComprobante(Integer id_estado,Integer id_comprobantedeposito, Integer id_consolidadepositos) {
-    	System.out.println("entra a actualizar " + id_comprobantedeposito + "-"+id_estado+ "-"+id_consolidadepositos);
-    	if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null) {
-    		comprobanteDepositos=serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
-        	try {
-        		estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
-            	
-            	estadoCuenta.setBloqueado(false);
-            	estadoCuenta.setSaldo(estadoCuenta.getSaldo()+comprobanteDepositos.getValor());
-    			serviceEstadoCuenta.modificar(estadoCuenta);
-    			
-    			comprobanteDepositos.setId_tmp(null);
-    			serviceComprobanteDepositos.modificar(comprobanteDepositos);
-    			
-    			consolidaDepositos=serviceConsolidaDeposito.listarPorId(id_consolidadepositos);
-    			
-    			serviceConsolidaDeposito.eliminar(consolidaDepositos);
-    			
-    			FacesContext.getCurrentInstance().addMessage(null,
+	public void actualizaEstadoComprobante(Integer id_estado, Integer id_comprobantedeposito,
+			Integer id_consolidadepositos, Integer anio, Integer mes) {
+		System.out.println(
+				"entra a actualizar " + id_comprobantedeposito + "-" + id_estado + "-" + id_consolidadepositos);
+		if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null) {
+			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
+			try {
+				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
+
+				estadoCuenta.setBloqueado(false);
+				estadoCuenta.setSaldo(estadoCuenta.getSaldo() + comprobanteDepositos.getValor());
+				serviceEstadoCuenta.modificar(estadoCuenta);
+
+				comprobanteDepositos.setId_tmp(null);
+				serviceComprobanteDepositos.modificar(comprobanteDepositos);
+
+				consolidaDepositos = serviceConsolidaDeposito.listarPorId(id_consolidadepositos);
+
+				serviceConsolidaDeposito.eliminar(consolidaDepositos);
+
+				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se reversa exitosamente"));
-    		} catch (Exception e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
+
+				listarVistaConsolidaDepositos(anio, mes);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 
 		}
-    	
-    	
-    	
-    }
-	
-	
-	
-	////GETTERS Y SETTERS/
-	
+
+	}
+
+	//// GETTERS Y SETTERS/
 
 	public PuntoRecaudacion getPunto() {
 		return punto;
@@ -175,8 +177,6 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 		this.mes = mes;
 	}
 
-	
-
 	public EstadoCuenta getEstadoCuenta() {
 		return estadoCuenta;
 	}
@@ -185,37 +185,29 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 		this.estadoCuenta = estadoCuenta;
 	}
 
-
 	public ComprobanteDepositos getComprobanteDepositos() {
 		return comprobanteDepositos;
 	}
-
 
 	public void setComprobanteDepositos(ComprobanteDepositos comprobanteDepositos) {
 		this.comprobanteDepositos = comprobanteDepositos;
 	}
 
-
 	public ConsolidaDepositos getConsolidaDepositos() {
 		return consolidaDepositos;
 	}
-
 
 	public void setConsolidaDepositos(ConsolidaDepositos consolidaDepositos) {
 		this.consolidaDepositos = consolidaDepositos;
 	}
 
-
 	public List<VistaConciliacionCompDepositoEstcCUentaDTO> getListaVistaConciliacionCompDepositoEstcCUentaDTOs() {
 		return listaVistaConciliacionCompDepositoEstcCUentaDTOs;
 	}
-
 
 	public void setListaVistaConciliacionCompDepositoEstcCUentaDTOs(
 			List<VistaConciliacionCompDepositoEstcCUentaDTO> listaVistaConciliacionCompDepositoEstcCUentaDTOs) {
 		this.listaVistaConciliacionCompDepositoEstcCUentaDTOs = listaVistaConciliacionCompDepositoEstcCUentaDTOs;
 	}
-
-	
 
 }
