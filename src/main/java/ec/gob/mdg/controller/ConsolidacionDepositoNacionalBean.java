@@ -11,6 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import ec.gob.mdg.model.Auditoria;
 import ec.gob.mdg.model.ComprobanteDepositos;
 import ec.gob.mdg.model.ConsolidaDepositos;
 import ec.gob.mdg.model.EstadoCuenta;
@@ -18,12 +19,14 @@ import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.model.Usuario;
 import ec.gob.mdg.model.UsuarioPunto;
 import ec.gob.mdg.model.VistaConciliacionCompDepositoEstcCUentaDTO;
+import ec.gob.mdg.service.IAuditoriaService;
 import ec.gob.mdg.service.IComprobanteDepositosService;
 import ec.gob.mdg.service.IConsolidaDepositosService;
 import ec.gob.mdg.service.IEstadoCuentaService;
 import ec.gob.mdg.service.IPuntoRecaudacionService;
 import ec.gob.mdg.service.IUsuarioPuntoService;
 import ec.gob.mdg.service.IVistaConciliacionCompDepositoEstcCuentaDTOService;
+import ec.gob.mdg.util.UtilsDate;
 
 @Named
 @ViewScoped
@@ -48,10 +51,14 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 
 	@Inject
 	private IVistaConciliacionCompDepositoEstcCuentaDTOService vistaConciliacionCompDepositoEstcCuentaDTOService;
+	
+	@Inject
+	private IAuditoriaService serviceAuditoria;
 
 	private EstadoCuenta estadoCuenta = new EstadoCuenta();
 	private ComprobanteDepositos comprobanteDepositos = new ComprobanteDepositos();
 	private ConsolidaDepositos consolidaDepositos = new ConsolidaDepositos();
+	
 
 	private List<VistaConciliacionCompDepositoEstcCUentaDTO> listaVistaConciliacionCompDepositoEstcCUentaDTOs = new ArrayList<>();
 
@@ -100,6 +107,7 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 		if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null) {
 			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
 			try {
+				
 				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
 
 				estadoCuenta.setBloqueado(false);
@@ -111,6 +119,19 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 
 				consolidaDepositos = serviceConsolidaDeposito.listarPorId(id_consolidadepositos);
 
+				Auditoria auditoria = new Auditoria();
+				
+				auditoria.setNombretabla("ConsolidaDeposito");
+				auditoria.setNombrecampo("Reversa");
+				auditoria.setOperacion("E");
+				auditoria.setUsuario(us.getUsername());
+				auditoria.setFecha(UtilsDate.fechaActual());
+				auditoria.setValoractual("EstadoCuenta:" +estadoCuenta.getNumtransaccion());
+				auditoria.setValoranterior("ComprobanteDep:"+comprobanteDepositos.getId());
+				
+				auditoria.setClaveprimaria(Integer.parseInt(String.valueOf(comprobanteDepositos.getId())+String.valueOf(estadoCuenta.getId())));
+				serviceAuditoria.registrar(auditoria);
+				
 				serviceConsolidaDeposito.eliminar(consolidaDepositos);
 
 				FacesContext.getCurrentInstance().addMessage(null,
