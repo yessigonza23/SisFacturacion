@@ -204,11 +204,11 @@ public class ingresoFactura implements Serializable {
 
 				if (a == 0) {
 
-					System.out
-							.println("entra no hay cliente " + this.cliente.getCi() + " - " + this.cliente.getTipoid());
+//					System.out
+//							.println("entra no hay cliente " + this.cliente.getCi() + " - " + this.cliente.getTipoid());
 					String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
 							this.cliente.getTipoid());
-					System.out.println("valida identificacion " + validaIdentificacion);
+//					System.out.println("valida identificacion " + validaIdentificacion);
 					if (!validaIdentificacion.equals("T")) {
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 								"Tipo de identificacion erronea buscar", validaIdentificacion));
@@ -259,13 +259,19 @@ public class ingresoFactura implements Serializable {
 
 	// VALIDADOR DE CEDULA-RUC
 	public void validaIdentificacion() {
-		String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());	
-		if (validaIdentificacion.equals("T")) {
-			validador = false;
+
+		if (cliente == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el No. de Identificación", "Sin Datos"));
 		} else {
-			validador = true;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Tipo de identificacion erronea", validaIdentificacion));
+			String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());
+			if (validaIdentificacion.equals("T")) {
+				validador = false;
+			} else {
+				validador = true;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Tipo de identificacion erronea", validaIdentificacion));
+			}
 		}
 	}
 
@@ -387,7 +393,7 @@ public class ingresoFactura implements Serializable {
 		totaldet = 0.00;
 		for (ComprobanteDetalle det : listaComprobanteDet) {
 			totaldet = totaldet + det.getSubtotal();
-			totaldet=FunValidaciones.formatearDecimales(totaldet, 2);
+			totaldet = FunValidaciones.formatearDecimales(totaldet, 2);
 		}
 	}
 
@@ -489,7 +495,7 @@ public class ingresoFactura implements Serializable {
 
 				respuesta = 0;
 				validaCamposCliente();
-				System.out.println("respuesta " + respuesta);
+
 				if (respuesta == 1) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Error, no existen datos de cliente", "Error"));
@@ -519,15 +525,17 @@ public class ingresoFactura implements Serializable {
 								String clave = this.cliente.getCi();
 								String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
 								c.setClave(claveHash);
-								cliente.setDireccion(cliente.getDireccion().toUpperCase());
-								cliente.setNombre(cliente.getNombre().toUpperCase());
-								cliente.setCorreo(cliente.getCorreo().toLowerCase());
-								
+								cliente.setCi(cliente.getCi());
+								cliente.setDireccion(cliente.getDireccion());
+								cliente.setNombre(cliente.getNombre());
+								cliente.setCorreo(cliente.getCorreo());
+
 								serviceCliente.registrar(c);
 							} else {
-								cliente.setDireccion(cliente.getDireccion().toUpperCase());
-								cliente.setNombre(cliente.getNombre().toUpperCase());
-								cliente.setCorreo(cliente.getCorreo().toLowerCase());
+								cliente.setCi(cliente.getCi());
+								cliente.setDireccion(cliente.getDireccion());
+								cliente.setNombre(cliente.getNombre());
+								cliente.setCorreo(cliente.getCorreo());
 								serviceCliente.modificar(cliente);
 							}
 							usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
@@ -535,7 +543,7 @@ public class ingresoFactura implements Serializable {
 							num1 = (Integer) fun.secFactura(usuPunto);
 							Comprobante comp = new Comprobante();
 							comp.setNumero(num1);
-							comp.setClienteruc(cliente.getCi());
+							comp.setClienteruc(cliente.getCi().toUpperCase());
 							comp.setClientenombre(cliente.getNombre());
 							comp.setClientedireccion(cliente.getDireccion());
 							comp.setClientetelefono(cliente.getTelefono());
@@ -603,8 +611,6 @@ public class ingresoFactura implements Serializable {
 		}
 	}
 
-
-
 	// BUSCAR FACTURA PARA DESPLEGAR INFORMACIoN EN LA NOTA DE CRéDITO
 	public void buscarFactura(Integer id_punto, Integer numero) {
 		try {
@@ -636,7 +642,8 @@ public class ingresoFactura implements Serializable {
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
 		props.put("mail.smtp.auth", institucion.getAuth()); // Usar autenticacin mediante usuario y clave
-		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor SMTP
+		props.put("mail.smtp.starttls.enable", institucion.getStarttls()); // Para conectar de manera segura al servidor
+																			// SMTP
 		props.put("mail.smtp.port", institucion.getPuerto()); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
 

@@ -125,9 +125,10 @@
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtCi" maxlength="13"
-									placeholder="cedula cliente"
+									placeholder="cedula cliente" onkeyup="mayusculas(this)"
 									onkeypress="return deshabilitarEnter(event);"
-									value="#{ingresoFactura.cliente.ci}" disabled="#{ingresoFactura.estadeshabilitado}">
+									value="#{ingresoFactura.cliente.ci}"
+									disabled="#{ingresoFactura.estadeshabilitado}">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.buscarClientes()}"
 										update="txtTipo, txtNombres, txtDireccion, txtTelefono, txtCorreo" />
@@ -163,7 +164,8 @@
 								<p:inputText id="txtNombres" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									requiredMessage="Requerido Nombres" style="width:200px;text-transform: uppercase;" />
+									requiredMessage="Requerido Nombres" style="width:200px"
+									onkeyup="mayusculas(this)" />
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>
@@ -175,7 +177,8 @@
 								<p:inputText id="txtDireccion" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.direccion}" required="true"
-									requiredMessage="Dirección Requerida" style="width:300px;text-transform: uppercase;" />
+									onkeyup="mayusculas(this)"
+									requiredMessage="Dirección Requerida" style="width:300px" />
 								<p:message for="txtDireccion" display="icon" />
 							</p:column>
 						</p:row>
@@ -184,7 +187,7 @@
 							<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtTelefono" maxlength="10"
-									onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+									onkeypress="return solonumeros(event);"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.telefono}" required="true"
 									requiredMessage="Teléfono requerido" style="width:100px;" />
@@ -197,9 +200,10 @@
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtCorreo" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
+									onkeyup="minusculas(this)"
 									value="#{ingresoFactura.cliente.correo}" required="true"
 									requiredMessage="Requerido Correo electronico"
-									style="width:300px;text-transform: lowercase"
+									style="width:300px"
 									validatorMessage="Correo electrónico no es válido">
 									<f:validateRegex
 										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -336,23 +340,22 @@
 					</p:column>
 
 					<p:column headerText="Origen" style="width:120px">
-						<h:outputText
-							value="#{d.origen}">
+						<h:outputText value="#{d.origen}">
 							<f:converter converterId="origen" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Tipo Transacción" style="text-align: justify ;width:120px;">
-						<h:outputText
-							value="#{d.tipotransaccion}">
+					<p:column headerText="Tipo Transacción"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.tipotransaccion}">
 							<f:converter converterId="tipoTransaccion" />
 						</h:outputText>
-						
+
 					</p:column>
-					<p:column headerText="Identificacion" style="text-align: justify ;width:120px;">
-						<h:outputText
-							value="#{d.identificacion}">
-						</h:outputText>						
+					<p:column headerText="Identificacion"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.identificacion}">
+						</h:outputText>
 					</p:column>
 					<p:column headerText="Nro. Depósito"
 						style="text-align: justify ;width:80px;"
@@ -542,13 +545,14 @@
 								</p:selectOneMenu>
 							</p:column>
 						</p:row>
-						
+
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte Depositante: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
 									placeholder="Ci/RUC/Pasaporte del Deposito"
+									onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>

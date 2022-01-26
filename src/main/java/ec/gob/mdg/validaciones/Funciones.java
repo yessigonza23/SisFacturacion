@@ -23,7 +23,6 @@ import ec.gob.mdg.model.ParametroDetalle;
 import ec.gob.mdg.model.RecaudacionDetalle;
 import ec.gob.mdg.model.Usuario;
 import ec.gob.mdg.model.UsuarioPunto;
-import ec.gob.mdg.model.VistaConciliacionCompDepositoEstcCUentaDTO;
 import ec.gob.mdg.util.UtilsDate;
 
 @Named
@@ -603,20 +602,20 @@ public class Funciones implements Serializable {
 
 	}
 
-	@Transactional
-	public void consolidaDepositos(Integer anio) throws Exception {
-		try {
-			Query query = em.createNativeQuery("CALL financiero.consolidadeposito_7(:panio)");
-			query = em.createNativeQuery("CALL financiero.consolidadeposito_6(:panio)");
-			query = em.createNativeQuery("CALL financiero.consolidadeposito_5(:panio)");
-			query = em.createNativeQuery("CALL financiero.consolidadeposito_4(:panio)");
-			query = em.createNativeQuery("CALL financiero.consolidadeposito_3(:panio)");
-			query.setParameter("panio", anio);
-			query.executeUpdate();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
+//	@Transactional
+//	public void consolidaDepositos(Integer anio) throws Exception {
+//		try {
+//			Query query = em.createNativeQuery("CALL financiero.consolidadeposito_7(:panio)");
+//			query = em.createNativeQuery("CALL financiero.consolidadeposito_6(:panio)");
+//			query = em.createNativeQuery("CALL financiero.consolidadeposito_5(:panio)");
+//			query = em.createNativeQuery("CALL financiero.consolidadeposito_4(:panio)");
+//			query = em.createNativeQuery("CALL financiero.consolidadeposito_3(:panio)");
+//			query.setParameter("panio", anio);
+//			query.executeUpdate();
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//	}
 
 	public Date fechaMaxEstadoCuenta() {
 		Date fecha;

@@ -127,8 +127,8 @@
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtCi" maxlength="13"
-									placeholder="cedula cliente"
-									onkeypress="return deshabilitarEnter(event);"
+									placeholder="cedula cliente" 
+									onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.cliente.ci}">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.buscarClientes()}"
@@ -165,7 +165,8 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
 									requiredMessage="Requerido Nombres"
-									style="width:200px;text-transform: uppercase;" />
+									onkeyup="mayusculas(this)"
+									style="width:200px;" />
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>
@@ -178,7 +179,8 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.direccion}" required="true"
 									requiredMessage="Dirección Requerida"
-									style="width:300px;text-transform: uppercase;" />
+									onkeyup="mayusculas(this)"
+									style="width:300px;" />
 								<p:message for="txtDireccion" display="icon" />
 							</p:column>
 						</p:row>
@@ -187,7 +189,7 @@
 							<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtTelefono" maxlength="10"
-									onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+									onkeyup="return solonumeros(event);"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.telefono}" required="true"
 									requiredMessage="Teléfono requerido" style="width:100px;" />
@@ -202,7 +204,8 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.correo}" required="true"
 									requiredMessage="Requerido Correo electronico"
-									style="width:300px;text-transform: lowercase;"
+									style="width:300px;"
+									onkeyup="minusculas(this)"
 									validatorMessage="Correo electrónico no es válido">
 									<f:validateRegex
 										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -546,7 +549,8 @@
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte Depositante: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
-									placeholder="Ci/RUC/Pasaporte del Deposito"
+									placeholder="Ci/RUC/Pasaporte del Deposito" 
+									onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>

@@ -154,7 +154,7 @@ public class CargaBancoBean implements Serializable {
 	
 	public void consolida(Integer anio,Integer id_usuario) {
 		try {
-			fun.consolidaDepositos(anio);
+//			fun.consolidaDepositos(anio);
 			
 			fun.consolidaDepositosE7(anio,id_usuario);
 			fun.consolidaDepositosE6(anio,id_usuario);

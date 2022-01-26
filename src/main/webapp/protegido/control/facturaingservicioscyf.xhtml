@@ -131,7 +131,7 @@
 								<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtCi" maxlength="13"
-										placeholder="cedula/RUC cliente"
+										placeholder="cedula/RUC cliente" onkeyup="mayusculas(this)"
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.ruc}">
 										<p:ajax event="valueChange"
@@ -154,7 +154,7 @@
 										<p:ajax event="change"
 											listener="#{ingresoFacturaServiciosCyfBean.validaIdentificacion()}"
 											process="@this" update="ingFacturas:txtNombres" />
-										
+
 										<f:selectItem itemLabel="RUC" itemValue="R" />
 										<f:selectItem itemLabel="Cédula" itemValue="C" />
 										<f:selectItem itemLabel="Pasaporte" itemValue="P" />
@@ -169,7 +169,8 @@
 									<p:inputText id="txtNombres" maxlength="150"
 										value="#{ingresoFacturaServiciosCyfBean.nombre}"
 										required="true" requiredMessage="Requerido Nombres"
-										style="width:200px;text-transform: uppercase;"
+										style="width:200px;"
+										onkeyup="mayusculas(this)"
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}" />
 									<p:message for="txtNombres" display="icon" />
 								</p:column>
@@ -183,7 +184,8 @@
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.cliente.direccion}"
 										required="true" requiredMessage="Dirección Requerida"
-										style="width:300px;text-transform: uppercase;" />
+										onkeyup="mayusculas(this)"
+										style="width:300px;" />
 									<p:message for="txtDireccion" display="icon" />
 								</p:column>
 							</p:row>
@@ -192,7 +194,7 @@
 								<p:column style="border-style: hidden; width:130px;">Teléfono: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtTelefono" maxlength="10"
-										onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+										onkeypress="return solonumeros(event);"
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.cliente.telefono}"
 										required="true" requiredMessage="Teléfono requerido"
@@ -208,6 +210,7 @@
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.cliente.correo}"
 										required="true" requiredMessage="Requerido Correo electronico"
+										onkeyup="minusculas(this)"
 										style="width:300px;"
 										validatorMessage="Correo electrónico no es válido">
 										<f:validateRegex
@@ -532,13 +535,14 @@
 								</p:inputText>
 							</p:column>
 						</p:row>
-						
+
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte Depositante: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
 									placeholder="Ci/RUC/Pasaporte del Deposito"
+									onkeyup="mayusculas(this)"
 									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>

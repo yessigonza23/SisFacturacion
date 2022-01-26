@@ -510,15 +510,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		}
 		detalle = detalle + "de las licencias de importaciones: ";
 		for (Fin_Importaciones_DTO f : listaImportaciones) {
-			System.out.println(f.getNum_solicitud() + "  lista de importaciones");
 			detalle = detalle + f.getNum_solicitud() + ", ";
-		}
-		;
+		};
 
 		for (Fin_Importaciones_DTO f : listaImportacionesRec) {
 			ComprobanteDetalle det = new ComprobanteDetalle();
 			id_tmp++;
-			System.out.println("codigo importacion " + f.getValor_pago());
 			double valorcero = f.getValor_pago();
 			this.recaudacionDetalle = serviceRecaudacionDetalle.mostrarRecaudacionDetallePorCodigo(f.getRecaudacion());
 			det.setId(null);
@@ -566,11 +563,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		}
 		detalle = detalle + "de las licencias de certificados: ";
 		for (Fin_Importaciones_No_DTO f : listaImportacionesNo) {
-			System.out.println(f.getNum_solicitud() + "  lista de importaciones no");
 			detalle = detalle + f.getNum_solicitud() + ", ";
-		}
-		;
+		};
+		
+
 		parametroDetalle = serviceParametroDetalle.mostrarValorDescripcion("RMU");
+
 		for (Fin_Importaciones_No_DTO f : listaImportacionesNoRec) {
 
 			ComprobanteDetalle det = new ComprobanteDetalle();
@@ -597,6 +595,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		}
 
 		totalDetalle();
+//		System.out.println("3 Imp no");
 	}
 
 	/// LISTAR SERVICIOS DE GUIAS
@@ -778,7 +777,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	// GUARDAR COMPROBANTE
 	@Transactional
-	public void registrarComprobante() {
+	public void registrarComprobante() {		
 		try {
 			contador = (Integer) serviceComprobante.validaCierre(usuPunto);
 			if (contador > 0) {
@@ -787,32 +786,41 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 			} else {
 				totalDetalle();
 				totalDeposito();
+				
 				if (totaldet != totaldep) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Error los valores de los detalles es diferente", "Error"));
-				} else {
+				} else {		
+					
 					// para validar la cedula
 					Long a = fun.buscarCliente(cliente);
+					
 					if (a == 0) {
+						
 						Cliente c = new Cliente();
 						c = cliente;
-						String clave = this.cliente.getCi();
+						String clave = this.ruc;
 						String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
 						c.setClave(claveHash);
-						c.setNombre(nombre);
-						c.setCi(ruc);
+						c.setCi(ruc.toUpperCase());
+						c.setNombre(nombre.toUpperCase());
 						c.setTipoid(tipoIdentificacion);
 						serviceCliente.registrar(c);
 					} else {
+						
+						cliente.setCi(cliente.getCi().toUpperCase());
+						cliente.setNombre(cliente.getNombre().toUpperCase());
 						serviceCliente.modificar(cliente);
 					}
+					
+					
 					usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 					// saca el secuencial +1
 					num1 = (Integer) fun.secFactura(usuPunto);
 					Comprobante comp = new Comprobante();
 					comp.setNumero(num1);
-					comp.setClienteruc(ruc);
-					comp.setClientenombre(nombre);
+					comp.setClienteruc(ruc.toUpperCase());
+					comp.setClientenombre(nombre.toUpperCase());
 					comp.setClientedireccion(cliente.getDireccion());
 					comp.setClientetelefono(cliente.getTelefono());
 					fechaActual = UtilsDate.fechaActual();
@@ -823,6 +831,8 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					comp.setTipocomprobante("F");
 					comp.setValor(totaldet);
 					comp.setPuntoRecaudacion(punto);
+					
+					
 					//// GENERAR CLAVE ACCESO
 					Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 					calendar.setTime(fechaActual);
@@ -842,6 +852,8 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					claveA = claveA + verificador;
 					comp.setClaveacceso(claveA);
 					////////////////////////////////////////////
+					
+					
 					id_comprobante = serviceComprobante.registrar(comp);
 					// actualiza la secuencia
 					fun.actualizaSecuencialFactura(usuPunto, num1);
@@ -849,10 +861,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 						det.setComprobante(comp);
 						serviceComprobanteDetalle.registrar(det);
 					}
+					
 					for (ComprobanteDepositos dep : listaComprobanteDepositos) {
 						dep.setComprobante(comp);
 						serviceComprobanteDepositos.registrar(dep);
 					}
+				
 					comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
 					/// GENERAR XML PARA LA FACTURA
 					genXml.generarXmlArchivo(punto.getId(), num1);
@@ -887,7 +901,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					"Error, debe realizar el cierre del día anterior, no podrá facturar", "Error"));
 		} else {
 			int factura_int = Integer.parseInt(factura);
-			System.out.println("entra a seleccionar el servicio factura numero: " + factura);
+
 			if (paramtipo2 == "C" && factura_int!=0) {
 				factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 						+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
@@ -906,7 +920,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 				}
 			} else if (paramtipo2 == "N" && factura_int!=0) {
 				for (Fin_Importaciones_No_DTO imp : listaImportacionesNo) {
-					System.out.println("entra a no controlados factura numero: " + factura);
+
 					dbcyf.actualizaimpno("N", imp.getCod_entidad(), factura, imp.getNum_solicitud());
 				}
 			} else if (paramtipo2 == "G" && factura_int!=0) {

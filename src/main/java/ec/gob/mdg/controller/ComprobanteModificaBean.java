@@ -602,10 +602,7 @@ public class ComprobanteModificaBean implements Serializable {
 		try {
 
 			modificarComprobanteDeposito();
-			System.out.println("despues de actualizar depositos ");
-			System.out.println("autorizacion " + comprobante.getAutorizacion());
-			System.out.println("estadoAnterior " + estadoAnterior);
-			System.out.println("comprobante.getEstado() " + comprobante.getEstado());
+		
 
 			if ((comprobante.getAutorizacion() != null)) {
 				if (estadoAnterior == comprobante.getEstado()) {
@@ -618,8 +615,7 @@ public class ComprobanteModificaBean implements Serializable {
 				}else if ((!estadoAnterior.equals(comprobante.getEstado()))) {
 
 					comprobante.setEstado(estadoAnterior);
-					comprobante.setFechaanulacion(fechaActual);
-
+					comprobante.setFechaanulacion(comprobante.getFechaanulacion());
 					serviceComprobante.modificar(comprobante);
 
 					validaestado = false;
@@ -642,9 +638,7 @@ public class ComprobanteModificaBean implements Serializable {
 				totalDeposito();
 				if (totaldet == totaldep) {
 					// VALIDAR CLIENTE
-					System.out.println("entra");
-					System.out.println("entr cuando la autorización es null " + cliente.getNombre());
-
+					
 					Long a = fun.buscarCliente(cliente);
 					System.out.println("longitud a " + a);
 
@@ -654,17 +648,17 @@ public class ComprobanteModificaBean implements Serializable {
 						String clave = this.cliente.getCi();
 						String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
 						c.setClave(claveHash);
+						c.setCi(cliente.getCi().toUpperCase());
 						serviceCliente.registrar(c);
 					} else {
-						System.out.println("entra a modificar el cliente");
-						System.out.println("nuevo cliente nombre " + cliente.getNombre());
+						
 						cliente.setNombre(cliente.getNombre());
-						System.out.println("despuesd " + cliente.getNombre());
+						cliente.setCi(cliente.getCi().toUpperCase());
 						serviceCliente.modificar(cliente);
 					}
 					/// MODIFICAR COMPROBANTE
 					comprobante.setValor(totaldet);
-					comprobante.setClienteruc(cliente.getCi());
+					comprobante.setClienteruc(cliente.getCi().toUpperCase());
 					comprobante.setClientenombre(cliente.getNombre().toUpperCase());
 					comprobante.setClientedireccion(cliente.getDireccion().toUpperCase());
 					comprobante.setClientetelefono(cliente.getTelefono());

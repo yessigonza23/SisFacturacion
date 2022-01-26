@@ -151,12 +151,12 @@ public class CargaMasivaAcuerdoBean implements Serializable {
 		fechaActual = UtilsDate.fechaActual();
 		System.out.println("entra try ");
 		try {
-			System.out.println("entra try 1");
+//			System.out.println("entra try 1");
 			path = UtilsArchivos.getRutaCargaMasiva() + "SArchivoAcuerdo" + punto.getId() + ".csv";
 
 			String line = "";
 			String cvsSplitBy = ";";
-			System.out.println("entra try 12");
+//			System.out.println("entra try 12");
 			try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 				c = 1;
 				while ((line = br.readLine()) != null && contador == 0) {
@@ -167,7 +167,7 @@ public class CargaMasivaAcuerdoBean implements Serializable {
 					String tipoidentificacion = leerArchivo[14];
 
 					String validaIdentificacion = CedulaRuc.comprobacion(ruc, tipoidentificacion);
-					System.out.println("entra try 2");
+//					System.out.println("entra try 2");
 					if (!validaIdentificacion.equals("T")) {
 						contador++;
 
@@ -190,7 +190,7 @@ public class CargaMasivaAcuerdoBean implements Serializable {
 						String[] leerArchivo = line.split(cvsSplitBy);
 
 						String ruc = leerArchivo[0];
-System.out.println("1");
+
 						String establecimientotmp = leerArchivo[1];
 						Integer establecimiento = Integer.parseInt(establecimientotmp);
 
@@ -198,47 +198,47 @@ System.out.println("1");
 						if (provincia.trim().length() > 100) {
 							provincia = provincia.substring(0, 9);
 						}
-						System.out.println("2");
+//						System.out.println("2");
 						String canton = leerArchivo[3];
 						if (canton.trim().length() > 100) {
 							canton = canton.substring(0, 99);
 						}
-						System.out.println("3");
+//						System.out.println("3");
 						String telefono = leerArchivo[4];
 						if (telefono.trim().length() > 10) {
 							telefono = telefono.substring(0, 9);
 						}
-						System.out.println("4");
+//						System.out.println("4");
 
 						String correo = leerArchivo[5];
 						if (correo.trim().length() > 100) {
 							correo = correo.substring(0, 99);
 						}
-						System.out.println("5");
+//						System.out.println("5");
 						String recaudacion = leerArchivo[6];
 						if (recaudacion.trim().length() > 100) {
 							recaudacion = recaudacion.substring(0, 99);
 						}
-						System.out.println("6");
+//						System.out.println("6");
 						String tipotramite = leerArchivo[7];
 						if (tipotramite.trim().length() > 200) {
 							tipotramite = tipotramite.substring(1, 199);
 						}
-						System.out.println("7");
+//						System.out.println("7");
 						String direccion = leerArchivo[8];
 						if (direccion.trim().length() > 150) {
 							direccion = direccion.substring(1, 199);
 						}
-						System.out.println("8");
+//						System.out.println("8");
 						String depositonumero = leerArchivo[9];
-						System.out.println("9");
+//						System.out.println("9");
 						String fecha_tmp = leerArchivo[10];
 						java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 						Date fechadeposito = (Date) formatter.parse(fecha_tmp);
 						double valor = Double.parseDouble(leerArchivo[11].replace(",", "."));
 
 						String codigopaf = leerArchivo[12];
-						System.out.println("10");
+//						System.out.println("10");
 						String cliente = leerArchivo[13];
 						if (cliente.trim().length() > 150) {
 							cliente = cliente.substring(0, 149);

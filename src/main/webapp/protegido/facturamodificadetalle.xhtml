@@ -82,15 +82,15 @@
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden; width:50px;">Fecha Anulación: </p:column>
 							<p:column style="border-style: hidden;">
-							<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
-									value="#{comprobanteConsultaModificaBean.fecha_inicio}">
+								<p:calendar id="txtFechaInicio" pattern="dd/MM/yyyy" mask="true"
+									value="#{comprobanteModificaBean.comprobante.fechaanulacion}">
 
 								</p:calendar>
 								<p:watermark for="txtFechaInicio" value="dd/MM/yyyy" />
 							</p:column>
 						</p:row>
-						
-						
+
+
 
 					</p:panelGrid>
 					<p:separator />
@@ -100,7 +100,7 @@
 							<p:column style="border-style: hidden;">
 								<p:inputText id="autfact" size="5"
 									value="#{comprobanteModificaBean.comprobante.autorizacion}"
-									style="width:420px;" disabled="true" />
+									style="width:400px;" disabled="true" />
 							</p:column>
 						</p:row>
 						<p:row style="border-style: hidden;">
@@ -108,7 +108,7 @@
 							<p:column style="border-style: hidden;">
 								<p:inputText id="fechaAutfact" size="5"
 									value="#{comprobanteModificaBean.comprobante.autorizacionfecha}"
-									style="width:300px;" disabled="true" />
+									style="width:150px;" disabled="true" />
 							</p:column>
 						</p:row>
 						<p:row style="border-style: hidden;">
@@ -157,7 +157,7 @@
 								<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtCi" maxlength="13"
-										placeholder="cedula cliente"
+										placeholder="cedula cliente" onkeyup="mayusculas(this)"
 										onkeypress="return deshabilitarEnter(event);"
 										value="#{comprobanteModificaBean.cliente.ci}"
 										disabled="#{comprobanteModificaBean.estadeshabilitado}">
@@ -193,6 +193,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtNombres"
 										disabled="#{comprobanteModificaBean.validador}"
+										onkeyup="mayusculas(this)"
 										value="#{comprobanteModificaBean.comprobante.clientenombre}"
 										required="true" requiredMessage="Requerido Nombres"
 										style="width:200px;" />
@@ -206,6 +207,7 @@
 								<p:column style="border-style: hidden;">
 									<p:inputText id="txtDireccion"
 										disabled="#{comprobanteModificaBean.validador}"
+										onkeyup="mayusculas(this)"
 										value="#{comprobanteModificaBean.cliente.direccion}"
 										required="true" requiredMessage="Dirección Requerida"
 										style="width:300px;" />
@@ -220,7 +222,7 @@
 										disabled="#{comprobanteModificaBean.validador}"
 										value="#{comprobanteModificaBean.cliente.telefono}"
 										required="true" requiredMessage="Teléfono requerido"
-										style="width:100px;" />
+										onkeypress="return solonumeros(event);" style="width:100px;" />
 									<p:message for="txtTelefono" display="icon" />
 								</p:column>
 							</p:row>
@@ -231,7 +233,8 @@
 									<p:inputText id="txtCorreo"
 										disabled="#{comprobanteModificaBean.validador}"
 										value="#{comprobanteModificaBean.cliente.correo}"
-										required="true" requiredMessage="Requerido Correo electronico"
+										onkeyup="minusculas(this)" required="true"
+										requiredMessage="Requerido Correo electronico"
 										style="width:300px;" />
 									<p:message for="txtCorreo" display="icon" />
 								</p:column>
@@ -564,14 +567,14 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">Clave Acceso: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="clavefact" size="30" disabled="true"
+									<p:inputText id="clavefact" size="60" disabled="true"
 										value="#{comprobanteModificaBean.comprobante.claveacceso}" />
 								</p:column>
 							</p:row>
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">XML: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="xmlfact" size="30" disabled="true"
+									<p:inputText id="xmlfact" size="60" disabled="true"
 										value="#{comprobanteModificaBean.comprobante.xml}" />
 								</p:column>
 							</p:row>
@@ -579,7 +582,7 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">Mensaje: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="Mensajefact" size="30"
+									<p:inputText id="Mensajefact" size="60"
 										value="#{comprobanteModificaBean.mensajeSri}" />
 								</p:column>
 							</p:row>
@@ -587,7 +590,7 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">XML SRI: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="xmlSrifact" size="30" disabled="true"
+									<p:inputText id="xmlSrifact" size="60" disabled="true"
 										value="#{comprobanteModificaBean.comprobante.xmlsri}" />
 								</p:column>
 							</p:row>
@@ -595,7 +598,7 @@
 							<p:row style="border-style: hidden;">
 								<p:column style="border-style: hidden; width:50px;">Mensaje Error: </p:column>
 								<p:column style="border-style: hidden;">
-									<p:inputText id="MensajeErrorfact" size="30"
+									<p:inputText id="MensajeErrorfact" size="60"
 										value="#{comprobanteModificaBean.mensajeSriError}" />
 								</p:column>
 							</p:row>
@@ -752,6 +755,7 @@
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
 									placeholder="Ci/RUC/Pasaporte del Deposito"
+									onkeyup="mayusculas(this)"
 									value="#{comprobanteModificaBean.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>
