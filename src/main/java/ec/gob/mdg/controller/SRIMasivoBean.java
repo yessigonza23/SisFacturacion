@@ -134,9 +134,9 @@ public class SRIMasivoBean implements Serializable {
 	public String firmarDocumentoXmlXades(Comprobante c) throws FileNotFoundException, IOException {
 
 		XadesSign x = new XadesSign();
-		System.out.println("firma xml " + c.getXml());
+		
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
-		System.out.println("pasa firmando");
+		
 		String xml64 = converBase64(xmlSigned);
 		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());
@@ -157,7 +157,7 @@ public class SRIMasivoBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-			System.out.println("entra a firmar " + comprobante.getNumero());
+//			System.out.println("entra a firmar " + comprobante.getNumero());
 
 			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
@@ -176,7 +176,7 @@ public class SRIMasivoBean implements Serializable {
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobante);
-				System.out.println("2");
+//				System.out.println("2");
 				try {
 
 					URL oURL = new URL(url);
@@ -200,7 +200,7 @@ public class SRIMasivoBean implements Serializable {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					System.out.println(sb.toString());
+//					System.out.println(sb.toString());
 					Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 					String estado = xml_utilidades.getNodes("RespuestaRecepcionComprobante", "estado", doc);
 
@@ -298,7 +298,7 @@ public class SRIMasivoBean implements Serializable {
 				con.setRequestProperty("Host", host);
 				OutputStream reqStreamOut = con.getOutputStream();
 				reqStreamOut.write(n.formatSendPost(comprobante.getClaveacceso()).getBytes());
-				System.out.println("2");
+				
 				java.io.BufferedReader rd = new java.io.BufferedReader(
 						new java.io.InputStreamReader(con.getInputStream(), "UTF8"));
 				String line = "";
@@ -307,12 +307,10 @@ public class SRIMasivoBean implements Serializable {
 					sb.append(line);
 				}
 
-				System.out.println(sb.toString());
+			
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 //			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
-
-				System.out.println("estado " + estado);
 
 				if (estado.equals("AUTORIZADO")) {
 					try {
@@ -362,7 +360,7 @@ public class SRIMasivoBean implements Serializable {
 
 					MensajeSri = mensaje;
 					MensajeSriError = informacionAdicional;
-					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
+					
 				}
 				con.disconnect();
 			} catch (Exception ex) {

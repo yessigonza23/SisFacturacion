@@ -71,7 +71,7 @@ public class EnviarCorreoOlvidoContrasenia implements Serializable {
 					  + "Ministerio de Gobierno - Sistema de Facturaci&oacute;n <br><br>"+ "</body></html>";
 		
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
@@ -80,7 +80,7 @@ public class EnviarCorreoOlvidoContrasenia implements Serializable {
 			
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
-			System.out.println("1" );
+//			System.out.println("1" );
 
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(institucion.getUsuariocorreo(),institucion.getNombre()));

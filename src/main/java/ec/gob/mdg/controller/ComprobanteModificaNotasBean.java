@@ -100,7 +100,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 
 	@Inject
 	private IAuditoriaService serviceAuditoria;
-	
+
 	@Inject
 	private IMensajeService serviceMensaje;
 
@@ -166,11 +166,10 @@ public class ComprobanteModificaNotasBean implements Serializable {
 	double valorAnterior;
 	String MensajeSri;
 	String MensajeSriError;
-	
+
 	String ambiente;
 	String url;
 	String host;
-
 
 	@PostConstruct
 	public void init() {
@@ -446,7 +445,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 		totalDetalle();
 	}
 
-//////////////////////PROCESO SRI
+		//////////////////////PROCESO SRI
 
 	public static XML_Utilidades xml_utilidades = new XML_Utilidades();
 
@@ -457,17 +456,17 @@ public class ComprobanteModificaNotasBean implements Serializable {
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
 		System.out.println("pasa firmando");
 		String xml64 = converBase64(xmlSigned);
-		//GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
+		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());
-		//GUARDA EL DOCUMENTO XML EN EL PATH DE FIRMADOS
+		// GUARDA EL DOCUMENTO XML EN EL PATH DE FIRMADOS
 		FileUtil.writeSignedXml(c, xmlSigned);
 
 		return xml64;
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void enviar(Integer id_comprobante) {// GEN-FIRST:event_btnEnviarActionPerformed
-		System.out.println("entra a envair id_comprobante" + id_comprobante);
+		//		System.out.println("entra a envair id_comprobante" + id_comprobante);
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
 
 		if (comprobante.getAutorizacion() != null) {
@@ -476,38 +475,29 @@ public class ComprobanteModificaNotasBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-			System.out.println("entra a firmar " + comprobante.getNumero());
+			//			System.out.println("entra a firmar " + comprobante.getNumero());
 
-			//estadeshabilitadoEnv = false;
+			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
-			
+
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-			System.out.println("------Ambiente-------- " + ambiente);
+			//			System.out.println("------Ambiente-------- " + ambiente);
 
 			if (ambiente.equals("1")) {
-				System.out.println("------Entra Enviar Ambiente de Pruebas -------- ");
+				//				System.out.println("------Entra Enviar Ambiente de Pruebas -------- ");
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 			} else if (ambiente.equals("2")) {
-				System.out.println("------Entra Enviar Ambiente de PRODUCCIÓN -------- ");
+				//				System.out.println("------Entra Enviar Ambiente de PRODUCCIÓN -------- ");
 				//// AMBIENTE DE PRODUCCIoN
 				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
 			}
 
-
-			////AMBIENTE DE PRUEBAS
-//			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-//			String host = "celcer.sri.gob.ec";
-
-			////AMBIENTE DE PRODUCCIN
-			//String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-			//String host = "cel.sri.gob.ec";
-
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobante);
-				System.out.println("2");
+				//				System.out.println("2");
 				try {
 
 					URL oURL = new URL(url);
@@ -531,7 +521,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					System.out.println(sb.toString());
+					//					System.out.println(sb.toString());
 					Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 					String estado = xml_utilidades.getNodes("RespuestaRecepcionComprobante", "estado", doc);
 
@@ -541,9 +531,9 @@ public class ComprobanteModificaNotasBean implements Serializable {
 							comprobante.setEstadosri("E");
 							comprobante.setEstadoerror("S");
 							serviceComprobante.modificar(comprobante);
-							System.out.println("deshabilita booton enviar");
+							//							System.out.println("deshabilita booton enviar");
 							estadeshabilitadoEnv = true; // PARA DESHABILITAR EL BOTON ENVIAR EN LA FACTURA
-							System.out.println("habilita booton autorizar");
+							//							System.out.println("habilita booton autorizar");
 							estadeshabilitadoAut = false;
 							estadeshabilitado = true;
 
@@ -599,33 +589,25 @@ public class ComprobanteModificaNotasBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-			//	estadeshabilitadoA = false;
+			// estadeshabilitadoA = false;
 			SoapAutorizacion n = new SoapAutorizacion();
-			
+
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-			System.out.println("------Ambiente-------- " + ambiente);			
-			
+			//			System.out.println("------Ambiente-------- " + ambiente);			
+
 			if (ambiente.equals("1")) {
-				System.out.println("------Entra Autoriza Ambiente de Pruebas -------- ");
+				//				System.out.println("------Entra Autoriza Ambiente de Pruebas -------- ");
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 
 			} else if (ambiente.equals("2")) {
-				System.out.println("------Entra Autoriza Ambiente de PRODUCCIÓN -------- ");
+				//				System.out.println("------Entra Autoriza Ambiente de PRODUCCIÓN -------- ");
 				//// AMBIENTE DE PRODUCCIoN
-				url ="https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
+				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
 			}
 
-
-			///AMBIENTE DE PRUEBAS
-//			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-//			String host = "celcer.sri.gob.ec";
-
-			///AMBIENTE DE PRODUCCIN
-			// String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-			// String host = "cel.sri.gob.ec";
 			try {
 				URL oURL = new URL(url);
 				HttpURLConnection con = (HttpURLConnection) oURL.openConnection(Proxy.NO_PROXY);
@@ -637,7 +619,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 				con.setRequestProperty("Host", host);
 				OutputStream reqStreamOut = con.getOutputStream();
 				reqStreamOut.write(n.formatSendPost(comprobante.getClaveacceso()).getBytes());
-				System.out.println("2");
+				//				System.out.println("2");
 				java.io.BufferedReader rd = new java.io.BufferedReader(
 						new java.io.InputStreamReader(con.getInputStream(), "UTF8"));
 				String line = "";
@@ -646,9 +628,9 @@ public class ComprobanteModificaNotasBean implements Serializable {
 					sb.append(line);
 				}
 
-				System.out.println(sb.toString());
+               //				System.out.println(sb.toString());
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
-				//SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+				// SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
 
 				if (estado.equals("AUTORIZADO")) {
@@ -689,7 +671,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 					String informacionAdicional = xml_utilidades.getNodes("mensaje", "informacionAdicional", doc);
 					String tipo = xml_utilidades.getNodes("mensaje", "tipo", doc);
 
-////INGRESA A LA TABLA MENSAJES EL ERROR
+                    ////INGRESA A LA TABLA MENSAJES EL ERROR
 					this.mensaje.setId_comprobante(this.comprobante.getId());
 					this.mensaje.setIdentificador(identificador);
 					this.mensaje.setMensaje(mensaje);
@@ -708,7 +690,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 		}
 	}
 
-//////////////////ENVIAR CORREO
+      //////////////////ENVIAR CORREO
 
 	public void eviarCorreo(Integer id_comprobante, String tipo) {
 
@@ -724,7 +706,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 		props.put("mail.smtp.host", institucion.getServidorcorreo()); // El servidor SMTP de Google
 		props.put("mail.smtp.user", institucion.getUsuariocorreo());
 		props.put("mail.smtp.clave", institucion.getClavecorreo()); // La clave de la cuenta
-		props.put("mail.smtp.auth", "true"); 
+		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true"); // Para conectar de manera segura al servidor SMTP
 		props.put("mail.smtp.port", "587"); // El puerto SMTP seguro de Google
 		props.put("mail.smtp.ssl.trust", "*");
@@ -743,11 +725,12 @@ public class ComprobanteModificaNotasBean implements Serializable {
 				+ comprobante.getPuntoRecaudacion().getEstablecimiento() + "- "
 				+ comprobante.getPuntoRecaudacion().getPuntoemision() + "- "
 				+ String.valueOf(obj.format("%09d", comprobante.getNumero())) + ", con fecha: "
-				+ comprobante.getFechaemision() + ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
+				+ comprobante.getFechaemision()
+				+ ", se encuentra disponible para su visualizaci&oacute;n y descarga<br><br>"
 				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
@@ -761,7 +744,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
 			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
 
-////AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+            ////AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
@@ -769,7 +752,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(institucion.getUsuariocorreo(), institucion.getNombre()));
-			message.addRecipients(Message.RecipientType.TO, comprobante.getCliente().getCorreo()); 
+			message.addRecipients(Message.RecipientType.TO, comprobante.getCliente().getCorreo());
 			message.setSubject(asuntoMensaje);
 			message.setContent(multiParte);
 			Transport transport = session.getTransport("smtp");
@@ -779,12 +762,12 @@ public class ComprobanteModificaNotasBean implements Serializable {
 			transport.close();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se envia con éxito", "Aviso"));
-//return true;
+
 		} catch (Exception e) {
 			System.out.println("Error " + e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR: No se Envió por correo", "ERROR"));
-//return false;
+
 		}
 	}
 

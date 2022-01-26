@@ -81,7 +81,7 @@ public class EnviarCorreoComprobantesBean implements Serializable {
 				+ institucion.getNombre() + "<br><br>"+ "</body></html>";
 		
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();

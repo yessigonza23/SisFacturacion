@@ -47,12 +47,19 @@ public class ClienteRegistroBean implements Serializable {
 
 	///VERIFICA SI EXISTE EL CLIENTE
 	public void verificarExistencia(String ci) {
-		this.clientetmp = service.ClientePorCiParametro(ci);		
-		if(clientetmp.getCi()!=null) {
-			validador=true;
+		if (ci == null) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Este cliente ya existe", "Error"));
+					"erro sin CI", "Error"));
+		
+		}else {
+			this.clientetmp = service.ClientePorCiParametro(ci);		
+			if(clientetmp.getCi()!=null) {
+				validador=true;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Este cliente ya existe", "Error"));
+			}
 		}
+		
 	}
 	@Transactional
 	public void registrar() {

@@ -64,12 +64,11 @@ public class SRIBean implements Serializable {
 	public static XML_Utilidades xml_utilidades = new XML_Utilidades();
 
 	public String firmarDocumentoXmlXades(Comprobante c) throws FileNotFoundException, IOException {
-		
-		
+
 		XadesSign x = new XadesSign();
-		
+
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
-		
+
 		String xml64 = converBase64(xmlSigned);
 		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());
@@ -81,7 +80,7 @@ public class SRIBean implements Serializable {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void enviar(Integer id_comprobante) {// GEN-FIRST:event_btnEnviarActionPerformed
-		
+
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
 
 		if (comprobante.getAutorizacion() != null) {
@@ -90,21 +89,18 @@ public class SRIBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else if (comprobante.getId() != null) {
-			
 
 			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
-			
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-			
-
+		
 			if (ambiente.equals("1")) {
-				
+
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 			} else if (ambiente.equals("2")) {
-				
+
 				//// AMBIENTE DE PRODUCCIoN
 				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
@@ -120,7 +116,6 @@ public class SRIBean implements Serializable {
 
 					con.setDoOutput(true);
 					con.setRequestMethod(method);
-
 					con.setRequestProperty("Content-type", "text/xml; charset=utf-8");
 					con.setRequestProperty("SOAPAction", "");
 					con.setRequestProperty("Host", host);
@@ -135,7 +130,7 @@ public class SRIBean implements Serializable {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					
+
 					Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 					String estado = xml_utilidades.getNodes("RespuestaRecepcionComprobante", "estado", doc);
 
@@ -145,9 +140,9 @@ public class SRIBean implements Serializable {
 							comprobante.setEstadosri("E");
 							comprobante.setEstadoerror("S");
 							serviceComprobante.modificar(comprobante);
-							
+
 							estadeshabilitadoEnv = true; // PARA DESHABILITAR EL BOTON ENVIAR EN LA FACTURA
-							
+
 							estadeshabilitadoAut = false;
 							estadeshabilitado = true;
 
@@ -181,9 +176,7 @@ public class SRIBean implements Serializable {
 							// TODO: handle exception
 						}
 					}
-
 					con.disconnect();
-
 				} catch (Exception ex) {
 					System.out.println("Error: " + ex);
 				}
@@ -194,15 +187,11 @@ public class SRIBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No hay datos para realizar el envío, debe guardar el comprobante", "Error"));
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
 	public void autorizar(Integer id_comprobante) {
-		
-		
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
-
 		if (comprobante.getAutorizacion() != null) {
 			estadeshabilitadoAut = true;
 			estadeshabilitadoA = true;
@@ -210,26 +199,21 @@ public class SRIBean implements Serializable {
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else if (comprobante.getId() != null && comprobante.getEstadosri().equals("E")) {
 			// estadeshabilitadoA = false;
-			
-			
 			SoapAutorizacion n = new SoapAutorizacion();
-			
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-				
-			
+
 			if (ambiente.equals("1")) {
-				
+
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 
 			} else if (ambiente.equals("2")) {
-				
+
 				//// AMBIENTE DE PRODUCCIoN
-				url ="https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
+				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
 			}
-
 
 			try {
 				URL oURL = new URL(url);
@@ -250,7 +234,6 @@ public class SRIBean implements Serializable {
 					sb.append(line);
 				}
 
-				
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
 
@@ -302,7 +285,7 @@ public class SRIBean implements Serializable {
 
 					MensajeSri = mensaje;
 					MensajeSriError = informacionAdicional;
-					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
+//					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
 				}
 				con.disconnect();
 			} catch (Exception ex) {

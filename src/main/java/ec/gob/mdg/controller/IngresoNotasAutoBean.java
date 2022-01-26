@@ -381,7 +381,7 @@ public class IngresoNotasAutoBean implements Serializable {
 				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();

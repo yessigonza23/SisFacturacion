@@ -51,9 +51,7 @@ public class XadesSign {
 	private final static String POLICY_TO_APPLY = "implied";
 
 	public byte[] firmarDocumentoXmlXades(byte[] entrada) {
-
 		X509Certificate certificate = LoadCertificate();
-
 		// Si encontramos el certificado...
 		if (certificate != null) {
 
@@ -72,7 +70,7 @@ public class XadesSign {
 			try {
 				FirmaXML f = new FirmaXML();
 				res = f.signFile(certificate, dataToSign, privateKey, provider);
-				System.out.println("Xml firmado correctamente!!!");
+//				System.out.println("Xml firmado correctamente!!!");
 			} catch (NoSuchMethodError ex) {
 				// logger.info("error : "+ex.getStackTrace() + " ");
 				ex.printStackTrace();
@@ -112,33 +110,23 @@ public class XadesSign {
 		try {
 			// Cargar certificado de fichero PFX
 			KeyStore ks = KeyStore.getInstance("PKCS12");
-
 			InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(firmaPath);
-
 			// ks.load(new BufferedInputStream(is), password.toCharArray());
-
 			ks.load(new BufferedInputStream(new FileInputStream(firmaPath)), password.toCharArray());
-
 			IPKStoreManager storeManager = new KSStore(ks, new PassStoreKS(password));
-
 			List<X509Certificate> certificates = storeManager.getSignCertificates();
-
 			// Si encontramos el certificado...
 			if (certificates.size() >= 1) {
 				// certificate = certificates.get(0);
-
 				for (X509Certificate cert : certificates) {
 					if (cert.getKeyUsage()[0]) {
 						certificate = cert;
 					}
 				}
-
 				// Obtencin de la clave privada asociada al certificado
 				privateKey = storeManager.getPrivateKey(certificate);
-
 				// Obtencin del provider encargado de las labores criptogr�ficas
 				provider = storeManager.getProvider(certificate);
-
 				
 			} else {
 				System.out.println("Certificado no fue cargado..");

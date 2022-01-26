@@ -204,15 +204,16 @@ public class ingresoFactura implements Serializable {
 
 				if (a == 0) {
 
-//					System.out
-//							.println("entra no hay cliente " + this.cliente.getCi() + " - " + this.cliente.getTipoid());
-					String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
-							this.cliente.getTipoid());
-//					System.out.println("valida identificacion " + validaIdentificacion);
-					if (!validaIdentificacion.equals("T")) {
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Tipo de identificacion erronea buscar", validaIdentificacion));
+					if (this.cliente.getCi() != null && this.cliente.getTipoid() != null) {
+						String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
+								this.cliente.getTipoid());
+						if (!validaIdentificacion.equals("T")) {
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR,
+											"Tipo de identificacion erronea buscar", validaIdentificacion));
+						}
 					}
+
 				} else {
 					this.cliente = serviceCliente.ClientePorCiParametro(cliente.getCi());
 
@@ -247,12 +248,14 @@ public class ingresoFactura implements Serializable {
 
 	// VALIDA LA FECHA QUE NO SEA MAYOR A LA ACTUAL
 	public void validaFechaActual(Date fecha) {
-		Date fechaactual = new Date(System.currentTimeMillis());
-		validaFecha = false;
-		if (fecha.after(fechaactual)) {
-			validaFecha = true;
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Fecha es mayor a la fecha de hoy"));
+		if (fecha != null) {
+			Date fechaactual = new Date(System.currentTimeMillis());
+			validaFecha = false;
+			if (fecha.after(fechaactual)) {
+				validaFecha = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Fecha es mayor a la fecha de hoy"));
+			}
 		}
 
 	}
@@ -314,8 +317,6 @@ public class ingresoFactura implements Serializable {
 
 	// METODO PARA LISTAR LA RECAUDACION POR PROCESO OTROS SERVICIOS
 	public void listarRecaudacionDetallePorProcesoOtrosServicios(String tipo_proceso, String estado) {
-		System.out.println("entra en listarRecaudacionDetallePorProcesoOtrosServicios ....");
-
 		this.listaRecaudacionDetalleArr = this.serviceRecaudacionDetalle
 				.listarRecaudacionDetallePorProcesoOtrosServicios(tipo_proceso, estado);
 	}
@@ -354,14 +355,18 @@ public class ingresoFactura implements Serializable {
 	// CALCULA SUBTOTAL DETALLE
 	public double calculaSubtotalDetalle(Integer cantidad, Double valor, Double valorIva) {
 		subtotaldet = 0;
-		if (valorIva == 0) {
-			subtotaldet = (cantidad * valor);
-			subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2);
-		} else {
-			subtotaldet = cantidad * (valorIva * fun.valorIva() / 100);
-			valIva = (valorIva * fun.valorIva() / 100);
-			subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2) + valorIva;
+		if (cantidad != null && valor != null && valorIva != null) {
+
+			if (valorIva == 0) {
+				subtotaldet = (cantidad * valor);
+				subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2);
+			} else {
+				subtotaldet = cantidad * (valorIva * fun.valorIva() / 100);
+				valIva = (valorIva * fun.valorIva() / 100);
+				subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2) + valorIva;
+			}
 		}
+
 		return subtotaldet;
 	}
 
@@ -543,7 +548,7 @@ public class ingresoFactura implements Serializable {
 							num1 = (Integer) fun.secFactura(usuPunto);
 							Comprobante comp = new Comprobante();
 							comp.setNumero(num1);
-							comp.setClienteruc(cliente.getCi().toUpperCase());
+							comp.setClienteruc(cliente.getCi());
 							comp.setClientenombre(cliente.getNombre());
 							comp.setClientedireccion(cliente.getDireccion());
 							comp.setClientetelefono(cliente.getTelefono());
@@ -666,7 +671,7 @@ public class ingresoFactura implements Serializable {
 				+ "<br><br>Atentamente,<br>" + institucion.getNombre() + "<br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();

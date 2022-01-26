@@ -30,13 +30,10 @@ import org.xml.sax.SAXException;
 public class XML_Utilidades {
 
     public Document getDoc(String dir) throws SAXException, ParserConfigurationException, IOException {
-
         File fXmlFile = new File(dir);
-
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
-
         return doc;
     }
 
@@ -85,11 +82,8 @@ public class XML_Utilidades {
     }    
     
     public String converBase64(Document doc) throws UnsupportedEncodingException {
-
         String str = convertDocumentToString(doc);
-
         String bytesEncoded = DatatypeConverter.printBase64Binary(str.getBytes("UTF-8"));
-
         return bytesEncoded;
     }
 
@@ -97,9 +91,7 @@ public class XML_Utilidades {
 
         String resultNodo = null;
         Element docEle = doc.getDocumentElement();
-
         NodeList studentList = docEle.getElementsByTagName(rootNodo);
-
         if (studentList.getLength() > 0) {
             Node node = studentList.item(0);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -115,9 +107,7 @@ public class XML_Utilidades {
 
         String resultNodo = null;
         Element docEle = doc.getDocumentElement();
-
         NodeList studentList = docEle.getElementsByTagName(rootNodo);
-
         if (studentList.getLength() > 0) {
             Node node = studentList.item(0);
             if (node.getNodeType() == Node.DOCUMENT_NODE) {
@@ -143,11 +133,8 @@ public class XML_Utilidades {
 
         //Ejemplo: //RespuestaAutorizacionComprobante/autorizaciones/autorizacion[last()]/estado
         String pathFull = pathLevelXML + nodo;
-
         XPath xpath = XPathFactory.newInstance().newXPath();
-
         return xpath.evaluate(pathFull, doc);
-
     }
 
     private static String nodeToString(Node node) {

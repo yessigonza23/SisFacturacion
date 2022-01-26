@@ -180,7 +180,7 @@ public class UsuarioBean implements Serializable {
 					  + institucion.getNombre() +" - Sistema de Facturaci&oacute;n <br><br>"+ "</body></html>";
 		
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+//		session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();

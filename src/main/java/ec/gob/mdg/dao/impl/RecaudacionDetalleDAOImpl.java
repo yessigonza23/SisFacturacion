@@ -202,7 +202,7 @@ public class RecaudacionDetalleDAOImpl implements IRecaudacionDetalleDAO, Serial
 	@Override
 	public List<RecaudacionDetalle> listarRecaudacionDetallePorProcesoOtrosServicios(String tipo_proceso,String estado) {
 		
-		System.out.println("tipo_proceso, " + tipo_proceso + "  estado " +  estado);
+		
 		List<RecaudacionDetalle> lstRecDet = new ArrayList<RecaudacionDetalle>();
 		try {
 			 Query q= em.createQuery("SELECT rd FROM Proceso p,Recaudacion r,RecaudacionDetalle rd WHERE p.id=r.proceso.id " + 
