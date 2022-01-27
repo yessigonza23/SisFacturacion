@@ -534,7 +534,7 @@ public class VistaRecaudacionDTODAOImpl implements IVistaRecaudacionDTODAO, Seri
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<VistaRecaudacionDTO> listarComprobantesPorCierreIdTotales(Integer id_cierre) {
-		System.out.println("entra a dao impo de la vistarecaudciondto " + id_cierre);
+//		System.out.println("entra a dao impo de la vistarecaudciondto " + id_cierre);
 		
 		List<Object[]> lista = new ArrayList<>();
 		List<VistaRecaudacionDTO> listaFin = new ArrayList<VistaRecaudacionDTO>();

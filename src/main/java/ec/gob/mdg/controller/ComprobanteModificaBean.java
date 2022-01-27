@@ -450,7 +450,7 @@ public class ComprobanteModificaBean implements Serializable {
 		totaldet = 0.00;
 		for (ComprobanteDetalle det : listaComprobanteDet) {
 
-			totaldet = totaldet + ((det.getCantidad() * det.getValorcero()) + det.getCantidad() * det.getValoriva());
+			totaldet = totaldet + ((det.getCantidad() * det.getValorcero()) + (det.getCantidad() * det.getValoriva())+(det.getCantidad() * det.getValoriva() *0.12));
 		}
 	}
 
