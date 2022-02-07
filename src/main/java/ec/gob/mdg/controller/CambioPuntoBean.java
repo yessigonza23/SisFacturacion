@@ -60,11 +60,11 @@ public class CambioPuntoBean implements Serializable{
 	@Transactional
 	public void modificarPunto(PuntoRecaudacion punto_nuevo) {
 		try {		
-			System.out.println("1");
+//			System.out.println("1");
 			usuPunto.setPuntoRecaudacion(punto_nuevo);
-			System.out.println("2");
+//			System.out.println("2");
 			serviceUsuPunto.modificar(usuPunto);
-			System.out.println("3");
+//			System.out.println("3");
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se cambió con éxito", "Haga clic en Continuar"));
 		} catch (Exception e) {

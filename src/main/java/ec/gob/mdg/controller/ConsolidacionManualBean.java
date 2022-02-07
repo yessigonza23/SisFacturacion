@@ -117,7 +117,7 @@ public class ConsolidacionManualBean implements Serializable {
 	@Transactional
 	public void modificar(Integer id_comprobanteDeposito, Integer id_estadoCuenta) {
 		try {
-System.out.println(" consolidaDepositos.getObservacion() " + consolidaDepositos.getObservacion());
+//System.out.println(" consolidaDepositos.getObservacion() " + consolidaDepositos.getObservacion());
 			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobanteDeposito);
 			estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estadoCuenta);
 			

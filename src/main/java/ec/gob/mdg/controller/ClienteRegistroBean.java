@@ -24,10 +24,10 @@ public class ClienteRegistroBean implements Serializable {
 
 	@Inject
 	private IClienteService service;
-	
+
 	@Inject
 	private IClienteService serviceCliente;
-	
+
 	@Inject
 	private Funciones fun;
 
@@ -35,9 +35,9 @@ public class ClienteRegistroBean implements Serializable {
 	private String tipoDialog;
 	private Cliente cliente;
 	private Cliente clientetmp;
-	boolean validador=false;
+	boolean validador = false;
 	boolean valida = false;
-	boolean estadeshabilitado=false;
+	boolean estadeshabilitado = false;
 
 	@PostConstruct
 	public void init() {
@@ -45,65 +45,77 @@ public class ClienteRegistroBean implements Serializable {
 		this.clientetmp = new Cliente();
 	}
 
-	///VERIFICA SI EXISTE EL CLIENTE
+	/// VERIFICA SI EXISTE EL CLIENTE
 	public void verificarExistencia(String ci) {
 		if (ci == null) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"erro sin CI", "Error"));
-		
-		}else {
-			this.clientetmp = service.ClientePorCiParametro(ci);		
-			if(clientetmp.getCi()!=null) {
-				validador=true;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Este cliente ya existe", "Error"));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "erro sin CI", "Error"));
+
+		} else {
+			this.clientetmp = service.ClientePorCiParametro(ci);
+			if (clientetmp.getCi() != null) {
+				validador = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este cliente ya existe", "Error"));
 			}
-		}
-		
-	}
-	@Transactional
-	public void registrar() {
-		Cliente c = new Cliente();
-		c.setTipoid(cliente.getTipoid());
-		c.setCi(cliente.getCi());
-		c.setDireccion(cliente.getDireccion().toUpperCase());
-		c.setNombre(cliente.getNombre().toUpperCase());
-		c.setTelefono(cliente.getTelefono());
-		c.setCorreo(cliente.getCorreo().toLowerCase());
-		try {
-			this.service.registrar(c);
-			estadeshabilitado =true;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Se grabó con éxito", "Satisfactoriamente"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 	}
-	
-	// NUEVO REGISTR0
-		public Boolean nuevo() {
-			estadeshabilitado = false;
-			return estadeshabilitado;
+
+	@Transactional
+	public void registrar() {
+		if (cliente == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Sin Datos"));
+		} else {
+			Cliente c = new Cliente();
+			c.setTipoid(cliente.getTipoid());
+			c.setCi(cliente.getCi());
+			c.setDireccion(cliente.getDireccion().toUpperCase());
+			c.setNombre(cliente.getNombre().toUpperCase());
+			c.setTelefono(cliente.getTelefono());
+			c.setCorreo(cliente.getCorreo().toLowerCase());
+			try {
+				this.service.registrar(c);
+				estadeshabilitado = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Se grabó con éxito", "Satisfactoriamente"));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+	}
+
+	// NUEVO REGISTR0
+	public Boolean nuevo() {
+		estadeshabilitado = false;
+		return estadeshabilitado;
+	}
 
 	public void limpiarControles() {
 		this.cliente = new Cliente();
 	}
-	
+
 	// VALIDADOR DE CEDULA-RUC
 	public void validaIdentificacion() {
-		String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());
-		if (validaIdentificacion.equals("T")) {
-			validador = false;
-		} else {
+		if (cliente == null) {
 			validador = true;
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Tipo de identificacion erronea", validaIdentificacion));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Tipo de identificacion erronea", "error"));
+		} else {
+			String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());
+			if (validaIdentificacion.equals("T")) {
+				validador = false;
+			} else {
+				validador = true;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Tipo de identificacion erronea", validaIdentificacion));
+			}
 		}
+
 	}
-	
+
 	public void buscarClientes() {
 		try {
 			if (cliente == null) {
@@ -112,17 +124,21 @@ public class ClienteRegistroBean implements Serializable {
 			} else {
 				Long a = fun.buscarCliente(cliente);
 				if (a == 0) {
-					String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
-							this.cliente.getTipoid());
-					if (validaIdentificacion.equals("T")) {
-						validador=false;
-					} else {
-						validador=true;
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Tipo de identificacion erronea buscar", validaIdentificacion));
+
+					if (this.cliente.getCi() != null && this.cliente.getTipoid() != null) {
+						validador = false;
+						String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
+								this.cliente.getTipoid());
+						if (!validaIdentificacion.equals("T")) {
+							validador = true;
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_ERROR,
+											"Tipo de identificacion erronea buscar", validaIdentificacion));
+						}
 					}
+
 				} else {
-					validador=true;
+					validador = true;
 					this.cliente = serviceCliente.ClientePorCiParametro(cliente.getCi());
 				}
 			}
@@ -130,8 +146,8 @@ public class ClienteRegistroBean implements Serializable {
 			// TODO: handle exception
 		}
 	}
-	
-	/////GETTER Y SETTERS
+
+	///// GETTER Y SETTERS
 
 	public List<Cliente> getLista() {
 		return lista;
@@ -189,5 +205,4 @@ public class ClienteRegistroBean implements Serializable {
 		this.estadeshabilitado = estadeshabilitado;
 	}
 
-	
 }

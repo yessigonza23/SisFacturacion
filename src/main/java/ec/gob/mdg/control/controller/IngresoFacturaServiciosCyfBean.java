@@ -983,7 +983,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-		session.setDebug(true);
+	//	session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();

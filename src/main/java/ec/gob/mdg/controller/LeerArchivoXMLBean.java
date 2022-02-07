@@ -32,7 +32,7 @@ public class LeerArchivoXMLBean implements Serializable {
 			    DocumentBuilder db = dbf.newDocumentBuilder();
 			    Document doc = db.parse(new FileInputStream(new File("C:\\comprobantes\\firmados\\2402202101176000066000110010030000144561234567810.xml")));
 			    String p = prettyPrint(doc);
-			    System.out.println("imprime atring " + p);
+//			    System.out.println("imprime atring " + p);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}  
@@ -50,7 +50,7 @@ public class LeerArchivoXMLBean implements Serializable {
 	    DOMSource source = new DOMSource(document);
 	    StringWriter strWriter = new StringWriter();
 	    StreamResult result = new StreamResult(strWriter);transformer.transform(source, result);
-	    System.out.println(strWriter.getBuffer().toString());
+//	    System.out.println(strWriter.getBuffer().toString());
 
 	    return strWriter.getBuffer().toString();
 

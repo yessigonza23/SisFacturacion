@@ -115,6 +115,9 @@ public class ReportesPorPuntoBean implements Serializable {
 			} else if (opcion.equals("6")) {
 				nombreReporte = "RepPorPuntoCierre.jasper";
 				nombreGuarda = "RepPorPuntoCierre";
+			} else if (opcion.equals("7")) {
+				nombreReporte = "RepPorPuntoDepositoNoConsolidado.jasper";
+				nombreGuarda = "RepPorPuntoNoConsolidados";
 			}
 			generarReporte(nombreReporte);
 		} catch (Exception e) {

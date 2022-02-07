@@ -105,7 +105,7 @@ public class GenerarDOMNotaBean implements Serializable {
 			generarDocument();
 			actualizaXml();
 			
-			System.out.println("TERMINA NOTAS");
+//			System.out.println("TERMINA NOTAS");
 		} catch (Exception e) {
 
 		}

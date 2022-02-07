@@ -34,10 +34,10 @@ public class ParametrosBean implements Serializable{
 	public void operar(String accion) {
 		try {
 			if(accion.equalsIgnoreCase("R")) {
-				System.out.println("entraR " +accion);
+//				System.out.println("entraR " +accion);
 				this.service.registrar(this.parametro);
 			}else if(accion.equalsIgnoreCase("M")) {
-				System.out.println("entraM " +accion);
+//				System.out.println("entraM " +accion);
 				this.service.modificar(this.parametro);
 			}
 			this.listar();

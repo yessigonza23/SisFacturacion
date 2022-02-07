@@ -145,11 +145,11 @@ public class CargaMasivaAcuerdoBean implements Serializable {
 
 	@Transactional
 	public String importarCSV(String tipo) {
-    System.out.println("entra en importar ");
+//    System.out.println("entra en importar ");
 		List<CargaMasiva> listaCargaMasivaAcuerdo = new ArrayList<CargaMasiva>();
 		usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 		fechaActual = UtilsDate.fechaActual();
-		System.out.println("entra try ");
+//		System.out.println("entra try ");
 		try {
 //			System.out.println("entra try 1");
 			path = UtilsArchivos.getRutaCargaMasiva() + "SArchivoAcuerdo" + punto.getId() + ".csv";

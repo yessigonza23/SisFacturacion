@@ -48,8 +48,9 @@ public class MasterBean implements Serializable{
 		}
 	}
 	
-	public void cerrarSesion() {
+	public String cerrarSesion() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "index?faces-redirect=true"; 
 	}
 	
 	

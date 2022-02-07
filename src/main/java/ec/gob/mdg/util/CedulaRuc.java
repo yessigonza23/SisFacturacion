@@ -3,106 +3,110 @@ package ec.gob.mdg.util;
 public class CedulaRuc {
 
 	public static String comprobacion(String cadena, String tipo) {
-		
 		String mensaje = "";
 
-		if (tipo.equals("P")) {
-			mensaje = "T";
-			return mensaje;
+		if (cadena != null && tipo != null) {
 
-		}
-		if (cadena.equals("")) {
-			mensaje = "No ha ingresado los caracteres suficientes en la identificación para proceder";
-			return mensaje;
-		}else {
-			if (cadena.length() == 10 && tipo.equals("R")) {
-				mensaje = "Tipo de identificación no corresponde";
+			if (tipo.equals("P")) {
+				mensaje = "T";
 				return mensaje;
 
-			} else if (cadena.length() == 13 && tipo.equals("C")) {
-				
-				mensaje = "Tipo de identificación no corresponde";
-				return mensaje;
 			}
+			if (cadena.equals("")) {
+				mensaje = "No ha ingresado los caracteres suficientes en la identificación para proceder";
+				return mensaje;
+			} else {
+				if (cadena.length() == 10 && tipo.equals("R")) {
+					mensaje = "Tipo de identificación no corresponde";
+					return mensaje;
 
-			else {
-				while (cadena.length() <= 13) {
-					cadena = cadena + " ";
-				}
-				boolean e1 = !(Integer.parseInt(cadena.substring(0, 2)) >= 1
-						&& Integer.parseInt(cadena.substring(0, 2)) <= 24);
-				boolean e2 = (!(Integer.parseInt(cadena.substring(2, 3)) >= 0
-						&& Integer.parseInt(cadena.substring(2, 3)) <= 6)
-						&& (Integer.parseInt(cadena.substring(2, 3)) != 9));
-				boolean e3 = (!cadena.substring(10, 13).equals("001") && !(cadena.substring(10, 13).trim().isEmpty()));
-				int n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, n7 = 0, n8 = 0, n9 = 0, n10 = 0, resultado1 = 0,
-						resultado2 = 0, resultado3 = 0;
-				if (e1 || e2 || e3) {
-					if (e1) {
-						mensaje = "Error en los dos primeros digitos... Debe ser un valor" + " entre '01' y '22'.";
-					} else {
-						if (e2) {
-							mensaje = "Error en los dos primeros digitos... Debe ser un "
-									+ "valor entre '0' y '6' para PN; '6' para \nSociedades"
-									+ " Públicas; o '9' para Sociedades Privadas..";
-						} else {
-							
-							if (e3) {
-								mensaje = "Debe terminar en '0001' para Sociedades "
-										+ "Públicas o en '001' para Sociedades Privadas.";
-							}
-						}
-					}
+				} else if (cadena.length() == 13 && tipo.equals("C")) {
+
+					mensaje = "Tipo de identificación no corresponde";
+					return mensaje;
 				}
 
 				else {
-
-					try {
-						n1 = Integer.parseInt(cadena.substring(0, 1));
-						n2 = Integer.parseInt(cadena.substring(1, 2));
-						n3 = Integer.parseInt(cadena.substring(2, 3));
-						n4 = Integer.parseInt(cadena.substring(3, 4));
-						n5 = Integer.parseInt(cadena.substring(4, 5));
-						n6 = Integer.parseInt(cadena.substring(5, 6));
-						n7 = Integer.parseInt(cadena.substring(6, 7));
-						n8 = Integer.parseInt(cadena.substring(7, 8));
-						n9 = Integer.parseInt(cadena.substring(8, 9));
-						n10 = Integer.parseInt(cadena.substring(9, 10));
-
-						/// si no ocurre error sigue el algoritmo
-
-						// Para la Cédula o Ruc de Personas Naturales
-						resultado1 = operacionCedula(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10) % 10;
-						if (resultado1 != 0) {
-							mensaje = "Cedula incorrecta";
-						}
-
-						// Para Ruc Sociedades Privadas
-						resultado2 = ((n1 * 4) + (n2 * 3) + (n3 * 2) + (n4 * 7) + (n5 * 6) + (n6 * 5) + (n7 * 4)
-								+ (n8 * 3) + (n9 * 2) + n10) % 11;
-
-						// Para Ruc Sociedades Públicas
-						resultado3 = ((n1 * 3) + (n2 * 2) + (n3 * 7) + (n4 * 6) + (n5 * 5) + (n6 * 4) + (n7 * 3)
-								+ (n8 * 2) + n9) % 11;
-						
-						if (((resultado1 == 0
-								&& (Integer.parseInt(cadena.substring(2, 3)) >= 0
-										&& Integer.parseInt(cadena.substring(2, 3)) <= 6)
-								&& (cadena.substring(10, 13).equals("001")
-										|| cadena.substring(10, 13).trim().isEmpty()))
-								|| (resultado2 == 0 && n3 == 9 && cadena.substring(10, 13).equals("001")))
-								|| (resultado3 == 0 && n3 == 6 && cadena.substring(9, 13).equals("0001"))) {
-
-							mensaje = "T";
+					while (cadena.length() <= 13) {
+						cadena = cadena + " ";
+					}
+					boolean e1 = !(Integer.parseInt(cadena.substring(0, 2)) >= 1
+							&& Integer.parseInt(cadena.substring(0, 2)) <= 24);
+					boolean e2 = (!(Integer.parseInt(cadena.substring(2, 3)) >= 0
+							&& Integer.parseInt(cadena.substring(2, 3)) <= 6)
+							&& (Integer.parseInt(cadena.substring(2, 3)) != 9));
+					boolean e3 = (!cadena.substring(10, 13).equals("001")
+							&& !(cadena.substring(10, 13).trim().isEmpty()));
+					int n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, n7 = 0, n8 = 0, n9 = 0, n10 = 0, resultado1 = 0,
+							resultado2 = 0, resultado3 = 0;
+					if (e1 || e2 || e3) {
+						if (e1) {
+							mensaje = "Error en los dos primeros digitos... Debe ser un valor" + " entre '01' y '22'.";
 						} else {
-							mensaje = "F" + mensaje;
-						}
+							if (e2) {
+								mensaje = "Error en los dos primeros digitos... Debe ser un "
+										+ "valor entre '0' y '6' para PN; '6' para \nSociedades"
+										+ " Públicas; o '9' para Sociedades Privadas..";
+							} else {
 
-					} catch (NumberFormatException numberFormatException) {
-						mensaje = "-No ha ingresado los caracteres suficientes en la identificacion para proceder";
+								if (e3) {
+									mensaje = "Debe terminar en '0001' para Sociedades "
+											+ "Públicas o en '001' para Sociedades Privadas.";
+								}
+							}
+						}
+					}
+
+					else {
+
+						try {
+							n1 = Integer.parseInt(cadena.substring(0, 1));
+							n2 = Integer.parseInt(cadena.substring(1, 2));
+							n3 = Integer.parseInt(cadena.substring(2, 3));
+							n4 = Integer.parseInt(cadena.substring(3, 4));
+							n5 = Integer.parseInt(cadena.substring(4, 5));
+							n6 = Integer.parseInt(cadena.substring(5, 6));
+							n7 = Integer.parseInt(cadena.substring(6, 7));
+							n8 = Integer.parseInt(cadena.substring(7, 8));
+							n9 = Integer.parseInt(cadena.substring(8, 9));
+							n10 = Integer.parseInt(cadena.substring(9, 10));
+
+							/// si no ocurre error sigue el algoritmo
+
+							// Para la Cédula o Ruc de Personas Naturales
+							resultado1 = operacionCedula(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10) % 10;
+							if (resultado1 != 0) {
+								mensaje = "Cedula incorrecta";
+							}
+
+							// Para Ruc Sociedades Privadas
+							resultado2 = ((n1 * 4) + (n2 * 3) + (n3 * 2) + (n4 * 7) + (n5 * 6) + (n6 * 5) + (n7 * 4)
+									+ (n8 * 3) + (n9 * 2) + n10) % 11;
+
+							// Para Ruc Sociedades Públicas
+							resultado3 = ((n1 * 3) + (n2 * 2) + (n3 * 7) + (n4 * 6) + (n5 * 5) + (n6 * 4) + (n7 * 3)
+									+ (n8 * 2) + n9) % 11;
+
+							if (((resultado1 == 0
+									&& (Integer.parseInt(cadena.substring(2, 3)) >= 0
+											&& Integer.parseInt(cadena.substring(2, 3)) <= 6)
+									&& (cadena.substring(10, 13).equals("001")
+											|| cadena.substring(10, 13).trim().isEmpty()))
+									|| (resultado2 == 0 && n3 == 9 && cadena.substring(10, 13).equals("001")))
+									|| (resultado3 == 0 && n3 == 6 && cadena.substring(9, 13).equals("0001"))) {
+
+								mensaje = "T";
+							} else {
+								mensaje = "F" + mensaje;
+							}
+
+						} catch (NumberFormatException numberFormatException) {
+							mensaje = "-No ha ingresado los caracteres suficientes en la identificacion para proceder";
+						}
 					}
 				}
 			}
+			
 		}
 		return mensaje;
 	}

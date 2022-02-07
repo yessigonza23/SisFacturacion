@@ -422,15 +422,15 @@ public class ComprobanteModificaNotasBean implements Serializable {
 
 	// ELIMINAR DETALLE
 	public void eliminarCompDetalle(int index, Integer id_comprobanteDetalle) {
-		System.out.println("id_comprobanteDetalle: " + id_comprobanteDetalle);
+//		System.out.println("id_comprobanteDetalle: " + id_comprobanteDetalle);
 		for (ComprobanteDetalle cd : listaComprobanteDet) {
 			ComprobanteDetalle compdet = new ComprobanteDetalle();
 			compdet = cd;
-			System.out.println("cd.getId(): " + cd.getId());
+//			System.out.println("cd.getId(): " + cd.getId());
 			if (cd.getId() == id_comprobanteDetalle) {
-				System.out.println("entra a if): " + cd.getId());
+//				System.out.println("entra a if): " + cd.getId());
 				listaComprobanteDetEliminadas.add(compdet);
-				System.out.println(cd.getId() + " pasa antes de remover");
+//				System.out.println(cd.getId() + " pasa antes de remover");
 
 				// serviceComprobanteDetalle.eliminarComprobanteDetalle(index);
 			} else {
@@ -440,7 +440,7 @@ public class ComprobanteModificaNotasBean implements Serializable {
 		}
 
 		listaComprobanteDet.remove(index);
-		System.out.println("pasa termina");
+//		System.out.println("pasa termina");
 
 		totalDetalle();
 	}
@@ -452,9 +452,9 @@ public class ComprobanteModificaNotasBean implements Serializable {
 	public String firmarDocumentoXmlXades(Comprobante c) throws FileNotFoundException, IOException {
 
 		XadesSign x = new XadesSign();
-		System.out.println("firma xml " + c.getXml());
+//		System.out.println("firma xml " + c.getXml());
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
-		System.out.println("pasa firmando");
+//		System.out.println("pasa firmando");
 		String xml64 = converBase64(xmlSigned);
 		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());

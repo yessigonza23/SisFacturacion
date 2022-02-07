@@ -504,8 +504,12 @@
 					<p:column style="border-style: hidden;">
 						<p:row>
 							<p:inputText
-								value="#{comprobanteModificaBean.detalle_comprobante}"
-								style="width:700px;" />
+								value="#{comprobanteModificaBean.comprobante.detalle}"
+								style="width:700px;" >
+								<p:ajax event="valueChange"
+											listener="#{comprobanteModificaBean.grabaDetalle(comprobanteModificaBean.comprobante.detalle)}"
+											update="@this" />
+								</p:inputText>
 						</p:row>
 					</p:column>
 				</p:row>

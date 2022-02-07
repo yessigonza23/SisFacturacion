@@ -50,7 +50,7 @@ public class UsuarioAsignaPuntoBean implements Serializable {
 			try {
 				//Usuario usu = new Usuario();
 				String clave = this.usuario.getContrasena();	
-				System.out.println("contrasenia " + usuario.getContrasena());
+//				System.out.println("contrasenia " + usuario.getContrasena());
 				String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
 				
 				usuario.setContrasena(claveHash);
@@ -75,7 +75,7 @@ public class UsuarioAsignaPuntoBean implements Serializable {
 	//VALIDA SI EXISTE EL USUARIO
 	public boolean validaCedula(String cedula) {
 		valida=serviceUsuario.validaUsuarioCedula(cedula);
-		System.out.println("imprime el valida : "+valida);
+//		System.out.println("imprime el valida : "+valida);
 		if(valida==true) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Esta cédula ya fue ingresada", "ERROR"));

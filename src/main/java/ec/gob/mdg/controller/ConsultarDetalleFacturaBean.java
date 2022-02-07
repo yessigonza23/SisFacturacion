@@ -180,13 +180,13 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 			Integer factura = Integer.parseInt(facturaS);
 
 			if (comprobante.getNumero().equals(factura)) {
-				System.out.println("entra a iguales: " + comprobante.getNumero() + " - " + factura);
+//				System.out.println("entra a iguales: " + comprobante.getNumero() + " - " + factura);
 				estadeshabilitado = true;
 				estadeshabilitadoA = true;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No puede borrar la Información del SRI, la autorización de la Factura", "Error"));
 			} else if (!comprobante.getNumero().equals(factura)) {
-				System.out.println("entra a diferentes " + comprobante.getId());
+//				System.out.println("entra a diferentes " + comprobante.getId());
 				try {
 					fun.borraSRI(comprobante.getId());
 					// CAMPO comprobante.getAutorizacion)
@@ -289,16 +289,16 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 			SoapRecepcion n = new SoapRecepcion();
 
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-			System.out.println("------Ambiente-------- " + ambiente);
+//			System.out.println("------Ambiente-------- " + ambiente);
 
 			if (ambiente.equals("1")) {
-				System.out.println("------Entra Enviar Ambiente de Pruebas -------- ");
+//				System.out.println("------Entra Enviar Ambiente de Pruebas -------- ");
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 
 			} else if (ambiente.equals("2")) {
-				System.out.println("------Entra Enviar Ambiente de PRODUCCIÓN -------- ");
+//				System.out.println("------Entra Enviar Ambiente de PRODUCCIÓN -------- ");
 				//// AMBIENTE DE PRODUCCIoN
 				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
@@ -331,7 +331,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					System.out.println(sb.toString());
+//					System.out.println(sb.toString());
 					Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 					String estado = xml_utilidades.getNodes("RespuestaRecepcionComprobante", "estado", doc);
 
@@ -404,29 +404,21 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 			SoapAutorizacion n = new SoapAutorizacion();
 
 			ambiente = comprobante.getUsuarioPunto().getPuntoRecaudacion().getInstitucion().getAmbiente();
-			System.out.println("------Ambiente-------- " + ambiente);
+//			System.out.println("------Ambiente-------- " + ambiente);
 
 			if (ambiente.equals("1")) {
-				System.out.println("------Entra Autoriza Ambiente de Pruebas -------- ");
+//				System.out.println("------Entra Autoriza Ambiente de Pruebas -------- ");
 				//// AMBIENTE DE PRUEBAS
 				url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "celcer.sri.gob.ec";
 
 			} else if (ambiente.equals("2")) {
-				System.out.println("------Entra Autoriza Ambiente de PRODUCCIÓN -------- ");
+//				System.out.println("------Entra Autoriza Ambiente de PRODUCCIÓN -------- ");
 				//// AMBIENTE DE PRODUCCIoN
 				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
 				host = "cel.sri.gob.ec";
 			}
 
-			/// AMBIENTE DE PRUEBAS
-//				String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-//				String host = "celcer.sri.gob.ec";
-
-			/// AMBIENTE DE PRODUCCIN
-			// String url =
-			/// "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl";
-			// String host = "cel.sri.gob.ec";
 			try {
 				URL oURL = new URL(url);
 				HttpURLConnection con = (HttpURLConnection) oURL.openConnection(Proxy.NO_PROXY);
@@ -447,7 +439,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 					sb.append(line);
 				}
 
-				System.out.println(sb.toString());
+//				System.out.println(sb.toString());
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 //				SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
@@ -500,7 +492,7 @@ public class ConsultarDetalleFacturaBean implements Serializable {
 
 					mensaje_Sri = mensaje;
 					mensaje_SriError = informacionAdicional;
-					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
+//					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
 				}
 				con.disconnect();
 			} catch (Exception ex) {

@@ -102,8 +102,7 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 
 	public void actualizaEstadoComprobante(Integer id_estado, Integer id_comprobantedeposito,
 			Integer id_consolidadepositos, Integer anio, Integer mes) {
-		System.out.println(
-				"entra a actualizar " + id_comprobantedeposito + "-" + id_estado + "-" + id_consolidadepositos);
+		
 		if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null) {
 			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
 			try {

@@ -164,6 +164,9 @@ public class CargaBancoBean implements Serializable {
 			fun.consolidaDepositos7(anio,id_usuario);
 			fun.consolidaDepositos6(anio,id_usuario);
 			fun.consolidaDepositos5(anio,id_usuario);
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se consolidaron los datos", "Exitoso"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

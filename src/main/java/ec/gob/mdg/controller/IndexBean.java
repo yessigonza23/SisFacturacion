@@ -50,7 +50,7 @@ public class IndexBean implements Serializable {
 
 		if (respuesta == false) {
 			try {
-				System.out.println("entra a usuario no existe");
+//				System.out.println("entra a usuario no existe");
 				fun.insertaUsuarioSesiones(fechaActual, us.getUsername(), "Fallido", "Usuario no Existe");
 
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
@@ -114,7 +114,7 @@ public class IndexBean implements Serializable {
 													+ " de 3 intentos, al tercer intento el usuario será bloqueado",
 											"Aviso, "));
 						} else {
-							System.out.println("ENTRA MAS DE 3");
+//							System.out.println("ENTRA MAS DE 3");
 							fun.actualizaEstadosUsuarioUsername(us.getUsername());
 
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(

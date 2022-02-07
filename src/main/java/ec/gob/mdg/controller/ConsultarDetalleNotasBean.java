@@ -163,7 +163,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 			Integer factura = Integer.parseInt(facturaS);
 
 			if (comprobanteNotas.getNumero().equals(factura)) {
-				System.out.println("entra a iguales");
+//				System.out.println("entra a iguales");
 				estadeshabilitado = true;
 				estadeshabilitadoA = true;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -218,9 +218,9 @@ public class ConsultarDetalleNotasBean implements Serializable {
 	public String firmarDocumentoXmlXades(Comprobante c) throws FileNotFoundException, IOException {
 
 		XadesSign x = new XadesSign();
-		System.out.println("firma xml " + c.getXml());
+//		System.out.println("firma xml " + c.getXml());
 		byte[] xmlSigned = x.firmarDocumentoXmlXades(c.getXml().getBytes());
-		System.out.println("pasa firmando");
+//		System.out.println("pasa firmando");
 		String xml64 = converBase64(xmlSigned);
 		// GUARDA EL DOCUMENTO XML EN EL PATH DE GENERADOS
 		FileUtil.writeXml(c, c.getXml().getBytes());
@@ -232,7 +232,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void enviar(Integer id_comprobante) {// GEN-FIRST:event_btnEnviarActionPerformed
-		System.out.println("entra a envair id_comprobante" + id_comprobante);
+//		System.out.println("entra a envair id_comprobante" + id_comprobante);
 		comprobanteNotas = serviceComprobante.listarComprobantePorId(id_comprobante);
 
 		if (comprobanteNotas.getAutorizacion() != null) {
@@ -241,7 +241,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"No puede realizar cambios el comprobante se encuentra autorizado por el SRI", "Error"));
 		} else {
-			System.out.println("entra a firmar " + comprobanteNotas.getNumero());
+//			System.out.println("entra a firmar " + comprobanteNotas.getNumero());
 
 			// estadeshabilitadoEnv = false;
 			SoapRecepcion n = new SoapRecepcion();
@@ -257,7 +257,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobanteNotas);
-				System.out.println("2");
+//				System.out.println("2");
 				try {
 
 					URL oURL = new URL(url);
@@ -281,7 +281,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 					while ((line = rd.readLine()) != null) {
 						sb.append(line);
 					}
-					System.out.println(sb.toString());
+//					System.out.println(sb.toString());
 					Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 					String estado = xml_utilidades.getNodes("RespuestaRecepcionComprobante", "estado", doc);
 
@@ -291,9 +291,9 @@ public class ConsultarDetalleNotasBean implements Serializable {
 							comprobanteNotas.setEstadosri("E");
 							comprobanteNotas.setEstadoerror("S");
 							serviceComprobante.modificar(comprobanteNotas);
-							System.out.println("deshabilita booton enviar");
+//							System.out.println("deshabilita booton enviar");
 							estadeshabilitadoEnv = true; // PARA DESHABILITAR EL BOTON ENVIAR EN LA FACTURA
-							System.out.println("habilita booton autorizar");
+//							System.out.println("habilita booton autorizar");
 							estadeshabilitadoAut = false;
 							estadeshabilitado = true;
 
@@ -371,7 +371,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 				con.setRequestProperty("Host", host);
 				OutputStream reqStreamOut = con.getOutputStream();
 				reqStreamOut.write(n.formatSendPost(comprobanteNotas.getClaveacceso()).getBytes());
-				System.out.println("2");
+//				System.out.println("2");
 				java.io.BufferedReader rd = new java.io.BufferedReader(
 						new java.io.InputStreamReader(con.getInputStream(), "UTF8"));
 				String line = "";
@@ -380,7 +380,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 					sb.append(line);
 				}
 
-				System.out.println(sb.toString());
+//				System.out.println(sb.toString());
 				Document doc = xml_utilidades.convertStringToDocument(sb.toString());
 				String estado = xml_utilidades.getNodes("RespuestaAutorizacionComprobante", "estado", doc);
 
@@ -432,7 +432,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 
 					MensajeSri = mensaje;
 					MensajeSriError = informacionAdicional;
-					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
+//					System.out.println("TERMINA AUTORIZAR EN MENSAJE");
 				}
 				con.disconnect();
 			} catch (Exception ex) {

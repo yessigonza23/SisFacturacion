@@ -138,7 +138,7 @@ public class UsuarioPuntoBean implements Serializable {
 	public void modificar(Integer id_usuariopunto, String estado) {
 		try {
 
-			System.out.println("parametros " + id_usuariopunto + " - " + estado);
+//			System.out.println("parametros " + id_usuariopunto + " - " + estado);
 			if (estado.equals("A")) {
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,

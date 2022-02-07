@@ -169,7 +169,6 @@ public class ComprobanteModificaBean implements Serializable {
 	Integer rd;
 	Integer id_comprobante = 0;
 	String tipo_proceso = null;
-	String detalle_comprobante;
 	Integer id = 0;
 	String param2;
 	Integer id_compDetalle;
@@ -234,7 +233,7 @@ public class ComprobanteModificaBean implements Serializable {
 
 		try {
 			this.comprobante = serviceComprobante.listarComprobantePorId(id);
-			detalle_comprobante = comprobante.getDetalle();
+			
 			this.listaComprobanteDet = this.serviceComprobanteDetalle.listarComDetPorIdComp(id);
 			this.listaComprobanteDep = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
 
@@ -659,12 +658,13 @@ public class ComprobanteModificaBean implements Serializable {
 					/// MODIFICAR COMPROBANTE
 					comprobante.setValor(totaldet);
 					comprobante.setClienteruc(cliente.getCi().toUpperCase());
-					comprobante.setClientenombre(cliente.getNombre().toUpperCase());
-					comprobante.setClientedireccion(cliente.getDireccion().toUpperCase());
+					comprobante.setClientenombre(cliente.getNombre());
+					comprobante.setClientedireccion(cliente.getDireccion());
 					comprobante.setClientetelefono(cliente.getTelefono());
+					comprobante.setCliente(cliente);
 					comprobante.setEstado(comprobante.getEstado());
 					comprobante.setValor(totaldet);
-					comprobante.setDetalle(comprobante.getDetalle());
+			
 
 					//// GENERAR CLAVE ACCESO
 					Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -855,6 +855,18 @@ public class ComprobanteModificaBean implements Serializable {
 		}
 
 	}
+	
+	///GRABAR DETALLE
+	public void grabaDetalle(String detalle) {
+		System.out.println("detalle comprobante" + detalle);
+		comprobante.setDetalle(detalle);
+		try {
+			serviceComprobante.modificar(comprobante);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	// ELIMINAR DEPOSITO
 
@@ -955,13 +967,6 @@ public class ComprobanteModificaBean implements Serializable {
 
 			}
 
-			//// AMBIENTE DE PRUEBAS
-			//			String url = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-			//			String host = "celcer.sri.gob.ec";
-
-			//// AMBIENTE DE PRODUCCIN
-			//				String url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
-			//				String host = "cel.sri.gob.ec";
 
 			try {
 				String xml64 = this.firmarDocumentoXmlXades(comprobante);
@@ -1701,12 +1706,6 @@ public class ComprobanteModificaBean implements Serializable {
 		this.valorAnterior = valorAnterior;
 	}
 
-	public String getDetalle_comprobante() {
-		return detalle_comprobante;
-	}
-
-	public void setDetalle_comprobante(String detalle_comprobante) {
-		this.detalle_comprobante = detalle_comprobante;
-	}
+	
 
 }

@@ -44,7 +44,7 @@ public class UsuarioConsultaBean implements Serializable {
 	//VALIDA SI EXISTE EL USUARIO
 	public boolean validaCedula(String cedula) {
 		valida=serviceUsuario.validaUsuarioCedula(cedula);
-		System.out.println("imprime el valida : "+valida);
+//		System.out.println("imprime el valida : "+valida);
 		if(valida==true) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Esta cédula ya fue ingresada", "ERROR"));

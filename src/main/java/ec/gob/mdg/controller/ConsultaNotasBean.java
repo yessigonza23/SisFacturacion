@@ -130,7 +130,7 @@ public class ConsultaNotasBean implements Serializable {
 		public void listarClientesF(String tipoComprobante) {
 			try {
 				this.listaClientesF = this.serviceComprobante.listarClientesComprobantes(tipoComprobante);
-				System.out.println("lista" +  listaClientesF);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
