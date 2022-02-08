@@ -1,6 +1,7 @@
 package ec.gob.mdg.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -19,6 +20,12 @@ import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.model.Usuario;
@@ -287,6 +294,342 @@ public class ReportesNacionalBean implements Serializable {
 		}
 		
 	}
+	
+	/////////////////////////////GENERAR XLS
+	
+	int contador1;
+	int contadorc1;
+	private HSSFWorkbook libro;
+
+	// Generar archivo xls
+	// LISTAR VISTA RECAUDACION Reporte 1
+	@SuppressWarnings("unused")
+	public void xlsRecaudacion() {
+
+		libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		/////////////////////////
+		contador1 = 0;
+		HSSFRow fila = hoja.createRow((short) contador1);
+		
+		HSSFCell celdaPunto = fila.createCell((short) 0);
+		HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
+		celdaPunto.setCellValue(Punto);
+
+		HSSFCell celdaFact = fila.createCell((short) 1);
+		HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
+		celdaFact.setCellValue(factura);
+
+		HSSFCell celdaFecha = fila.createCell((short) 2);
+		HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
+		celdaFecha.setCellValue(fecha);
+
+		HSSFCell celdaCliente = fila.createCell((short) 3);
+		HSSFRichTextString cliente = new HSSFRichTextString("Cliente");
+		celdaCliente.setCellValue(cliente);
+
+		HSSFCell celdaRuc = fila.createCell((short) 4);
+		HSSFRichTextString ruc = new HSSFRichTextString("Ci/Ruc/Pasaporte");
+		celdaRuc.setCellValue(ruc);
+
+		HSSFCell celdaValor = fila.createCell((short) 5);
+		HSSFRichTextString valor = new HSSFRichTextString("Valor");
+		celdaValor.setCellValue(valor);
+
+		HSSFCell celdaCodRecaudacion = fila.createCell((short) 6);
+		HSSFRichTextString CodRecaudacion = new HSSFRichTextString("Codigo Recaudación");
+		celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+		HSSFCell celdaCodBanco = fila.createCell((short) 7);
+		HSSFRichTextString CodBanco = new HSSFRichTextString("Código Banco");
+		celdaCodBanco.setCellValue(CodBanco);
+
+		HSSFCell celdaResponsable = fila.createCell((short) 8);
+		HSSFRichTextString Responsable = new HSSFRichTextString("Responsable");
+		celdaResponsable.setCellValue(Responsable);
+
+		////////////////////////////////
+		contador1 = 1;
+		for (VistaRecaudacionDTO v : listaVistaRecaudacionDTO) {
+			fila = hoja.createRow((short) contador1);
+
+			for (VistaRecaudacionDTO v1 : listaVistaRecaudacionDTO) {
+
+				celdaPunto = fila.createCell((short) 0);
+				Punto = new HSSFRichTextString(String.valueOf(v.getPunto_nombre()));
+				celdaPunto.setCellValue(Punto);
+				
+				celdaFact = fila.createCell((short) 1);
+				Integer fac = v.getComp_numero();
+				celdaFact.setCellValue(fac);
+
+				celdaFecha = fila.createCell((short) 2);
+				fecha = new HSSFRichTextString(String.valueOf(v.getComp_fechaemision()));
+				celdaFecha.setCellValue(fecha);
+
+				celdaCliente = fila.createCell((short) 3);
+				cliente = new HSSFRichTextString(v.getCliente_nombre());
+				celdaCliente.setCellValue(cliente);
+
+				celdaRuc = fila.createCell((short) 4);
+				ruc = new HSSFRichTextString(v.getCliente_ci());
+				celdaRuc.setCellValue(ruc);
+
+				celdaValor = fila.createCell((short) 5);
+				Double compvalor = v.getComp_valor();
+				celdaValor.setCellValue(compvalor);
+
+				celdaCodRecaudacion = fila.createCell((short) 6);
+				CodRecaudacion = new HSSFRichTextString(String.valueOf(v.getRecdetalle_codigo()));
+				celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+				celdaCodBanco = fila.createCell((short) 7);
+				CodBanco = new HSSFRichTextString(String.valueOf(v.getRecaudacion_codigobanco()));
+				celdaCodBanco.setCellValue(CodBanco);
+
+				celdaResponsable = fila.createCell((short) 8);
+				Responsable = new HSSFRichTextString(String.valueOf(v.getUsuario_nombre()));
+				celdaResponsable.setCellValue(Responsable);		
+
+			}
+			contador1++;
+		}
+
+		try {
+
+			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDetalleNac"+ nombre.getId() +".xls");																									// ".xls");
+			libro.write(elFichero);
+			elFichero.close();
+			
+			String archivo="RecDetalleNac"+ nombre.getId() +".xls";
+			UtilsArchivos.verXls(archivo);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	// Generar archivo xls
+		// LISTAR VISTA RECAUDACION ANULADAS Reporte 2
+		@SuppressWarnings("unused")
+		public void xlsRecaudacionAnuladas() {
+
+			libro = new HSSFWorkbook();
+			HSSFSheet hoja = libro.createSheet();
+			/////////////////////////
+			contador1 = 0;
+			HSSFRow fila = hoja.createRow((short) contador1);
+			
+			HSSFCell celdaPunto = fila.createCell((short) 0);
+			HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
+			celdaPunto.setCellValue(Punto);
+
+			HSSFCell celdaFact = fila.createCell((short) 1);
+			HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
+			celdaFact.setCellValue(factura);
+
+			HSSFCell celdaFecha = fila.createCell((short) 2);
+			HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
+			celdaFecha.setCellValue(fecha);
+
+			HSSFCell celdaCliente = fila.createCell((short) 3);
+			HSSFRichTextString cliente = new HSSFRichTextString("Cliente");
+			celdaCliente.setCellValue(cliente);
+
+			HSSFCell celdaRuc = fila.createCell((short) 4);
+			HSSFRichTextString ruc = new HSSFRichTextString("Ci/Ruc/Pasaporte");
+			celdaRuc.setCellValue(ruc);
+
+			HSSFCell celdaValor = fila.createCell((short) 5);
+			HSSFRichTextString valor = new HSSFRichTextString("Valor");
+			celdaValor.setCellValue(valor);
+
+			HSSFCell celdaCodRecaudacion = fila.createCell((short) 6);
+			HSSFRichTextString CodRecaudacion = new HSSFRichTextString("Codigo Recaudación");
+			celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+			HSSFCell celdaCodBanco = fila.createCell((short) 7);
+			HSSFRichTextString CodBanco = new HSSFRichTextString("Código Banco");
+			celdaCodBanco.setCellValue(CodBanco);
+
+			HSSFCell celdaResponsable = fila.createCell((short) 8);
+			HSSFRichTextString Responsable = new HSSFRichTextString("Responsable");
+			celdaResponsable.setCellValue(Responsable);
+
+			////////////////////////////////
+			contador1 = 1;
+			for (VistaRecaudacionDTO v : listaVistaRecaudacionAnuladas) {
+				fila = hoja.createRow((short) contador1);
+
+				for (VistaRecaudacionDTO v1 : listaVistaRecaudacionAnuladas) {
+
+					celdaPunto = fila.createCell((short) 0);
+					Punto = new HSSFRichTextString(String.valueOf(v.getPunto_nombre()));
+					celdaPunto.setCellValue(Punto);
+					
+					celdaFact = fila.createCell((short) 1);
+					Integer fac = v.getComp_numero();
+					celdaFact.setCellValue(fac);
+
+					celdaFecha = fila.createCell((short) 2);
+					fecha = new HSSFRichTextString(String.valueOf(v.getComp_fechaemision()));
+					celdaFecha.setCellValue(fecha);
+
+					celdaCliente = fila.createCell((short) 3);
+					cliente = new HSSFRichTextString(v.getCliente_nombre());
+					celdaCliente.setCellValue(cliente);
+
+					celdaRuc = fila.createCell((short) 4);
+					ruc = new HSSFRichTextString(v.getCliente_ci());
+					celdaRuc.setCellValue(ruc);
+
+					celdaValor = fila.createCell((short) 5);
+					Double compvalor = v.getComp_valor();
+					celdaValor.setCellValue(compvalor);
+
+					celdaCodRecaudacion = fila.createCell((short) 6);
+					CodRecaudacion = new HSSFRichTextString(String.valueOf(v.getRecdetalle_codigo()));
+					celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+					celdaCodBanco = fila.createCell((short) 7);
+					CodBanco = new HSSFRichTextString(String.valueOf(v.getRecaudacion_codigobanco()));
+					celdaCodBanco.setCellValue(CodBanco);
+
+					celdaResponsable = fila.createCell((short) 8);
+					Responsable = new HSSFRichTextString(String.valueOf(v.getUsuario_nombre()));
+					celdaResponsable.setCellValue(Responsable);		
+
+				}
+				contador1++;
+			}
+
+			try {
+
+				FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecAnuladasNac"+ nombre.getId() +".xls");																									// ".xls");
+				libro.write(elFichero);
+				elFichero.close();
+				
+				String archivo="RecAnuladasNac"+ nombre.getId() +".xls";
+				UtilsArchivos.verXls(archivo);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		
+		// LISTAR VISTA RECAUDACION NO AUTORIZADAS Reporte 3
+		@SuppressWarnings("unused")
+		public void xlsRecaudacionNoAutorizadas() {
+
+			libro = new HSSFWorkbook();
+			HSSFSheet hoja = libro.createSheet();
+			/////////////////////////
+			contador1 = 0;
+			HSSFRow fila = hoja.createRow((short) contador1);
+			
+			HSSFCell celdaPunto = fila.createCell((short) 0);
+			HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
+			celdaPunto.setCellValue(Punto);
+
+			HSSFCell celdaFact = fila.createCell((short) 1);
+			HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
+			celdaFact.setCellValue(factura);
+
+			HSSFCell celdaFecha = fila.createCell((short) 2);
+			HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
+			celdaFecha.setCellValue(fecha);
+
+			HSSFCell celdaCliente = fila.createCell((short) 3);
+			HSSFRichTextString cliente = new HSSFRichTextString("Cliente");
+			celdaCliente.setCellValue(cliente);
+
+			HSSFCell celdaRuc = fila.createCell((short) 4);
+			HSSFRichTextString ruc = new HSSFRichTextString("Ci/Ruc/Pasaporte");
+			celdaRuc.setCellValue(ruc);
+
+			HSSFCell celdaValor = fila.createCell((short) 5);
+			HSSFRichTextString valor = new HSSFRichTextString("Valor");
+			celdaValor.setCellValue(valor);
+
+			HSSFCell celdaCodRecaudacion = fila.createCell((short) 6);
+			HSSFRichTextString CodRecaudacion = new HSSFRichTextString("Codigo Recaudación");
+			celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+			HSSFCell celdaCodBanco = fila.createCell((short) 7);
+			HSSFRichTextString CodBanco = new HSSFRichTextString("Código Banco");
+			celdaCodBanco.setCellValue(CodBanco);
+
+			HSSFCell celdaResponsable = fila.createCell((short) 8);
+			HSSFRichTextString Responsable = new HSSFRichTextString("Responsable");
+			celdaResponsable.setCellValue(Responsable);
+
+			////////////////////////////////
+			contador1 = 1;
+			for (VistaRecaudacionDTO v : listaVistaRecaudacionNoAutorizadas) {
+				fila = hoja.createRow((short) contador1);
+
+				for (VistaRecaudacionDTO v1 : listaVistaRecaudacionNoAutorizadas) {
+
+					celdaPunto = fila.createCell((short) 0);
+					Punto = new HSSFRichTextString(String.valueOf(v.getPunto_nombre()));
+					celdaPunto.setCellValue(Punto);
+					
+					celdaFact = fila.createCell((short) 1);
+					Integer fac = v.getComp_numero();
+					celdaFact.setCellValue(fac);
+
+					celdaFecha = fila.createCell((short) 2);
+					fecha = new HSSFRichTextString(String.valueOf(v.getComp_fechaemision()));
+					celdaFecha.setCellValue(fecha);
+
+					celdaCliente = fila.createCell((short) 3);
+					cliente = new HSSFRichTextString(v.getCliente_nombre());
+					celdaCliente.setCellValue(cliente);
+
+					celdaRuc = fila.createCell((short) 4);
+					ruc = new HSSFRichTextString(v.getCliente_ci());
+					celdaRuc.setCellValue(ruc);
+
+					celdaValor = fila.createCell((short) 5);
+					Double compvalor = v.getComp_valor();
+					celdaValor.setCellValue(compvalor);
+
+					celdaCodRecaudacion = fila.createCell((short) 6);
+					CodRecaudacion = new HSSFRichTextString(String.valueOf(v.getRecdetalle_codigo()));
+					celdaCodRecaudacion.setCellValue(CodRecaudacion);
+
+					celdaCodBanco = fila.createCell((short) 7);
+					CodBanco = new HSSFRichTextString(String.valueOf(v.getRecaudacion_codigobanco()));
+					celdaCodBanco.setCellValue(CodBanco);
+
+					celdaResponsable = fila.createCell((short) 8);
+					Responsable = new HSSFRichTextString(String.valueOf(v.getUsuario_nombre()));
+					celdaResponsable.setCellValue(Responsable);		
+
+				}
+				contador1++;
+			}
+
+			try {
+
+				FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecNoAutorizadasNac"+ nombre.getId() +".xls");																									// ".xls");
+				libro.write(elFichero);
+				elFichero.close();
+				
+				String archivo="RecNoAutorizadasNac"+ nombre.getId() +".xls";
+				UtilsArchivos.verXls(archivo);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	
+	
+	
 	////// GETTERS Y SETTERS
 
 	public PuntoRecaudacion getPunto() {

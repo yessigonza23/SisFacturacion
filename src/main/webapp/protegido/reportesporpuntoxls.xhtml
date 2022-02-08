@@ -65,8 +65,10 @@
 						process="@form" update="ingReportes:factDet">
 					</p:commandButton>
 
-					<p:commandButton value="Export as CSV" ajax="false" >
-						<p:dataExporter type="csv" target="factDet" fileName="recaudacion" />
+					<p:commandButton icon="ui-icon-disk" id="btnExcelRecaudacion"
+						value="Exportar XLS "
+						actionListener="#{reportesPorPuntoBean.xlsRecaudacion()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDet" resizableColumns="true"
@@ -180,9 +182,10 @@
 						process="@form" update="ingReportes:factDep">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDep"
-							fileName="recaudacionDep" />
+					<p:commandButton id="btnExcelRecDeposito"
+						value="Exportar XLS "
+						actionListener="#{reportesPorPuntoBean.xlsRecaudacionDep()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDep" resizableColumns="true"
@@ -295,9 +298,10 @@
 						process="@form" update="ingReportes:factCierre">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factCierre"
-							fileName="CierreCaja" />
+					<p:commandButton id="btnExcelCierre"
+						value="Exportar XLS "
+						actionListener="#{reportesPorPuntoBean.xlsCierreCaja()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factCierre" resizableColumns="true"

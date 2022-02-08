@@ -14,6 +14,8 @@ import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.model.UploadedFile;
 
@@ -161,6 +163,31 @@ public class UtilsArchivos {
 		}
 		return rutaAdjuntos;
 
+	}
+	
+	@SuppressWarnings("resource")
+	public static void verXls(String archivo) throws IOException {
+		File ficheroXLS = new File(UtilsArchivos.getRutaReportes() + archivo);
+
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		FileInputStream fis = new FileInputStream(ficheroXLS);
+		byte bytes[] = new byte[1000];
+		int read = 0;
+		if (!ctx.getResponseComplete()) {
+			String nombre =archivo;
+			String contentType = "application/vnd.ms-excel";
+			HttpServletResponse response = (HttpServletResponse) ctx.getExternalContext().getResponse();
+			response.setContentType(contentType);
+			response.setHeader("Content-Disposition",
+					(new StringBuilder()).append("attachment;filename=\"").append(nombre).append("\"").toString());
+			ServletOutputStream out = response.getOutputStream();
+			while ((read = fis.read(bytes)) != -1)
+				out.write(bytes, 0, read);
+			out.flush();
+			out.close();
+			//System.out.println("Descargado");
+			ctx.responseComplete();
+		}
 	}
 
 }

@@ -450,6 +450,7 @@ public class ComprobanteModificaBean implements Serializable {
 		for (ComprobanteDetalle det : listaComprobanteDet) {
 
 			totaldet = totaldet + ((det.getCantidad() * det.getValorcero()) + (det.getCantidad() * det.getValoriva())+(det.getCantidad() * det.getValoriva() *0.12));
+			totaldet = FunValidaciones.formatearDecimales(totaldet, 2) ;
 		}
 	}
 
@@ -458,6 +459,7 @@ public class ComprobanteModificaBean implements Serializable {
 		totaldep = 0.00;
 		for (ComprobanteDepositos dep : listaComprobanteDep) {
 			totaldep = totaldep + dep.getValor();
+			totaldep = FunValidaciones.formatearDecimales(totaldep, 2) ;
 		}
 	}
 
@@ -589,7 +591,8 @@ public class ComprobanteModificaBean implements Serializable {
 					}
 				}
 			}
-
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "se grabó con éxito", "Aviso"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Error - Diferencia de valores en detalle y deposito", "Error"));
@@ -601,7 +604,6 @@ public class ComprobanteModificaBean implements Serializable {
 		try {
 
 			modificarComprobanteDeposito();
-		
 
 			if ((comprobante.getAutorizacion() != null)) {
 				if (estadoAnterior == comprobante.getEstado()) {
@@ -612,7 +614,6 @@ public class ComprobanteModificaBean implements Serializable {
 							"No puede realizar cambios la factura ya esta autorizada por el SRI, para el caso de cambios en los depósitos se grabó con éxito",
 							"Error"));
 				}else if ((!estadoAnterior.equals(comprobante.getEstado()))) {
-
 					comprobante.setEstado(estadoAnterior);
 					comprobante.setFechaanulacion(comprobante.getFechaanulacion());
 					serviceComprobante.modificar(comprobante);
@@ -632,6 +633,7 @@ public class ComprobanteModificaBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No puede cambiar el estado de la factura, no se encuentra autorizada", "Error"));
 			} else if (comprobante.getAutorizacion() == null) {
+				System.out.println("entra");
 				validaestado = true;
 				totalDetalle();
 				totalDeposito();
@@ -684,7 +686,7 @@ public class ComprobanteModificaBean implements Serializable {
 					String verificador = String.valueOf(ValorMod11.mod11(claveA));
 					claveA = claveA + verificador;
 					comprobante.setClaveacceso(claveA);
-
+System.out.println("1");
 					serviceComprobante.modificar(comprobante);
 					genXml.generarXmlArchivo(punto.getId(), comprobante.getNumero());
 					//// AUDITORIA TABLA COMPROBANTE
@@ -758,7 +760,7 @@ public class ComprobanteModificaBean implements Serializable {
 					}
 
 					genXml.generarXmlArchivo(comprobante.getPuntoRecaudacion().getId(), comprobante.getNumero());
-
+System.out.println("2");
 					estadeshabilitado = true;
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, "se grabó con éxito", "Aviso"));
