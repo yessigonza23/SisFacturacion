@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
@@ -60,8 +61,14 @@ public class ComprobanteConsultaModificaBean implements Serializable {
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void listarComprobantes() {
 		try {
-			this.listaComprobante = serviceComprobante.listarComprobantePorFechas(fecha_inicio, fecha_fin,
-					punto.getId(), tipoF);
+			if (fecha_inicio !=null && fecha_fin !=null) {
+				this.listaComprobante = serviceComprobante.listarComprobantePorFechas(fecha_inicio, fecha_fin,
+						punto.getId(), tipoF);
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sin Datos", "Especifique las fechas"));
+			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -71,8 +78,15 @@ public class ComprobanteConsultaModificaBean implements Serializable {
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void listarComprobantesSinAutor() {
 		try {
-			this.listaComprobante = serviceComprobante.listarComprobantePorFechasSinAutor(fecha_inicio, fecha_fin,
-					punto.getId(), tipoF);
+			
+			
+			if (fecha_inicio !=null && fecha_fin !=null) {
+				this.listaComprobante = serviceComprobante.listarComprobantePorFechasSinAutor(fecha_inicio, fecha_fin,
+						punto.getId(), tipoF);
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sin Datos", "Especifique las fechas"));
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -81,8 +95,14 @@ public class ComprobanteConsultaModificaBean implements Serializable {
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void listarComprobantesNotas() {
 		try {
-			this.listaComprobante = serviceComprobante.listarComprobantePorFechas(fecha_inicio, fecha_fin,
-					punto.getId(), tipoC);
+			if (fecha_inicio !=null && fecha_fin !=null) {
+				this.listaComprobante = serviceComprobante.listarComprobantePorFechas(fecha_inicio, fecha_fin,
+						punto.getId(), tipoC);
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sin Datos", "Especifique las fechas"));
+			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

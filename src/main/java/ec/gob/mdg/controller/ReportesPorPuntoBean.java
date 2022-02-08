@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -55,7 +56,7 @@ public class ReportesPorPuntoBean implements Serializable {
 
 	@Inject
 	private IVistaRecaudacionDTOService serviceVistaRecaudacionDTO;
-	
+
 	@Inject
 	private IVistaRecaudacioDepositoDTOService serviceVistaRecaudacionDepositoDTO;
 
@@ -75,7 +76,7 @@ public class ReportesPorPuntoBean implements Serializable {
 	String nombreGuarda;
 	// totales vista recaudacion
 	double total = 0.00;
-	
+
 	// totales vista recaudacion deposito
 	double totald = 0.00;
 	Integer contadord = 0;
@@ -97,29 +98,32 @@ public class ReportesPorPuntoBean implements Serializable {
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void reportesPorOpcion(String opcion) {
 		try {
-			if (opcion.equals("1")) {
-				nombreReporte = "RepPorPuntoFactGeneral.jasper";
-				nombreGuarda = "RepPorPuntoFactGeneral";
-			} else if (opcion.equals("2")) {
-				nombreReporte = "RepPorPuntoFactCodBanco.jasper";
-				nombreGuarda = "RepPorPuntoFactCodBanco";
-			} else if (opcion.equals("3")) {
-				nombreReporte = "RepPorPuntoFactAnuladas.jasper";
-				nombreGuarda = "RepPorPuntoFactAnuladas";
-			} else if (opcion.equals("4")) {
-				nombreReporte = "RepPorPuntoFactNoAutorizadas.jasper";
-				nombreGuarda = "RepPorPuntoFactNoAutorizadas";
-			} else if (opcion.equals("5")) {
-				nombreReporte = "RepPorPuntoCruceFacturasNotas.jasper";
-				nombreGuarda = "RepPorPuntoCruceFacturasNotas";
-			} else if (opcion.equals("6")) {
-				nombreReporte = "RepPorPuntoCierre.jasper";
-				nombreGuarda = "RepPorPuntoCierre";
-			} else if (opcion.equals("7")) {
-				nombreReporte = "RepPorPuntoDepositoNoConsolidado.jasper";
-				nombreGuarda = "RepPorPuntoNoConsolidados";
+			if (opcion != null) {
+				if (opcion.equals("1")) {
+					nombreReporte = "RepPorPuntoFactGeneral.jasper";
+					nombreGuarda = "RepPorPuntoFactGeneral";
+				} else if (opcion.equals("2")) {
+					nombreReporte = "RepPorPuntoFactCodBanco.jasper";
+					nombreGuarda = "RepPorPuntoFactCodBanco";
+				} else if (opcion.equals("3")) {
+					nombreReporte = "RepPorPuntoFactAnuladas.jasper";
+					nombreGuarda = "RepPorPuntoFactAnuladas";
+				} else if (opcion.equals("4")) {
+					nombreReporte = "RepPorPuntoFactNoAutorizadas.jasper";
+					nombreGuarda = "RepPorPuntoFactNoAutorizadas";
+				} else if (opcion.equals("5")) {
+					nombreReporte = "RepPorPuntoCruceFacturasNotas.jasper";
+					nombreGuarda = "RepPorPuntoCruceFacturasNotas";
+				} else if (opcion.equals("6")) {
+					nombreReporte = "RepPorPuntoCierre.jasper";
+					nombreGuarda = "RepPorPuntoCierre";
+				} else if (opcion.equals("7")) {
+					nombreReporte = "RepPorPuntoDepositoNoConsolidado.jasper";
+					nombreGuarda = "RepPorPuntoNoConsolidados";
+				}
+				generarReporte(nombreReporte);
 			}
-			generarReporte(nombreReporte);
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -127,28 +131,28 @@ public class ReportesPorPuntoBean implements Serializable {
 
 	public void generarReporte(String nombreReporte) {
 		try {
-			
-			String rutaImagenLogo = UtilsArchivos.getRutaLogo()+ "logomdg.png";
-			String rutaImagenLogoPie = UtilsArchivos.getRutaLogo()+ "footer.png";
-			
+
+			String rutaImagenLogo = UtilsArchivos.getRutaLogo() + "logomdg.png";
+			String rutaImagenLogoPie = UtilsArchivos.getRutaLogo() + "footer.png";
+
 			Map<String, Object> parametros = new HashMap<String, Object>();
 			parametros.put("PUNTO", punto.getId());
 			parametros.put("FECHA_INICIAL", fecha_inicio);
 			parametros.put("FECHA_FINAL", fecha_fin);
 			parametros.put("LOGO", rutaImagenLogo);
 			parametros.put("LOGOPIE", rutaImagenLogoPie);
-			
-			String path = UtilsArchivos.getRutaReportesJasper() ;
-			String pathPdf = UtilsArchivos.getRutaReportes() ;
+
+			String path = UtilsArchivos.getRutaReportesJasper();
+			String pathPdf = UtilsArchivos.getRutaReportes();
 
 			Connection conn = datasource.getConnection();
-			File jasper = new File( path + nombreReporte);
+			File jasper = new File(path + nombreReporte);
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros, conn);
 
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
-			
+
 			response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
 
 			JasperExportManager.exportReportToPdfFile(jasperPrint, pathPdf + nombreGuarda + punto.getId() + ".pdf");
@@ -169,9 +173,16 @@ public class ReportesPorPuntoBean implements Serializable {
 	}
 
 	public void listarVistaCierre(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
-		this.listaVistaCierreDTO = this.serviceVistaCierreDTO.listarCierre(fecha_inicio, fecha_fin, id_punto);
-		this.contadorc = this.serviceVistaCierreDTO.cuentaFacturas(fecha_inicio, fecha_fin, id_punto);
-		totalc();
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaCierreDTO = this.serviceVistaCierreDTO.listarCierre(fecha_inicio, fecha_fin, id_punto);
+			this.contadorc = this.serviceVistaCierreDTO.cuentaFacturas(fecha_inicio, fecha_fin, id_punto);
+			totalc();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
+		
+		
 	}
 
 	public void totalc() {
@@ -182,15 +193,17 @@ public class ReportesPorPuntoBean implements Serializable {
 	}
 
 ///////////
-public void listarVistaRecaudacion(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
+	public void listarVistaRecaudacion(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaRecaudacionDTO = this.serviceVistaRecaudacionDTO.listarRecaudacionDetalle(fecha_inicio,
+					fecha_fin, id_punto);
+			total();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
 
-	this.listaVistaRecaudacionDTO = this.serviceVistaRecaudacionDTO.listarRecaudacionDetalle(fecha_inicio,
-			fecha_fin, id_punto);
-	
-
-	total();
-}
-
+	}
 
 	public void total() {
 		total = 0;
@@ -201,13 +214,18 @@ public void listarVistaRecaudacion(Date fecha_inicio, Date fecha_fin, Integer id
 	////////////////////////
 
 	public void listarVistaRecaudacionDeposito(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
+					.listarRecaudacionDeposito(fecha_inicio, fecha_fin, id_punto);
 
-		this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
-				.listarRecaudacionDeposito(fecha_inicio, fecha_fin, id_punto);
+			this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturas(fecha_inicio, fecha_fin, id_punto);
 
-		this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturas(fecha_inicio, fecha_fin, id_punto);
+			totald();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
 
-		totald();
 	}
 
 	public void totald() {
@@ -323,8 +341,6 @@ public void listarVistaRecaudacion(Date fecha_inicio, Date fecha_fin, Integer id
 	public void setTotal(double total) {
 		this.total = total;
 	}
-
-	
 
 	public double getTotald() {
 		return totald;

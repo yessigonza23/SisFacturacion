@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -104,23 +105,26 @@ public class ReportesNacionalBean implements Serializable {
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void reportesPorOpcion(String opcion) {
 		try {
-			if (opcion.equals("1")) {
-				nombreReporte = "RepConsNanPorPuntoFactSerBanCodPres.jasper";
-				nombreGuarda = "RepConsNanPorPuntoFactSerBanCodPres";
-			} else if (opcion.equals("2")) {
-				nombreReporte = "RepConsNanProcesoCodPresupuestario.jasper";
-				nombreGuarda = "RepConsNanProcesoCodPresupuestario";
-			} else if (opcion.equals("3")) {
-				nombreReporte = "RepConsNanServicioPunto.jasper";
-				nombreGuarda = "RepConsNanServicioPunto";
-			} else if (opcion.equals("4")) {
-				nombreReporte = "RepConsNanCodPartPresupuestari.jasper";
-				nombreGuarda = "RepConsNanCodPartPresupuestari";
-			} else if (opcion.equals("5")) {
-				nombreReporte = "RepConsNanPlanPresBanProceso.jasper";
-				nombreGuarda = "RepConsNanPlanPresBanProceso";
-			} 
-			generarReporte(nombreReporte);
+			if (opcion != null) {
+				if (opcion.equals("1")) {
+					nombreReporte = "RepConsNanPorPuntoFactSerBanCodPres.jasper";
+					nombreGuarda = "RepConsNanPorPuntoFactSerBanCodPres";
+				} else if (opcion.equals("2")) {
+					nombreReporte = "RepConsNanProcesoCodPresupuestario.jasper";
+					nombreGuarda = "RepConsNanProcesoCodPresupuestario";
+				} else if (opcion.equals("3")) {
+					nombreReporte = "RepConsNanServicioPunto.jasper";
+					nombreGuarda = "RepConsNanServicioPunto";
+				} else if (opcion.equals("4")) {
+					nombreReporte = "RepConsNanCodPartPresupuestari.jasper";
+					nombreGuarda = "RepConsNanCodPartPresupuestari";
+				} else if (opcion.equals("5")) {
+					nombreReporte = "RepConsNanPlanPresBanProceso.jasper";
+					nombreGuarda = "RepConsNanPlanPresBanProceso";
+				}
+				generarReporte(nombreReporte);
+			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -128,10 +132,10 @@ public class ReportesNacionalBean implements Serializable {
 
 	public void generarReporte(String nombreReporte) {
 		try {
-			
-			String rutaImagenLogo = UtilsArchivos.getRutaLogo()+ "logomdg.png";
-			String rutaImagenLogoPie = UtilsArchivos.getRutaLogo()+ "footer.png";
-			
+
+			String rutaImagenLogo = UtilsArchivos.getRutaLogo() + "logomdg.png";
+			String rutaImagenLogoPie = UtilsArchivos.getRutaLogo() + "footer.png";
+
 			Map<String, Object> parametros = new HashMap<String, Object>();
 			parametros.put("PUNTO", punto.getId());
 			parametros.put("FECHA_INICIAL", fecha_inicio);
@@ -139,20 +143,19 @@ public class ReportesNacionalBean implements Serializable {
 			parametros.put("PROCESO", proceso);
 			parametros.put("LOGO", rutaImagenLogo);
 			parametros.put("LOGOPIE", rutaImagenLogoPie);
-			String path = UtilsArchivos.getRutaReportesJasper() ;
-			String pathPdf = UtilsArchivos.getRutaReportes() ;
+			String path = UtilsArchivos.getRutaReportesJasper();
+			String pathPdf = UtilsArchivos.getRutaReportes();
 
 			Connection conn = datasource.getConnection();
-			File jasper = new File( path + nombreReporte);
+			File jasper = new File(path + nombreReporte);
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros, conn);
 
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
-			
-			JasperExportManager.exportReportToPdfFile(jasperPrint,
-					pathPdf + nombreGuarda + punto.getId() + ".pdf");
+
+			JasperExportManager.exportReportToPdfFile(jasperPrint, pathPdf + nombreGuarda + punto.getId() + ".pdf");
 
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
@@ -171,10 +174,17 @@ public class ReportesNacionalBean implements Serializable {
 
 	///////////
 	public void listarVistaRecaudacionNac(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
-		this.listaVistaRecaudacionDTO = this.serviceVistaRecaudacionDTO.listarRecaudacionDetalleNac(fecha_inicio,
-				fecha_fin, proceso_tipo);
-		this.contador = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
-		total();
+
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaRecaudacionDTO = this.serviceVistaRecaudacionDTO.listarRecaudacionDetalleNac(fecha_inicio,
+					fecha_fin, proceso_tipo);
+			this.contador = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
+			total();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
+
 	}
 
 	public void total() {
@@ -186,11 +196,17 @@ public class ReportesNacionalBean implements Serializable {
 	////////////////////////
 
 	public void listarVistaRecaudacionDeposito(Date fecha_inicio, Date fecha_fin) {
-		
-		this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
-				.listarRecaudacionDepositoNac(fecha_inicio, fecha_fin);
-		this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturasNac(fecha_inicio, fecha_fin);
-		totald();
+
+		if (fecha_inicio != null && fecha_fin != null) {
+
+			this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
+					.listarRecaudacionDepositoNac(fecha_inicio, fecha_fin);
+			this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturasNac(fecha_inicio, fecha_fin);
+			totald();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
 	}
 
 	public void totald() {
@@ -203,10 +219,17 @@ public class ReportesNacionalBean implements Serializable {
 	////////////////////////////////////////
 
 	public void listarVistaRecaudacionAnuladas(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
-		this.listaVistaRecaudacionAnuladas = this.serviceVistaRecaudacionDTO.listarRecaudacionAnuladasNac(fecha_inicio,
-				fecha_fin, proceso_tipo);
-		this.contadora = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
-		totala();
+		if (fecha_inicio != null && fecha_fin != null) {
+
+			this.listaVistaRecaudacionAnuladas = this.serviceVistaRecaudacionDTO
+					.listarRecaudacionAnuladasNac(fecha_inicio, fecha_fin, proceso_tipo);
+			this.contadora = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
+			totala();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
+
 	}
 
 	public void totala() {
@@ -219,11 +242,18 @@ public class ReportesNacionalBean implements Serializable {
 	///////////////////////////////////////////
 
 	public void listarVistaRecaudacionNoAutorizadas(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
-		this.listaVistaRecaudacionNoAutorizadas = this.serviceVistaRecaudacionDTO
-				.listarRecaudacionNoAutorizadasNac(fecha_inicio, fecha_fin, proceso_tipo);
-		this.contadorn = this.serviceVistaRecaudacionDTO.cuentaFacturasNoAutorizadasNac(fecha_inicio, fecha_fin,
-				proceso_tipo);
-		totaln();
+
+		if (fecha_inicio != null && fecha_fin != null) {
+
+			this.listaVistaRecaudacionNoAutorizadas = this.serviceVistaRecaudacionDTO
+					.listarRecaudacionNoAutorizadasNac(fecha_inicio, fecha_fin, proceso_tipo);
+			this.contadorn = this.serviceVistaRecaudacionDTO.cuentaFacturasNoAutorizadasNac(fecha_inicio, fecha_fin,
+					proceso_tipo);
+			totaln();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
 	}
 
 	public void totaln() {
@@ -234,15 +264,28 @@ public class ReportesNacionalBean implements Serializable {
 	}
 
 	///////////////////////////////////////////
+
 	public void listarVistaRecaudacionSinCierre(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
-		this.listaVistaRecaudacionSinCierre = this.serviceVistaRecaudacionDTO.listarRecaudacionSinCierre(fecha_inicio,
-				fecha_fin, proceso_tipo);
+
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaRecaudacionSinCierre = this.serviceVistaRecaudacionDTO
+					.listarRecaudacionSinCierre(fecha_inicio, fecha_fin, proceso_tipo);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
 	}
 
 	////////////////////////////////////////////
 	public void listarVistaRecaudacionDif(Date fecha_inicio, Date fecha_fin, String proceso_tipo) {
-		this.listaVistaRecaudacionDif = this.serviceVistaRecaudacionDTO.listarRecaudacioDif(fecha_inicio, fecha_fin,
-				proceso_tipo);
+		if (fecha_inicio != null && fecha_fin != null) {
+			this.listaVistaRecaudacionDif = this.serviceVistaRecaudacionDTO.listarRecaudacioDif(fecha_inicio, fecha_fin,
+					proceso_tipo);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique las fechas"));
+		}
+		
 	}
 	////// GETTERS Y SETTERS
 
