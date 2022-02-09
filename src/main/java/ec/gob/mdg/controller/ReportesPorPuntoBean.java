@@ -42,6 +42,10 @@ import ec.gob.mdg.util.UtilsArchivos;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 
 @Named
 @ViewScoped
@@ -127,8 +131,17 @@ public class ReportesPorPuntoBean implements Serializable {
 				} else if (opcion.equals("7")) {
 					nombreReporte = "RepPorPuntoDepositoNoConsolidado.jasper";
 					nombreGuarda = "RepPorPuntoNoConsolidados";
+				} else if (opcion.equals("20")) {
+					nombreReporte = "RepPorPuntoCierreXls.jasper";
+					nombreGuarda = "RepPorPuntoCierreXls";
+				}else if (opcion.equals("21")) {
+					nombreReporte = "RepPorPuntoRecDetalleXls.jasper";
+					nombreGuarda = "RepPorPuntoRecDetalleXls";
+				}else if (opcion.equals("22")) {
+					nombreReporte = "RepPorPuntoRecDepositoXls.jasper";
+					nombreGuarda = "RepPorPuntoRecDepositoXls";
 				}
-				generarReporte(nombreReporte);
+				generarReporte(nombreReporte,opcion);
 			}
 
 		} catch (Exception e) {
@@ -136,7 +149,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		}
 	}
 
-	public void generarReporte(String nombreReporte) {
+	public void generarReporte(String nombreReporte,String opcion) {
 		try {
 
 			String rutaImagenLogo = UtilsArchivos.getRutaLogo() + "logomdg.png";
@@ -157,15 +170,62 @@ public class ReportesPorPuntoBean implements Serializable {
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros, conn);
 
-			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-					.getResponse();
-
-			response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
-
-			JasperExportManager.exportReportToPdfFile(jasperPrint, pathPdf + nombreGuarda + punto.getId() + ".pdf");
-
-			ServletOutputStream stream = response.getOutputStream();
-			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			Integer opcionInt = Integer.parseInt(opcion);
+			if (opcionInt < 20) {
+				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+						.getResponse();
+				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
+				JasperExportManager.exportReportToPdfFile(jasperPrint, pathPdf + nombreGuarda + punto.getId() + ".pdf");
+				ServletOutputStream stream = response.getOutputStream();
+				JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			}else {
+				
+			}
+			
+			
+		//////
+			
+					System.out.println("11111111111");
+					
+//					JRCsvMetadataExporter exporter = new JRXlsxExporter(); // initialize exporter 
+//					System.out.println("1.1");
+//					exporter.setExporterInput(new SimpleExporterInput(jasperPrint)); // set compiled report as input
+//					System.out.println("1.2");
+//				    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pathPdf + nombreGuarda + punto.getId() + ".xls"));  // set output file via path with filename
+//				    System.out.println("1.3");
+//				    SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+//				    System.out.println("1.4");
+//				    configuration.setOnePagePerSheet(true); // setup configuration
+//				    System.out.println("1.5");
+//				    configuration.setDetectCellType(true);
+//				    System.out.println("1.6");
+//				    exporter.setConfiguration(configuration); // set configuration
+//				    System.out.println("1.7");
+//				    exporter.exportReport();
+//					
+//				    System.out.println("2222222222");
+				    
+					//////
+				    
+//				    
+//				    JRCsvMetadataExporter exporter = new JRCsvMetadataExporter();
+//			        SimpleCsvMetadataExporterConfiguration configuration = new SimpleCsvMetadataExporterConfiguration();
+//			        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+//			        exporter.setExporterOutput((WriterExporterOutput) new SimpleOutputStreamExporterOutput(pathPdf + nombreGuarda + punto.getId() + ".csv"));  // set output file via path with filename
+//			        exporter.setConfiguration(configuration);
+//			        exporter.exportReport();
+//				    System.out.println("2222222222");
+			
+					
+				
+					JRCsvExporter exporter = new JRCsvExporter();
+					exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+					exporter.setExporterOutput(new SimpleWriterExporterOutput(new File(pathPdf + nombreGuarda + punto.getId() + ".csv")));
+					SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
+					configuration.setWriteBOM(Boolean.TRUE);
+					configuration.setRecordDelimiter("\r\n");
+					exporter.setConfiguration(configuration);
+					exporter.exportReport();
 
 			stream.flush();
 			stream.close();
@@ -347,7 +407,9 @@ public class ReportesPorPuntoBean implements Serializable {
 
 			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDetalle"+ nombre.getId() +".xls");																									// ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
+			
 			
 			String archivo="RecDetalle"+ nombre.getId() +".xls";
 			UtilsArchivos.verXls(archivo);
@@ -454,6 +516,7 @@ public class ReportesPorPuntoBean implements Serializable {
 
 			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDeposito"+ nombre.getId() +".xls");																									// ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 			
 			String archivo="RecDeposito"+ nombre.getId() +".xls";
@@ -476,7 +539,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		HSSFRow fila = hoja.createRow((short) contador);
 
 		HSSFCell celdaCierre = fila.createCell((short) 0);
-		HSSFRichTextString cierre = new HSSFRichTextString(String.valueOf("No. Cierre"));
+		HSSFRichTextString cierre = new HSSFRichTextString(String.valueOf("No Cierre"));
 		celdaCierre.setCellValue(cierre);
 		
 		HSSFCell celdaFact = fila.createCell((short) 1);
@@ -506,11 +569,12 @@ public class ReportesPorPuntoBean implements Serializable {
 			for (VistaCierreDTO v1 : listaVistaCierreDTO) {
 
 				celdaCierre = fila.createCell((short) 0);
-				celdaFact.setCellValue(v.getId_cierre());
+				cierre = new HSSFRichTextString(String.valueOf(v.getId_cierre()));
+				celdaCierre.setCellValue(cierre);
 				
 				celdaFact = fila.createCell((short) 1);
-				Integer fac = v.getNumeroFactura();
-				celdaFact.setCellValue(fac);
+				factura = new HSSFRichTextString(String.valueOf(v.getNumeroFactura())); 
+				celdaFact.setCellValue(factura);
 
 				celdaFecha = fila.createCell((short) 2);
 				fecha = new HSSFRichTextString(String.valueOf(v.getFechaemision()));
@@ -537,6 +601,7 @@ public class ReportesPorPuntoBean implements Serializable {
 
 			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecCierre"+ nombre.getId() +".xls");																									// ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 			
 			String archivo="RecCierre"+ nombre.getId() +".xls";

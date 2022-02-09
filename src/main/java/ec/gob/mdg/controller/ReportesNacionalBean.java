@@ -40,6 +40,10 @@ import ec.gob.mdg.util.UtilsArchivos;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 @Named
 @ViewScoped
@@ -166,6 +170,24 @@ public class ReportesNacionalBean implements Serializable {
 
 			ServletOutputStream stream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+			
+			
+			//////
+			
+			System.out.println("11111111111");
+			
+			JRXlsxExporter exporter = new JRXlsxExporter(); // initialize exporter 
+		    exporter.setExporterInput(new SimpleExporterInput(jasperPrint)); // set compiled report as input
+		    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pathPdf));  // set output file via path with filename
+		    SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+		    configuration.setOnePagePerSheet(true); // setup configuration
+		    configuration.setDetectCellType(true);
+		    exporter.setConfiguration(configuration); // set configuration
+		    exporter.exportReport();
+			
+		    System.out.println("2222222222");
+		    
+			//////
 
 			stream.flush();
 			stream.close();
@@ -399,6 +421,7 @@ public class ReportesNacionalBean implements Serializable {
 			FileOutputStream elFichero = new FileOutputStream(
 					UtilsArchivos.getRutaReportes() + "RecDetalleNac" + nombre.getId() + ".xls"); // ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 
 			String archivo = "RecDetalleNac" + nombre.getId() + ".xls";
@@ -508,6 +531,7 @@ public class ReportesNacionalBean implements Serializable {
 			FileOutputStream elFichero = new FileOutputStream(
 					UtilsArchivos.getRutaReportes() + "RecAnuladasNac" + nombre.getId() + ".xls"); // ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 
 			String archivo = "RecAnuladasNac" + nombre.getId() + ".xls";
@@ -617,6 +641,7 @@ public class ReportesNacionalBean implements Serializable {
 			FileOutputStream elFichero = new FileOutputStream(
 					UtilsArchivos.getRutaReportes() + "RecNoAutorizadasNac" + nombre.getId() + ".xls"); // ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 
 			String archivo = "RecNoAutorizadasNac" + nombre.getId() + ".xls";
@@ -670,6 +695,7 @@ public class ReportesNacionalBean implements Serializable {
 			FileOutputStream elFichero = new FileOutputStream(
 					UtilsArchivos.getRutaReportes() + "RecSinCierreNac" + nombre.getId() + ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 
 			String archivo = "RecSinCierreNac" + nombre.getId() + ".xls";
@@ -746,6 +772,7 @@ public class ReportesNacionalBean implements Serializable {
 			FileOutputStream elFichero = new FileOutputStream(
 					UtilsArchivos.getRutaReportes() + "RecDifAutorizadasNac" + nombre.getId() + ".xls"); // ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 
 			String archivo = "RecDifAutorizadasNac" + nombre.getId() + ".xls";
@@ -857,6 +884,7 @@ public class ReportesNacionalBean implements Serializable {
 
 			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDeposito"+ nombre.getId() +".xls");																									// ".xls");
 			libro.write(elFichero);
+			elFichero.flush();
 			elFichero.close();
 			
 			String archivo="RecDeposito"+ nombre.getId() +".xls";

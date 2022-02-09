@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingFacturas"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">MODIFICACIÓN DE
+					No. DEPOSITOS DE FACTURAS -
+					#{comprobanteModificaDepositosBean.comprobante.puntoRecaudacion.nombre}</h2>
+				<h3 style="color: #003778; text-align: center">Factura No.:
+					#{comprobanteModificaDepositosBean.comprobante.numero} Fecha
+					Emisión:
+					#{comprobanteModificaDepositosBean.comprobante.fechaemision} Valor:
+					#{comprobanteModificaDepositosBean.comprobante.valor}</h3>
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+
+				<h2 style="color: #003778; text-align: center">Modificación de
+					No. de Depósitos</h2>
+
+				<!-- TABLA DEPOSITO DE DE FACTURA				 -->
+				<p:dataTable id="dep" style="width:900px;"
+					value="#{comprobanteModificaBean.listaComprobanteDep}" var="d"
+					widgetVar="accionTablaDep" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción"
+					rowIndexVar="index">
+
+					<p:column style="text-align: justify;width:20px;">
+						<f:facet name="header">
+							<h:outputText value="No." />
+						</f:facet>
+						<h:outputText value="#{index + 1}" />
+					</p:column>
+					<p:column style="text-align: justify ;width:120px;">
+						<f:facet name="header">
+							<h:outputText value="Origen" style="text-align: justify" />
+						</f:facet>
+						<h:selectOneMenu id="origen" disabled="true" value="#{d.origen}">
+							<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+							<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column style="text-align: justify ;width:150px;">
+						<f:facet name="header">
+							<h:outputText value="Tipo Transacción"
+								style="text-align: justify" />
+						</f:facet>
+						<h:selectOneMenu id="tipotransaccion" disabled="true"
+							value="#{d.tipotransaccion}" required="true" style="width:100px">
+							<f:selectItem itemLabel="Intermático" itemValue="I" />
+							<f:selectItem itemLabel="Depósito" itemValue="D" />
+							<f:selectItem itemLabel="Transferencia" itemValue="T" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column headerText="Identificacion"
+						style="text-align: justify ;width:120px;">
+						<h:outputText value="#{d.identificacion}">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Nro. Depósito"
+						style="text-align: justify ;width:80px;"
+						sortBy="#{d.num_deposito}">
+						<h:outputLabel value="#{d.num_deposito}" />
+					</p:column>
+
+					<p:column headerText="Fecha Depósito"
+						style="text-align: justify ;width:80px;" sortBy="#{d.fecha}">
+						<h:outputLabel value="#{d.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputLabel>
+					</p:column>
+		
+				</p:dataTable>
+
+				<!-- Botones -->
+				<p:panel>
+					<p:panelGrid columns="7" style="display:block; text-align:center"
+						columnClasses="centered">
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Guardar"
+							action="#{comprobanteModificaDepositosBean.modificarComprobanteDeposito()}"
+							process="@this"
+							update="ingFacturas:btnGuardar"
+							disabled="#{comprobanteModificaDepositosBean.estadeshabilitado}">
+						</p:commandButton>
+						<p:commandButton id="btnRegresar" value="Principal"
+							icon="fa fa-fw fa-hand-o-left"
+							action="#{navegarVistasBean.principal()}" process="@this"
+							update="@this" />
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
