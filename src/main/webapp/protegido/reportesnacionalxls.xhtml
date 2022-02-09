@@ -77,8 +77,10 @@
 						process="@form" update="ingReportes:factDet">
 					</p:commandButton>
 
-					<p:commandButton value="Export as csv" ajax="false">
-						<p:dataExporter type="csv" target="factDet" fileName="recaudacion" />
+					<p:commandButton id="btnExcelRecaudacion"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacion()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDet" resizableColumns="true"
@@ -193,9 +195,10 @@
 						process="@form" update="ingReportes:factDetAn">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDetAn"
-							fileName="recaudacionan" />
+					<p:commandButton id="btnExcelRecaudacionAnu"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacionAnuladas()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDetAn" resizableColumns="true"
@@ -307,9 +310,10 @@
 						process="@form" update="ingReportes:factDetNo">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDetNo"
-							fileName="recaudacionNo" />
+					<p:commandButton id="btnExcelRecaudacionNoAut"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacionNoAutorizadas()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDetNo" resizableColumns="true"
@@ -420,9 +424,10 @@
 						process="@form" update="ingReportes:factDetSin">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDetSin"
-							fileName="recaudacionSi" />
+					<p:commandButton id="btnExcelRecaudacionSinCie"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacionSinCierre()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDetSin" resizableColumns="true"
@@ -467,9 +472,10 @@
 						process="@form" update="ingReportes:factDetDif">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDetDif"
-							fileName="recaudacionDif" />
+					<p:commandButton id="btnExcelRecaudacionDif"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacionDiferentes()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDetDif" resizableColumns="true"
@@ -533,9 +539,10 @@
 						process="@form" update="ingReportes:factDep">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="factDep"
-							fileName="recaudacionDep" />
+					<p:commandButton id="btnExcelRecaudacionDep"
+						value="Exportar XLS "
+						actionListener="#{reportesNacionalBean.xlsRecaudacionDep()}"
+						process="@form" ajax="false">
 					</p:commandButton>
 
 					<p:dataTable id="factDep" resizableColumns="true"
