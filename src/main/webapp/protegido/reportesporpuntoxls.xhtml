@@ -65,21 +65,13 @@
 						process="@form" update="ingReportes:factDet">
 					</p:commandButton>
 
-					<p:commandButton icon="ui-icon-disk" id="btnExcelRecaudacion"
-						value="Exportar XLS "
-						actionListener="#{reportesPorPuntoBean.xlsRecaudacion()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					<p:commandButton value="Descargar"
+						onclick="exportar('ingReportes:factDet','RecaDetalle')" />
 
 					<p:dataTable id="factDet" resizableColumns="true"
 						value="#{reportesPorPuntoBean.listaVistaRecaudacionDTO}" var="e"
-						rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
 						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -181,22 +173,15 @@
 						actionListener="#{reportesPorPuntoBean.listarVistaRecaudacionDeposito(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
 						process="@form" update="ingReportes:factDep">
 					</p:commandButton>
+					
+					<p:commandButton value="Descargar"
+						onclick="exportar('ingReportes:factDep','RecaDeposito')" />
 
-					<p:commandButton id="btnExcelRecDeposito"
-						value="Exportar XLS "
-						actionListener="#{reportesPorPuntoBean.xlsRecaudacionDep()}"
-						process="@form" ajax="false">
-					</p:commandButton>
 
 					<p:dataTable id="factDep" resizableColumns="true"
 						value="#{reportesPorPuntoBean.listaVistaRecaudacionDepositoDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -297,30 +282,20 @@
 						actionListener="#{reportesPorPuntoBean.listarVistaCierre(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
 						process="@form" update="ingReportes:factCierre">
 					</p:commandButton>
-
-					<p:commandButton id="btnExcelCierre"
-						value="Exportar XLS "
-						actionListener="#{reportesPorPuntoBean.xlsCierreCaja()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					
+					<p:commandButton value="Descargar"
+						onclick="exportar('ingReportes:factCierre','CierreRecaudacion')" />
 
 					<p:dataTable id="factCierre" resizableColumns="true"
 						value="#{reportesPorPuntoBean.listaVistaCierreDTO}" var="e"
-						rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
 						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
 							</f:facet>
 							<h:outputText value="#{index + 1}" />
 						</p:column>
-
-
 
 						<p:column headerText="No. Cierre" filterBy="#{e.id_cierre}"
 							filterMatchMode="contains" style="width:80px;">

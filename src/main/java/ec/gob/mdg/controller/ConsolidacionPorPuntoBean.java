@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 
 import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.model.Usuario;
@@ -43,7 +43,7 @@ public class ConsolidacionPorPuntoBean implements Serializable {
 
 	@Inject
 	private IVistaConciliacionValNoFacturadosDTOService serviceVistaConciliacionValNoFacturadosDTO;
-	
+
 	@Inject
 	private IVistaConciliacionCompDepositoEstcCuentaDTOService serviceVistaConciliacionCompDepositoEstcCuentaDTO;
 
@@ -74,7 +74,7 @@ public class ConsolidacionPorPuntoBean implements Serializable {
 	double totalDep = 0.00;
 	// totales cosolidacion 4
 	double totalF4 = 0.00;
-	//total comprobantes consolidados
+	// total comprobantes consolidados
 	double totalB4 = 0.00;
 	double totalB5 = 0.00;
 	double totalB6 = 0.00;
@@ -92,85 +92,161 @@ public class ConsolidacionPorPuntoBean implements Serializable {
 
 	//// LISTAR CONSULTA DE COMPROBANTES VS BANCO
 	public void listarComprobantesVsBanco() {
-		this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
-				.listarConsultaBancoVsBanco(nombre.getId(), anio, mes);
-		totalFacturas();
+
+		if (nombre.getId() != null && anio != null && mes != null) {
+			this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
+					.listarConsultaBancoVsBanco(nombre.getId(), anio, mes);
+			totalFacturas();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}
 	}
 
 	public void totalFacturas() {
 		totalF = 0.0;
 		totalB = 0.0;
-		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
-			totalF = totalF + v.getDeposito_valor();
-			totalF =FunValidaciones.formatearDecimales(totalF, 2);
-			totalB = totalB + v.getEstadocuenta_valor();
-			totalB =FunValidaciones.formatearDecimales(totalB, 2);
+
+		if (listaVistaRecaudacionDepositoDTO != null) {
+			for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
+				totalF = totalF + v.getDeposito_valor();
+				totalF = FunValidaciones.formatearDecimales(totalF, 2);
+				totalB = totalB + v.getEstadocuenta_valor();
+				totalB = FunValidaciones.formatearDecimales(totalB, 2);
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
 		}
+
 	}
 
 	// LISTAR CONSULTA DE DEPOSITOS QUE NO CONSTA EN EL ESTADO DE CUENTA
+	@SuppressWarnings("unused")
 	public void listarDepositosNoBanco() {
-		this.listaVistaRecaudacionDepositoDTO1 = this.serviceVistaRecaudacionDepositoDTO
-				.listarDepositosNoBanco(nombre.getId(), anio, mes);
-		totalFacturas2();
+		if (listaVistaRecaudacionDepositoDTO != null) {
+			for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO1) {
+				this.listaVistaRecaudacionDepositoDTO1 = this.serviceVistaRecaudacionDepositoDTO
+						.listarDepositosNoBanco(nombre.getId(), anio, mes);
+				totalFacturas2();
+			}
+
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}
 	}
 
 	public void totalFacturas2() {
 		totalF2 = 0.0;
-		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO1) {
-			totalF2 = totalF2 + v.getDeposito_valor();
-			totalF2 =FunValidaciones.formatearDecimales(totalF2, 2);
+		if (listaVistaRecaudacionDepositoDTO1 != null) {
+			for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO1) {
+				totalF2 = totalF2 + v.getDeposito_valor();
+				totalF2 = FunValidaciones.formatearDecimales(totalF2, 2);
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
 		}
+
 	}
 
 	// LISTAR CONSULTA DE VALORES NO FACTURADOS DEL ESTADO DE CUENTA
 	public void listarValoresNoFacturados() {
-		this.listaVistaonciliacionValNoFacturadosDTO = this.serviceVistaConciliacionValNoFacturadosDTO
-				.listarValoresNoFacturados(anio, mes);
-		totalDepositos();
+				
+		if (anio != null && mes != null) {
+			this.listaVistaonciliacionValNoFacturadosDTO = this.serviceVistaConciliacionValNoFacturadosDTO
+					.listarValoresNoFacturados(anio, mes);
+			totalDepositos();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}
+		
 	}
 
 	public void totalDepositos() {
-		totalDep = 0.0;
-		for (VistaConciliacionValNoFacturadosDTO v : listaVistaonciliacionValNoFacturadosDTO) {
-			totalDep = totalDep + v.getValor();
+		if (listaVistaonciliacionValNoFacturadosDTO != null) {
+			totalDep = 0.0;
+			for (VistaConciliacionValNoFacturadosDTO v : listaVistaonciliacionValNoFacturadosDTO) {
+				totalDep = totalDep + v.getValor();
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
 		}
+		
 	}
 
 	///// LISTAR CONSULTA DE DEPOSITOS EN VARIAS FACTURAS
 	public void listarDepositosVariasFacturas() {
-		this.listaVistaRecaudacionDepositoDTO2 = this.serviceVistaRecaudacionDepositoDTO
-				.listarDepositosVariasFacturas(nombre.getId(), anio, mes);
+
+		if (nombre.getId() != null && anio != null && mes != null) {
+			this.listaVistaRecaudacionDepositoDTO2 = this.serviceVistaRecaudacionDepositoDTO
+					.listarDepositosVariasFacturas(nombre.getId(), anio, mes);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}
 	}
 
-   ////LISTAR CONSULTA ESTADO DE CUENTA SIN CONCIALIAR 
+	//// LISTAR CONSULTA ESTADO DE CUENTA SIN CONCIALIAR
 	public void listarSinConciliar() {
-		this.listaVistaRecaudacionDepositoDTO3 = this.serviceVistaRecaudacionDepositoDTO
-				.listarEstadoSinColidar(nombre.getId(), anio, mes);
-		totalFacturas4();
+		if (nombre.getId() != null && anio != null && mes != null) {
+			this.listaVistaRecaudacionDepositoDTO3 = this.serviceVistaRecaudacionDepositoDTO
+					.listarEstadoSinColidar(nombre.getId(), anio, mes);
+			totalFacturas4();
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}
+
 	}
 
 	public void totalFacturas4() {
-		totalF4 = 0.0;
-		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO3) {
-			totalF4 = totalF4 + v.getDeposito_valor();
-		}
+		if (listaVistaRecaudacionDepositoDTO3 != null) {
+			totalF4 = 0.0;
+			for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO3) {
+				totalF4 = totalF4 + v.getDeposito_valor();
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}	
+		
 	}
-	
-	///LISTAR COMPROBANTES CONSOLIDADOS
+
+	/// LISTAR COMPROBANTES CONSOLIDADOS
 	public void listarConsolidados() {
-		this.listaVistaConciliacionCompDepositoEstcCuentaDTO = this.serviceVistaConciliacionCompDepositoEstcCuentaDTO.listarConsolidados(nombre.getId(), anio, mes);
+		
+		if (listaVistaConciliacionCompDepositoEstcCuentaDTO != null) {
+			this.listaVistaConciliacionCompDepositoEstcCuentaDTO = this.serviceVistaConciliacionCompDepositoEstcCuentaDTO
+					.listarConsolidados(nombre.getId(), anio, mes);
+			
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}	
 	}
 
 	public void totalFacturasCon() {
-		totalB4 = 0.0;
-		totalB5 = 0.0;
-		totalB6 = 0.0;
-		for (VistaConciliacionCompDepositoEstcCUentaDTO v : listaVistaConciliacionCompDepositoEstcCuentaDTO) {
-			totalB4 = totalB4 + v.getDeposito_valor();
-			totalB5 = totalB5 + v.getEstadocuenta_valor();
-			totalB6 = totalB6 + v.getEstadocuenta_saldo();
-		}
+	
+		
+		if (listaVistaConciliacionCompDepositoEstcCuentaDTO != null) {
+			totalB4 = 0.0;
+			totalB5 = 0.0;
+			totalB6 = 0.0;
+			for (VistaConciliacionCompDepositoEstcCUentaDTO v : listaVistaConciliacionCompDepositoEstcCuentaDTO) {
+				totalB4 = totalB4 + v.getDeposito_valor();
+				totalB5 = totalB5 + v.getEstadocuenta_valor();
+				totalB6 = totalB6 + v.getEstadocuenta_saldo();
+			}
+			
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));
+		}	
+		
 	}
 	////// GETTERS Y SETTERS
 
@@ -355,7 +431,5 @@ public class ConsolidacionPorPuntoBean implements Serializable {
 	public void setTotalB6(double totalB6) {
 		this.totalB6 = totalB6;
 	}
-	
-	
 
 }

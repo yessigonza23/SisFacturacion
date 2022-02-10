@@ -1,7 +1,6 @@
 package ec.gob.mdg.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -20,12 +19,6 @@ import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.model.Usuario;
@@ -150,6 +143,7 @@ public class ReportesPorPuntoBean implements Serializable {
 	}
 
 	public void generarReporte(String nombreReporte,String opcion) {
+		System.out.println(opcion);
 		try {
 
 			String rutaImagenLogo = UtilsArchivos.getRutaLogo() + "logomdg.png";
@@ -178,58 +172,34 @@ public class ReportesPorPuntoBean implements Serializable {
 				JasperExportManager.exportReportToPdfFile(jasperPrint, pathPdf + nombreGuarda + punto.getId() + ".pdf");
 				ServletOutputStream stream = response.getOutputStream();
 				JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
-			}else {
 				
-			}
-			
-			
-		//////
-			
-					System.out.println("11111111111");
-					
-//					JRCsvMetadataExporter exporter = new JRXlsxExporter(); // initialize exporter 
-//					System.out.println("1.1");
-//					exporter.setExporterInput(new SimpleExporterInput(jasperPrint)); // set compiled report as input
-//					System.out.println("1.2");
-//				    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pathPdf + nombreGuarda + punto.getId() + ".xls"));  // set output file via path with filename
-//				    System.out.println("1.3");
-//				    SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
-//				    System.out.println("1.4");
-//				    configuration.setOnePagePerSheet(true); // setup configuration
-//				    System.out.println("1.5");
-//				    configuration.setDetectCellType(true);
-//				    System.out.println("1.6");
-//				    exporter.setConfiguration(configuration); // set configuration
-//				    System.out.println("1.7");
-//				    exporter.exportReport();
-//					
-//				    System.out.println("2222222222");
-				    
-					//////
-				    
-//				    
-//				    JRCsvMetadataExporter exporter = new JRCsvMetadataExporter();
-//			        SimpleCsvMetadataExporterConfiguration configuration = new SimpleCsvMetadataExporterConfiguration();
-//			        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-//			        exporter.setExporterOutput((WriterExporterOutput) new SimpleOutputStreamExporterOutput(pathPdf + nombreGuarda + punto.getId() + ".csv"));  // set output file via path with filename
-//			        exporter.setConfiguration(configuration);
-//			        exporter.exportReport();
-//				    System.out.println("2222222222");
-			
-					
+				stream.flush();
+				stream.close();
+
+			}else if (opcionInt >= 20) {
+				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+						.getResponse();
+				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
+				ServletOutputStream stream = response.getOutputStream();
+								
+				JRCsvExporter exporter = new JRCsvExporter();
+				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+				exporter.setExporterOutput(new SimpleWriterExporterOutput(new File(pathPdf + nombreGuarda + punto.getId() + ".csv")));
+				SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
+				configuration.setWriteBOM(Boolean.TRUE);
+				configuration.setRecordDelimiter("\r\n");
 				
-					JRCsvExporter exporter = new JRCsvExporter();
-					exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-					exporter.setExporterOutput(new SimpleWriterExporterOutput(new File(pathPdf + nombreGuarda + punto.getId() + ".csv")));
-					SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
-					configuration.setWriteBOM(Boolean.TRUE);
-					configuration.setRecordDelimiter("\r\n");
-					exporter.setConfiguration(configuration);
-					exporter.exportReport();
-
-			stream.flush();
-			stream.close();
-
+				exporter.setConfiguration(configuration);
+				exporter.exportReport();
+				
+				String archivo = nombreGuarda + punto.getId() + ".csv";
+				UtilsArchivos.verXls(archivo);
+				
+				stream.flush();
+				stream.close();
+				
+			}			
+		
 			FacesContext.getCurrentInstance().responseComplete();
 			if (conn != null) {
 				conn.close();
@@ -301,317 +271,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		}
 	}
 
-	////////////////////////////////////////////////////////
-
-	int contador;
-	int contadorc1;
-	private HSSFWorkbook libro;
-
-	// Generar archivo xls
-	// LISTAR VISTA RECAUDACION Reporte 1
-	@SuppressWarnings("unused")
-	public void xlsRecaudacion() {
-
-		libro = new HSSFWorkbook();
-		HSSFSheet hoja = libro.createSheet();
-		// this.listaVistaRecaudacionDTO =
-		// this.serviceVistaRecaudacionDTO.listarRecaudacionDetalle(fecha_inicio,
-		// fecha_fin, nombre.getId());
-		/////////////////////////
-		contador = 0;
-		HSSFRow fila = hoja.createRow((short) contador);
-
-		HSSFCell celdaFact = fila.createCell((short) 0);
-		HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
-		celdaFact.setCellValue(factura);
-
-		HSSFCell celdaFecha = fila.createCell((short) 1);
-		HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
-		celdaFecha.setCellValue(fecha);
-
-		HSSFCell celdaCliente = fila.createCell((short) 2);
-		HSSFRichTextString cliente = new HSSFRichTextString("Cliente");
-		celdaCliente.setCellValue(cliente);
-
-		HSSFCell celdaRuc = fila.createCell((short) 3);
-		HSSFRichTextString ruc = new HSSFRichTextString("Ci/Ruc/Pasaporte");
-		celdaRuc.setCellValue(ruc);
-
-		HSSFCell celdaValor = fila.createCell((short) 4);
-		HSSFRichTextString valor = new HSSFRichTextString("Valor");
-		celdaValor.setCellValue(valor);
-
-		HSSFCell celdaCodRecaudacion = fila.createCell((short) 5);
-		HSSFRichTextString CodRecaudacion = new HSSFRichTextString("Codigo Recaudación");
-		celdaCodRecaudacion.setCellValue(CodRecaudacion);
-
-		HSSFCell celdaCodBanco = fila.createCell((short) 6);
-		HSSFRichTextString CodBanco = new HSSFRichTextString("Código Banco");
-		celdaCodBanco.setCellValue(CodBanco);
-
-		HSSFCell celdaResponsable = fila.createCell((short) 7);
-		HSSFRichTextString Responsable = new HSSFRichTextString("Responsable");
-		celdaResponsable.setCellValue(Responsable);
-
-		HSSFCell celdaPunto = fila.createCell((short) 8);
-		HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
-		celdaPunto.setCellValue(Punto);
-		////////////////////////////////
-		contador = 1;
-		for (VistaRecaudacionDTO v : listaVistaRecaudacionDTO) {
-			fila = hoja.createRow((short) contador);
-
-			for (VistaRecaudacionDTO v1 : listaVistaRecaudacionDTO) {
-
-				celdaFact = fila.createCell((short) 0);
-				Integer fac = v.getComp_numero();
-				celdaFact.setCellValue(fac);
-
-				celdaFecha = fila.createCell((short) 1);
-				fecha = new HSSFRichTextString(String.valueOf(v.getComp_fechaemision()));
-				celdaFecha.setCellValue(fecha);
-
-				celdaCliente = fila.createCell((short) 2);
-				cliente = new HSSFRichTextString(v.getCliente_nombre());
-				celdaCliente.setCellValue(cliente);
-
-				celdaRuc = fila.createCell((short) 3);
-				ruc = new HSSFRichTextString(v.getCliente_ci());
-				celdaRuc.setCellValue(ruc);
-
-				celdaValor = fila.createCell((short) 4);
-				Double compvalor = v.getComp_valor();
-				celdaValor.setCellValue(compvalor);
-
-				celdaCodRecaudacion = fila.createCell((short) 5);
-				CodRecaudacion = new HSSFRichTextString(String.valueOf(v.getRecdetalle_codigo()));
-				celdaCodRecaudacion.setCellValue(CodRecaudacion);
-
-				celdaCodBanco = fila.createCell((short) 6);
-				CodBanco = new HSSFRichTextString(String.valueOf(v.getRecaudacion_codigobanco()));
-				celdaCodBanco.setCellValue(CodBanco);
-
-				celdaResponsable = fila.createCell((short) 7);
-				Responsable = new HSSFRichTextString(String.valueOf(v.getUsuario_nombre()));
-				celdaResponsable.setCellValue(Responsable);
-
-				celdaPunto = fila.createCell((short) 8);
-				Punto = new HSSFRichTextString(String.valueOf(v.getPunto_nombre()));
-				celdaPunto.setCellValue(Punto);
-
-			}
-			contador++;
-		}
-
-		try {
-
-			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDetalle"+ nombre.getId() +".xls");																									// ".xls");
-			libro.write(elFichero);
-			elFichero.flush();
-			elFichero.close();
-			
-			
-			String archivo="RecDetalle"+ nombre.getId() +".xls";
-			UtilsArchivos.verXls(archivo);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/////REPORTE 2 RECAUDACIONES POR DEPOSITOS
-	@SuppressWarnings("unused")
-	public void xlsRecaudacionDep() {
-
-		libro = new HSSFWorkbook();
-		HSSFSheet hoja = libro.createSheet();
-		/////////////////////////
-		contador = 0;
-		HSSFRow fila = hoja.createRow((short) contador);
-
-		HSSFCell celdaFact = fila.createCell((short) 0);
-		HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
-		celdaFact.setCellValue(factura);
-
-		HSSFCell celdaFecha = fila.createCell((short) 1);
-		HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
-		celdaFecha.setCellValue(fecha);
-
-		HSSFCell celdaCliente = fila.createCell((short) 2);
-		HSSFRichTextString cliente = new HSSFRichTextString("Cliente");
-		celdaCliente.setCellValue(cliente);
-
-		HSSFCell celdaRuc = fila.createCell((short) 3);
-		HSSFRichTextString ruc = new HSSFRichTextString("Ci/Ruc/Pasaporte");
-		celdaRuc.setCellValue(ruc);
-		
-		HSSFCell celdaNumDeposito = fila.createCell((short) 4);
-		HSSFRichTextString NumDeposito = new HSSFRichTextString("No. Depositos");
-		celdaNumDeposito.setCellValue(NumDeposito);
-
-		HSSFCell celdaFecDeposito = fila.createCell((short) 5);
-		HSSFRichTextString FecDeposito = new HSSFRichTextString("Fecha Depósitos");
-		celdaFecDeposito.setCellValue(FecDeposito);
-
-		HSSFCell celdaValor = fila.createCell((short) 6);
-		HSSFRichTextString valor = new HSSFRichTextString("Valor");
-		celdaValor.setCellValue(valor);		
-
-		HSSFCell celdaResponsable = fila.createCell((short) 7);
-		HSSFRichTextString Responsable = new HSSFRichTextString("Responsable");
-		celdaResponsable.setCellValue(Responsable);
-
-		HSSFCell celdaPunto = fila.createCell((short) 8);
-		HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
-		celdaPunto.setCellValue(Punto);
-		////////////////////////////////
-		contador = 1;
-		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
-			fila = hoja.createRow((short) contador);
-
-			for (VistaRecaudacionDepositoDTO v1 : listaVistaRecaudacionDepositoDTO) {
-
-				celdaFact = fila.createCell((short) 0);
-				Integer fac = v.getComp_numero();
-				celdaFact.setCellValue(fac);
-
-				celdaFecha = fila.createCell((short) 1);
-				fecha = new HSSFRichTextString(String.valueOf(v.getComp_fechaemision()));
-				celdaFecha.setCellValue(fecha);
-
-				celdaCliente = fila.createCell((short) 2);
-				cliente = new HSSFRichTextString(v.getCliente_nombre());
-				celdaCliente.setCellValue(cliente);
-
-				celdaRuc = fila.createCell((short) 3);
-				ruc = new HSSFRichTextString(v.getCliente_ci());
-				celdaRuc.setCellValue(ruc);
-
-				celdaNumDeposito = fila.createCell((short) 4);
-				NumDeposito = new HSSFRichTextString(String.valueOf(v.getDeposito_numero()));
-				celdaNumDeposito.setCellValue(NumDeposito);
-
-				celdaFecDeposito = fila.createCell((short) 5);
-				FecDeposito = new HSSFRichTextString(String.valueOf(v.getDeposito_fecha()));
-				celdaFecDeposito.setCellValue(FecDeposito);
-				
-				celdaValor = fila.createCell((short) 6);
-				Double compvalor = v.getComp_valor();
-				celdaValor.setCellValue(compvalor);
-
-				celdaResponsable = fila.createCell((short) 7);
-				Responsable = new HSSFRichTextString(String.valueOf(v.getUsuario_nombre()));
-				celdaResponsable.setCellValue(Responsable);
-
-				celdaPunto = fila.createCell((short) 8);
-				Punto = new HSSFRichTextString(String.valueOf(v.getPunto_nombre()));
-				celdaPunto.setCellValue(Punto);
-
-			}
-			contador++;
-		}
-
-		try {
-
-			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecDeposito"+ nombre.getId() +".xls");																									// ".xls");
-			libro.write(elFichero);
-			elFichero.flush();
-			elFichero.close();
-			
-			String archivo="RecDeposito"+ nombre.getId() +".xls";
-			UtilsArchivos.verXls(archivo);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-     /////REPORTE 3 CIERRE DE CAJA
-	@SuppressWarnings("unused")
-	public void xlsCierreCaja() {
-
-		libro = new HSSFWorkbook();
-		HSSFSheet hoja = libro.createSheet();
-		/////////////////////////
-		contador = 0;
-		HSSFRow fila = hoja.createRow((short) contador);
-
-		HSSFCell celdaCierre = fila.createCell((short) 0);
-		HSSFRichTextString cierre = new HSSFRichTextString(String.valueOf("No Cierre"));
-		celdaCierre.setCellValue(cierre);
-		
-		HSSFCell celdaFact = fila.createCell((short) 1);
-		HSSFRichTextString factura = new HSSFRichTextString(String.valueOf("Factura"));
-		celdaFact.setCellValue(factura);
-
-		HSSFCell celdaFecha = fila.createCell((short) 2);
-		HSSFRichTextString fecha = new HSSFRichTextString(String.valueOf("Fecha de Emisión"));
-		celdaFecha.setCellValue(fecha);
-
-		HSSFCell celdaValor = fila.createCell((short) 3);
-		HSSFRichTextString valor = new HSSFRichTextString("Valor");
-		celdaValor.setCellValue(valor);		
-
-		HSSFCell celdaEstado = fila.createCell((short) 4);
-		HSSFRichTextString Estado = new HSSFRichTextString("Estado");
-		celdaEstado.setCellValue(Estado);
-
-		HSSFCell celdaPunto = fila.createCell((short) 5);
-		HSSFRichTextString Punto = new HSSFRichTextString("Punto Recaudación");
-		celdaPunto.setCellValue(Punto);
-		////////////////////////////////
-		contador = 1;
-		for (VistaCierreDTO v : listaVistaCierreDTO) {
-			fila = hoja.createRow((short) contador);
-
-			for (VistaCierreDTO v1 : listaVistaCierreDTO) {
-
-				celdaCierre = fila.createCell((short) 0);
-				cierre = new HSSFRichTextString(String.valueOf(v.getId_cierre()));
-				celdaCierre.setCellValue(cierre);
-				
-				celdaFact = fila.createCell((short) 1);
-				factura = new HSSFRichTextString(String.valueOf(v.getNumeroFactura())); 
-				celdaFact.setCellValue(factura);
-
-				celdaFecha = fila.createCell((short) 2);
-				fecha = new HSSFRichTextString(String.valueOf(v.getFechaemision()));
-				celdaFecha.setCellValue(fecha);
-
-				celdaValor = fila.createCell((short) 3);
-				Double compvalor = v.getValor();
-				celdaValor.setCellValue(compvalor);
-				
-				celdaEstado = fila.createCell((short) 4);
-				Estado = new HSSFRichTextString(String.valueOf(v.getEstado()));
-				celdaEstado.setCellValue(Estado);
-
-
-				celdaPunto = fila.createCell((short) 5);
-				Punto = new HSSFRichTextString(String.valueOf(v.getPuntoRecaudacion()));
-				celdaPunto.setCellValue(Punto);
-
-			}
-			contador++;
-		}
-
-		try {
-
-			FileOutputStream elFichero = new FileOutputStream(UtilsArchivos.getRutaReportes() + "RecCierre"+ nombre.getId() +".xls");																									// ".xls");
-			libro.write(elFichero);
-			elFichero.flush();
-			elFichero.close();
-			
-			String archivo="RecCierre"+ nombre.getId() +".xls";
-			UtilsArchivos.verXls(archivo);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+	
 
 	////// GETTERS Y SETTERS
 

@@ -34,12 +34,7 @@
 					emptyMessage="No hay ningún registro con esa opción"
 					rowIndexVar="index">
 
-					<p:column style="text-align: justify;width:20px;">
-						<f:facet name="header">
-							<h:outputText value="No." />
-						</f:facet>
-						<h:outputText value="#{index + 1}" />
-					</p:column>
+
 					<p:column style="text-align: justify ;width:120px;">
 						<f:facet name="header">
 							<h:outputText value="Origen" style="text-align: justify" />
@@ -49,6 +44,22 @@
 							<f:selectItem itemLabel="Corresponsal" itemValue="C" />
 						</h:selectOneMenu>
 					</p:column>
+
+					<p:column headerText="Origen" style="width:130px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{d.origen}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<h:selectOneMenu id="origen" disabled="true" value="#{d.origen}">
+									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+									<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+								</h:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
 
 					<p:column style="text-align: justify ;width:150px;">
 						<f:facet name="header">
@@ -80,7 +91,7 @@
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputLabel>
 					</p:column>
-		
+
 				</p:dataTable>
 
 				<!-- Botones -->
@@ -90,8 +101,7 @@
 						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
 							value="Guardar"
 							action="#{comprobanteModificaDepositosBean.modificarComprobanteDeposito()}"
-							process="@this"
-							update="ingFacturas:btnGuardar"
+							process="@this" update="ingFacturas:btnGuardar"
 							disabled="#{comprobanteModificaDepositosBean.estadeshabilitado}">
 						</p:commandButton>
 						<p:commandButton id="btnRegresar" value="Principal"

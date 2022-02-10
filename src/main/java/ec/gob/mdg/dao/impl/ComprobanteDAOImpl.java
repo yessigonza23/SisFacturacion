@@ -127,7 +127,7 @@ public class ComprobanteDAOImpl implements IComprobanteDAO, Serializable {
 		List<Comprobante> lista = new ArrayList<Comprobante>();
 		try {
 			Query q = em.createQuery(
-					"SELECT c FROM Comprobante c WHERE c.cliente.id=?1 and c.tipocomprobante='F' ORDER BY c.fechaemision DESC, c.numero DESC");
+					"SELECT c FROM Comprobante c WHERE c.cliente.id=?1  ORDER BY c.fechaemision DESC, c.numero DESC");
 			q.setParameter(1, c.getId());
 			lista = (List<Comprobante>) q.getResultList();
 		} catch (Exception e) {

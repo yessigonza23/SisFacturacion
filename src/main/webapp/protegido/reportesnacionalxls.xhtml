@@ -8,7 +8,8 @@
 <body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
-			<h:form id="ingReportes" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="ingReportes"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 
 				<h2 style="color: #003778; text-align: center">REPORTES
 					NACIONALES</h2>
@@ -77,21 +78,13 @@
 						process="@form" update="ingReportes:factDet">
 					</p:commandButton>
 
-					<p:commandButton id="btnExcelRecaudacion"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacion()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingReportes:factDet','NacionalRecDetalle')" />
 
 					<p:dataTable id="factDet" resizableColumns="true"
 						value="#{reportesNacionalBean.listaVistaRecaudacionDTO}" var="e"
-						rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
 						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -131,7 +124,7 @@
 
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:100px;text-align:right">
-							<p:outputLabel value="#{e.comp_valor}" >
+							<p:outputLabel value="#{e.comp_valor}">
 								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
@@ -173,12 +166,12 @@
 								<p:column />
 								<p:column />
 								<p:column />
-								
+
 							</p:row>
 						</p:columnGroup>
 
 					</p:dataTable>
-				
+
 				</p:panel>
 
 				<!-- 				FIN REPORTES RECAUDACIONES POR DETALLE -->
@@ -195,21 +188,13 @@
 						process="@form" update="ingReportes:factDetAn">
 					</p:commandButton>
 
-					<p:commandButton id="btnExcelRecaudacionAnu"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacionAnuladas()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingReportes:factDetAn','NacionalRecDetalleAnuladas')" />
 
 					<p:dataTable id="factDetAn" resizableColumns="true"
 						value="#{reportesNacionalBean.listaVistaRecaudacionAnuladas}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -295,7 +280,7 @@
 						</p:columnGroup>
 
 					</p:dataTable>
-					
+
 				</p:panel>
 
 				<!-- 				FIN REPORTES RECAUDACIONES ANULADAS POR DETALLE -->
@@ -310,21 +295,13 @@
 						process="@form" update="ingReportes:factDetNo">
 					</p:commandButton>
 
-					<p:commandButton id="btnExcelRecaudacionNoAut"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacionNoAutorizadas()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingReportes:factDetNo','NacionalRecNoAutorizadas')" />
 
 					<p:dataTable id="factDetNo" resizableColumns="true"
 						value="#{reportesNacionalBean.listaVistaRecaudacionNoAutorizadas}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -410,7 +387,7 @@
 						</p:columnGroup>
 
 					</p:dataTable>
-					
+
 				</p:panel>
 
 				<!--	FIN REPORTES RECAUDACIONES NO AUTORIZADAS POR DETALLE -->
@@ -423,22 +400,14 @@
 						actionListener="#{reportesNacionalBean.listarVistaRecaudacionSinCierre(reportesNacionalBean.fecha_inicio,reportesNacionalBean.fecha_fin,reportesNacionalBean.proceso_tipo)}"
 						process="@form" update="ingReportes:factDetSin">
 					</p:commandButton>
-
-					<p:commandButton id="btnExcelRecaudacionSinCie"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacionSinCierre()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingReportes:factDetSin','NacionalRecSinCierre')" />
 
 					<p:dataTable id="factDetSin" resizableColumns="true"
 						value="#{reportesNacionalBean.listaVistaRecaudacionSinCierre}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -472,21 +441,13 @@
 						process="@form" update="ingReportes:factDetDif">
 					</p:commandButton>
 
-					<p:commandButton id="btnExcelRecaudacionDif"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacionDiferentes()}"
-						process="@form" ajax="false">
-					</p:commandButton>
-
+                    <p:commandButton value="Export as XLS"
+						onclick="exportar('ingReportes:factDetDif','NacionalRecDifAutor')" />
+						
 					<p:dataTable id="factDetDif" resizableColumns="true"
-						value="#{reportesNacionalBean.listaVistaRecaudacionDif}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+						value="#{reportesNacionalBean.listaVistaRecaudacionDif}" var="e"
 						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -499,7 +460,7 @@
 							style="width:150px;">
 							<p:outputLabel value="#{e.punto_nombre}" />
 						</p:column>
-						
+
 						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
 							filterMatchMode="contains" style="width:100px;">
 							<p:outputLabel value="#{e.comp_numero}" />
@@ -512,13 +473,14 @@
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
 						</p:column>
-						
 
-						<p:column headerText="Factura Aut/Clave" filterBy="#{e.numero_factura}"
-							filterMatchMode="contains" style="width:100px;">
+
+						<p:column headerText="Factura Aut/Clave"
+							filterBy="#{e.numero_factura}" filterMatchMode="contains"
+							style="width:100px;">
 							<p:outputLabel value="#{e.numero_factura}" />
 						</p:column>
-						
+
 						<p:column headerText="Detalle" filterBy="#{e.comp_detalle}"
 							filterMatchMode="contains" style="width:100px;">
 							<p:outputLabel value="#{e.comp_detalle}" />
@@ -539,21 +501,15 @@
 						process="@form" update="ingReportes:factDep">
 					</p:commandButton>
 
-					<p:commandButton id="btnExcelRecaudacionDep"
-						value="Exportar XLS "
-						actionListener="#{reportesNacionalBean.xlsRecaudacionDep()}"
-						process="@form" ajax="false">
-					</p:commandButton>
+					<p:commandButton value="Descargar"
+						onclick="exportar('ingReportes:factDep','RecaudacionDepNacional')" />
 
-					<p:dataTable id="factDep" resizableColumns="true"
+					<p:dataTable id="factDep"
 						value="#{reportesNacionalBean.listaVistaRecaudacionDepositoDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
+
+
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -572,9 +528,8 @@
 							<p:outputLabel value="#{e.comp_numero}" />
 						</p:column>
 
-						<p:column headerText="Fecha Factura"
-							filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
-							style="width:80px;">
+						<p:column headerText="Fecha" filterBy="#{e.comp_fechaemision}"
+							filterMatchMode="contains" style="width:80px;">
 							<p:outputLabel value="#{e.comp_fechaemision}">
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
@@ -590,15 +545,13 @@
 							<p:outputLabel value="#{e.cliente_ci}" />
 						</p:column>
 
-						<p:column headerText="No. Depósito"
-							filterBy="#{e.deposito_numero}" filterMatchMode="contains"
-							style="width:150px;">
+						<p:column headerText="No.Depósito" filterBy="#{e.deposito_numero}"
+							filterMatchMode="contains" style="width:150px;">
 							<p:outputLabel value="#{e.deposito_numero}" />
 						</p:column>
 
-						<p:column headerText="Fecha Depósito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
-							style="width:80px;">
+						<p:column headerText="Fec.Depósito" filterBy="#{e.deposito_fecha}"
+							filterMatchMode="contains" style="width:100px;">
 							<p:outputLabel value="#{e.deposito_fecha}">
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
@@ -642,7 +595,7 @@
 						</p:columnGroup>
 
 					</p:dataTable>
-					
+
 				</p:panel>
 				<!-- FIN REPORTE DE RECAUDACIONES CON DEPOSITOS -->
 

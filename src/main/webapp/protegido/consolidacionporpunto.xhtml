@@ -70,19 +70,13 @@
 						process="@form" update="ingConsolida:Res1">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res1" fileName="recaudacion" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res1','ConsolidacionRecVsBanco')" />
 
 					<p:dataTable id="Res1" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaRecaudacionDepositoDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -199,19 +193,13 @@
 						process="@form" update="ingConsolida:Res2">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res2" fileName="depNoBanco" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res2','ConsolidacionDepNoBanco')" />
 
 					<p:dataTable id="Res2" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaRecaudacionDepositoDTO1}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -312,20 +300,13 @@
 						process="@form" update="ingConsolida:Res3">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res3"
-							fileName="valNoFacturados" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res3','ConsoValoresNoFacturados')" />
 
 					<p:dataTable id="Res3" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaonciliacionValNoFacturadosDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -429,19 +410,13 @@
 						process="@form" update="ingConsolida:Res4">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res4" fileName="depNoBanco" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res4','ConsolidacionDepVariasFact')" />
 
 					<p:dataTable id="Res4" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaRecaudacionDepositoDTO2}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -492,19 +467,13 @@
 						process="@form" update="ingConsolida:Res5">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res5" fileName="recaudacion" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res5','ConsolidacionCompNoConsolidados')" />
 
 					<p:dataTable id="Res5" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaRecaudacionDepositoDTO3}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -605,19 +574,13 @@
 						process="@form" update="ingConsolida:Res6">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res6" fileName="recaudacion" />
-					</p:commandButton>
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res6','ConsolidacionComprobantesConsolidados')" />
 
 					<p:dataTable id="Res6" resizableColumns="true"
 						value="#{consolidacionPorPuntoBean.listaVistaConciliacionCompDepositoEstcCuentaDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
