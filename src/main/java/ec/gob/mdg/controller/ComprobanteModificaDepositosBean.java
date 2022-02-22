@@ -1,7 +1,5 @@
 package ec.gob.mdg.controller;
 
-
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +12,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
+
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
 import ec.gob.mdg.model.ComprobanteDepositos;
@@ -30,6 +30,7 @@ import ec.gob.mdg.service.IComprobanteService;
 import ec.gob.mdg.service.IInstitucionService;
 import ec.gob.mdg.service.IPuntoRecaudacionService;
 import ec.gob.mdg.service.IUsuarioPuntoService;
+import ec.gob.mdg.util.UtilsDate;
 
 @Named
 @ViewScoped
@@ -45,7 +46,6 @@ public class ComprobanteModificaDepositosBean implements Serializable {
 
 	@Inject
 	private IComprobanteService serviceComprobante;
-
 
 	@Inject
 	private IComprobanteDepositosService serviceComprobanteDepositos;
@@ -104,17 +104,15 @@ public class ComprobanteModificaDepositosBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-
 		try {
-			
+			fechaActual = UtilsDate.fechaActual();
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 			punto = usuPunto.getPuntoRecaudacion();
 			inst = punto.getInstitucion().getId();
 			institucion = institucionService.institucionPorPunto(inst);
 			nombre = servicePuntoRecaudacion.listarPorId(punto);
-
 			mostrarComprobante();
-			mostrarComprobanteDetalle();
+			// mostrarComprobanteDetalle();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -128,39 +126,26 @@ public class ComprobanteModificaDepositosBean implements Serializable {
 	public void mostrarComprobante() {
 		param2 = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
 		id = Integer.parseInt(param2);
-System.out.println("entra a mostrar componente " + id);
+		
 		try {
 			// LLENAR CON LOS DATOS DE BD
 			this.comprobante = serviceComprobante.listarComprobantePorId(id);
 			this.cliente = this.serviceCliente.ClientePorCiParametro(comprobante.getClienteruc());
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void mostrarComprobanteDetalle() {
-		param2 = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
-		id = Integer.parseInt(param2);
-		System.out.println("entra a mostrar componentedetalle " + id);
-		try {
-			this.comprobante = serviceComprobante.listarComprobantePorId(id);			
 			this.listaComprobanteDep = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
-			
 			this.listaComprobanteDepTmp = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
-			this.cliente = this.serviceCliente.ClientePorCiParametro(comprobante.getClienteruc());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void modificarComprobanteDeposito() {
-		for (ComprobanteDepositos c : listaComprobanteDep) {
+	@Transactional
+	public void modificarComprobanteDeposito(ComprobanteDepositos comprobanteDepositos) {
+
+		if (comprobanteDepositos != null) {
 			try {
-				c.setComprobante(comprobante);
-				serviceComprobanteDepositos.modificar(c);
+				comprobanteDepositos.setFecha(comprobanteDepositos.getFecha());
+				serviceComprobanteDepositos.modificar(comprobanteDepositos);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -169,10 +154,14 @@ System.out.println("entra a mostrar componente " + id);
 
 		//// AUDITORIA TABLA COMPROBANTE DEPOSITO
 		for (ComprobanteDepositos c : listaComprobanteDep) {
+			System.out.println(c.getIdentificacion());
 			if (c.getId() != null) {
+				System.out.println("entra diferente de null");
 				for (ComprobanteDepositos ct : listaComprobanteDepTmp) {
+					System.out.println("id dep " + c.getIdentificacion() +"-"+ct.getIdentificacion());
 					if (c.getId().equals(ct.getId())) {
 						// CAMPO RECAUDACIN
+						System.out.println("entra a fondo "+ ct.getOrigen());
 						if (!c.getOrigen().equals(ct.getOrigen())) {
 							serviceAuditoria.insertaModificacion("ComprobanteDeposito", "Origen", "U",
 									usuPunto.getUsuario().getUsername(), fechaActual, c.getOrigen(), ct.getOrigen(),
@@ -188,20 +177,22 @@ System.out.println("entra a mostrar componente " + id);
 									usuPunto.getUsuario().getUsername(), fechaActual, c.getNum_deposito(),
 									ct.getNum_deposito(), c.getId());
 						}
+						if (!c.getIdentificacion().equals(ct.getIdentificacion())) {
+							serviceAuditoria.insertaModificacion("ComprobanteDeposito", "identificacion", "U",
+									usuPunto.getUsuario().getUsername(), fechaActual, c.getIdentificacion(),
+									ct.getIdentificacion(), c.getId());
+						}
+						
 						@SuppressWarnings("unused")
 						Date date = new Date();
 						SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-
+System.out.println("c.getfechcha " + c.getFecha() + "ct " +ct.getFecha());
 						if (!c.getFecha().equals(ct.getFecha())) {
 							serviceAuditoria.insertaModificacion("ComprobanteDeposito", "fecha", "U",
 									usuPunto.getUsuario().getUsername(), fechaActual, formater.format(c.getFecha()),
 									formater.format(ct.getFecha()), c.getId());
 						}
-						if (c.getValor() != ct.getValor()) {
-							serviceAuditoria.insertaModificacion("ComprobanteDeposito", "Valor", "U",
-									usuPunto.getUsuario().getUsername(), fechaActual, String.valueOf(c.getValor()),
-									String.valueOf(ct.getValor()), c.getId());
-						}
+					
 					}
 				}
 			}
@@ -222,8 +213,6 @@ System.out.println("entra a mostrar componente " + id);
 	}
 
 	// Getters y Setters
-
-	
 
 	public Cliente getCliente() {
 		return cliente;
@@ -281,8 +270,6 @@ System.out.println("entra a mostrar componente " + id);
 		this.recaudacionDetalle = recaudacionDetalle;
 	}
 
-
-
 	public UsuarioPunto getUsuPunto() {
 		return usuPunto;
 	}
@@ -299,7 +286,6 @@ System.out.println("entra a mostrar componente " + id);
 		this.p = p;
 	}
 
-	
 	public Date getFechaActual() {
 		return fechaActual;
 	}
@@ -307,7 +293,6 @@ System.out.println("entra a mostrar componente " + id);
 	public void setFechaActual(Date fechaActual) {
 		this.fechaActual = fechaActual;
 	}
-
 
 	public PuntoRecaudacion getPunto() {
 		return punto;
@@ -357,8 +342,6 @@ System.out.println("entra a mostrar componente " + id);
 		this.estadeshabilitado = estadeshabilitado;
 	}
 
-	
-
 	public Integer getInst() {
 		return inst;
 	}
@@ -383,8 +366,6 @@ System.out.println("entra a mostrar componente " + id);
 		this.institucion = institucion;
 	}
 
-
-
 	public ComprobanteDetalle getComprobanteDetalleNotas() {
 		return comprobanteDetalleNotas;
 	}
@@ -400,8 +381,6 @@ System.out.println("entra a mostrar componente " + id);
 	public void setTipo_proceso(String tipo_proceso) {
 		this.tipo_proceso = tipo_proceso;
 	}
-
-
 
 	public Integer getId_comprobante() {
 		return id_comprobante;
@@ -459,8 +438,12 @@ System.out.println("entra a mostrar componente " + id);
 		this.comprobanteAud = comprobanteAud;
 	}
 
-	
+	public List<ComprobanteDepositos> getListaComprobanteDep() {
+		return listaComprobanteDep;
+	}
 
-	
+	public void setListaComprobanteDep(List<ComprobanteDepositos> listaComprobanteDep) {
+		this.listaComprobanteDep = listaComprobanteDep;
+	}
 
 }

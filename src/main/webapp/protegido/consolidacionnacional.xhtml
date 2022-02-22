@@ -68,17 +68,15 @@
 						process="@form" update="ingConsolida:Res1">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res1" fileName="EstadoCuenta" />
-					</p:commandButton>
+
+					<p:commandButton value="Descargar"
+						onclick="exportar('ingConsolida:Res1','EstadoCuenta')" />
+
 
 					<p:dataTable id="Res1" resizableColumns="true"
 						value="#{consolidacionNacionalBean.listaEstadoCuenta}" var="e"
-						rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción">
+						emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 
 						<p:column headerText="No.Depósito" filterBy="#{e.numtransaccion}"
 							filterMatchMode="contains" style="width:70px;">
@@ -87,7 +85,6 @@
 						<p:column headerText="Valor" filterBy="#{e.valor}"
 							filterMatchMode="contains" style="width:60px;">
 							<p:outputLabel value="#{e.valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 						<p:column headerText="Servicio" filterBy="#{e.servicio}"
@@ -119,103 +116,12 @@
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
 						</p:column>
-						<p:column headerText="No. Factura" filterBy="#{e.id_comprobante}"
-							filterMatchMode="contains" style="width:100px;">
-							<p:selectOneMenu id="cboComprobante" disabled="true"
-								value="#{e.id_comprobante}" style="width:85px;">
-								<f:selectItem itemLabel="Sin Consolidar" itemValue="" />
-								<f:selectItems
-									value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
-									itemLabel="#{p.numero}" itemValue="#{p.id}" />
-							</p:selectOneMenu>
-						</p:column>
-
-						<p:column headerText="Fecha Factura"
-							filterBy="#{e.id_comprobante}" filterMatchMode="contains"
-							style="width:110px;">
-							<p:selectOneMenu id="cboComprobanteFecha" disabled="true"
-								value="#{e.id_comprobante}" style="width:90px;">
-								<f:selectItem itemLabel="Sin Consolidar" itemValue="" />
-								<f:selectItems
-									value="#{consolidacionNacionalBean.listaComprobantes}" var="p"
-									itemLabel="#{p.fechaemision}" itemValue="#{p.id}" />
-							</p:selectOneMenu>
-						</p:column>
-
-						<p:column headerText="Punto Recaudación" filterBy="#{e.id_punto}"
-							filterMatchMode="contains" style="width:300px;">
-							<p:selectOneMenu id="cboPuntoRecaudac" disabled="true"
-								value="#{e.id_punto}" style="width:280px;">
-								<f:selectItem itemLabel="Sin Consolidar" itemValue="" />
-								<f:selectItems value="#{puntoRecaudacionBean.lista}" var="p"
-									itemLabel="#{p.nombre}" itemValue="#{p.id}" />
-							</p:selectOneMenu>
-						</p:column>
+	
 
 					</p:dataTable>
 				</p:panel>
 
-				<!-- REPORTE 2: VISTA DE COMPROBANTES DEPOSITO -->
 
-				<p:panel header="Depósitos de Facturas - Recaudaciones">
-
-					<p:commandButton icon="ui-icon-disk" id="btnCompDep"
-						value="Consultar"
-						actionListener="#{consolidacionNacionalBean.listarVistaDepositos()}"
-						process="@form" update="ingConsolida:Res2">
-					</p:commandButton>
-
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res2"
-							fileName="ComprobantesDepositos" />
-					</p:commandButton>
-
-					<p:dataTable id="Res2" resizableColumns="true"
-						value="#{consolidacionNacionalBean.listaVistaRecaudacionDepositoDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción">
-
-						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
-							filterMatchMode="contains" style="width:60px;">
-							<p:outputLabel value="#{e.comp_numero}" />
-						</p:column>
-						<p:column headerText="No.Depósito" filterBy="#{e.deposito_numero}"
-							filterMatchMode="contains" style="width:70px;">
-							<p:outputLabel value="#{e.deposito_numero}" />
-						</p:column>
-						<p:column headerText="Fecha Deposito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
-							style="width:70px;">
-							<p:outputLabel value="#{e.comp_fechaemision}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</p:outputLabel>
-						</p:column>
-						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
-							filterMatchMode="contains" style="width:60px;">
-							<p:outputLabel value="#{e.deposito_valor}"
-								style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
-							</p:outputLabel>
-						</p:column>
-						<p:column headerText="Observacion"
-							filterBy="#{e.deposito_observacion}" filterMatchMode="contains"
-							style="width:70px;">
-							<p:outputLabel value="#{e.deposito_observacion}" />
-						</p:column>
-						<p:column headerText="Ruc" filterBy="#{e.cliente_ci}"
-							filterMatchMode="contains" style="width:100px;">
-							<p:outputLabel value="#{e.cliente_ci}" />
-						</p:column>
-						<p:column headerText="Punto Recaudación"
-							filterBy="#{e.punto_nombre}" filterMatchMode="contains"
-							style="width:250px;">
-							<p:outputLabel value="#{e.punto_nombre}" />
-						</p:column>
-					</p:dataTable>
-				</p:panel>
 			</h:form>
 			<!-- Script de estilos para el contenido fel formulario-->
 			<h:outputStylesheet library="css" name="buscar.css" />

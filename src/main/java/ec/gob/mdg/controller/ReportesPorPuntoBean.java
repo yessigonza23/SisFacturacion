@@ -32,13 +32,10 @@ import ec.gob.mdg.service.IVistaCierreDTOService;
 import ec.gob.mdg.service.IVistaRecaudacioDepositoDTOService;
 import ec.gob.mdg.service.IVistaRecaudacionDTOService;
 import ec.gob.mdg.util.UtilsArchivos;
+import ec.gob.mdg.validaciones.FunValidaciones;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 
 @Named
 @ViewScoped
@@ -104,37 +101,35 @@ public class ReportesPorPuntoBean implements Serializable {
 		try {
 			if (opcion != null) {
 				if (opcion.equals("1")) {
+					System.out.println("reporte 1 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoFactGeneral.jasper";
 					nombreGuarda = "RepPorPuntoFactGeneral";
 				} else if (opcion.equals("2")) {
+					System.out.println("reporte 2 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoFactCodBanco.jasper";
 					nombreGuarda = "RepPorPuntoFactCodBanco";
 				} else if (opcion.equals("3")) {
+					System.out.println("reporte 3 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoFactAnuladas.jasper";
 					nombreGuarda = "RepPorPuntoFactAnuladas";
 				} else if (opcion.equals("4")) {
+					System.out.println("reporte 4 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoFactNoAutorizadas.jasper";
 					nombreGuarda = "RepPorPuntoFactNoAutorizadas";
 				} else if (opcion.equals("5")) {
+					System.out.println("reporte5 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoCruceFacturasNotas.jasper";
 					nombreGuarda = "RepPorPuntoCruceFacturasNotas";
 				} else if (opcion.equals("6")) {
+					System.out.println("reporte 6 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoCierre.jasper";
 					nombreGuarda = "RepPorPuntoCierre";
 				} else if (opcion.equals("7")) {
+					System.out.println("reporte 7 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepPorPuntoDepositoNoConsolidado.jasper";
 					nombreGuarda = "RepPorPuntoNoConsolidados";
-				} else if (opcion.equals("20")) {
-					nombreReporte = "RepPorPuntoCierreXls.jasper";
-					nombreGuarda = "RepPorPuntoCierreXls";
-				}else if (opcion.equals("21")) {
-					nombreReporte = "RepPorPuntoRecDetalleXls.jasper";
-					nombreGuarda = "RepPorPuntoRecDetalleXls";
-				}else if (opcion.equals("22")) {
-					nombreReporte = "RepPorPuntoRecDepositoXls.jasper";
-					nombreGuarda = "RepPorPuntoRecDepositoXls";
-				}
-				generarReporte(nombreReporte,opcion);
+				} 
+				generarReporte(nombreReporte);
 			}
 
 		} catch (Exception e) {
@@ -142,7 +137,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		}
 	}
 
-	public void generarReporte(String nombreReporte,String opcion) {
+	public void generarReporte(String nombreReporte) {
 		System.out.println(opcion);
 		try {
 
@@ -164,8 +159,8 @@ public class ReportesPorPuntoBean implements Serializable {
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros, conn);
 
-			Integer opcionInt = Integer.parseInt(opcion);
-			if (opcionInt < 20) {
+			
+		
 				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 						.getResponse();
 				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
@@ -176,29 +171,7 @@ public class ReportesPorPuntoBean implements Serializable {
 				stream.flush();
 				stream.close();
 
-			}else if (opcionInt >= 20) {
-				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-						.getResponse();
-				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
-				ServletOutputStream stream = response.getOutputStream();
-								
-				JRCsvExporter exporter = new JRCsvExporter();
-				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-				exporter.setExporterOutput(new SimpleWriterExporterOutput(new File(pathPdf + nombreGuarda + punto.getId() + ".csv")));
-				SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
-				configuration.setWriteBOM(Boolean.TRUE);
-				configuration.setRecordDelimiter("\r\n");
-				
-				exporter.setConfiguration(configuration);
-				exporter.exportReport();
-				
-				String archivo = nombreGuarda + punto.getId() + ".csv";
-				UtilsArchivos.verXls(archivo);
-				
-				stream.flush();
-				stream.close();
-				
-			}			
+					
 		
 			FacesContext.getCurrentInstance().responseComplete();
 			if (conn != null) {
@@ -225,6 +198,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		totalc = 0;
 		for (VistaCierreDTO v : listaVistaCierreDTO) {
 			totalc = totalc + v.getValor();
+			totalc = FunValidaciones.formatearDecimales(totalc, 2);
 		}
 	}
 
@@ -245,6 +219,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		total = 0;
 		for (VistaRecaudacionDTO v : listaVistaRecaudacionDTO) {
 			total = total + v.getComp_valor();
+			total = FunValidaciones.formatearDecimales(total, 2);
 		}
 	}
 	////////////////////////
@@ -268,6 +243,7 @@ public class ReportesPorPuntoBean implements Serializable {
 		totald = 0;
 		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
 			totald = totald + v.getComp_valor();
+			totald = FunValidaciones.formatearDecimales(totald, 2);
 		}
 	}
 

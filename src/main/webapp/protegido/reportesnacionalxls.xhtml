@@ -122,12 +122,12 @@
 						</p:column>
 
 
-						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
+						<p:column headerText="Valor" filterBy="#{e.comp_valor}" exportable="false"
 							filterMatchMode="contains" style="width:100px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
+				
 
 						<p:column headerText="Cód.Recaudacion"
 							filterBy="#{e.recdetalle_codigo}" filterMatchMode="contains"
@@ -235,7 +235,6 @@
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:100px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -342,7 +341,6 @@
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:100px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -509,7 +507,6 @@
 						var="e" emptyMessage="No hay ningún registro con esa opción"
 						rowIndexVar="index" scrollable="true" scrollHeight="150">
 
-
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -560,15 +557,14 @@
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:80px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
 
-						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}"
-							filterMatchMode="contains" style="width:150px;">
-							<p:outputLabel value="#{e.usuario_nombre}" />
-						</p:column>
+<!-- 						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}" -->
+<!-- 							filterMatchMode="contains" style="width:150px;"> -->
+<!-- 							<p:outputLabel value="#{e.usuario_nombre}" /> -->
+<!-- 						</p:column> -->
 
 						<p:columnGroup type="footer">
 							<p:row>

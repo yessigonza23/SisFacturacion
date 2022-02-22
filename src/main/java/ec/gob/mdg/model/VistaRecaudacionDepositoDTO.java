@@ -121,6 +121,9 @@ public class VistaRecaudacionDepositoDTO implements Serializable {
 	@Column(name = "estadocuenta_id_comprobante")
 	private Integer estadocuenta_id_comprobante;
 
+	@Column(name = "deposito_fechastring")
+	private String deposito_fechastring;
+	
 	public String getInst_nombre() {
 		return inst_nombre;
 	}
@@ -416,5 +419,14 @@ public class VistaRecaudacionDepositoDTO implements Serializable {
 	public void setDeposito_id_tmp(Integer deposito_id_tmp) {
 		this.deposito_id_tmp = deposito_id_tmp;
 	}
+
+	public String getDeposito_fechastring() {
+		return deposito_fechastring;
+	}
+
+	public void setDeposito_fechastring(String deposito_fechastring) {
+		this.deposito_fechastring = deposito_fechastring;
+	}
+	
 
 }

@@ -65,7 +65,7 @@ public class UtilsArchivos {
 	}
 
 	public static String getRutaGenerados() {
-		System.out.println("generados ");
+		System.out.println("generados UtilArchivos ");
 		return crearRuta(getRutaRaiz() + "generados" + sep);
 	}
 

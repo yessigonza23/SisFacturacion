@@ -436,10 +436,12 @@
 					</p:column>
 
 					<p:column headerText="Fecha Depósito"
-						style="text-align: justify ;width:80px;" sortBy="#{d.fecha}">
-						<h:outputLabel value="#{d.fecha}">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
-						</h:outputLabel>
+						style="text-align: justify ;width:90px;" sortBy="#{d.fecha}">
+						<p:calendar id="txtFecha1" pattern="dd/MM/yyyy" mask="true"
+							value="#{d.fecha}" inputStyle="width:80px" disabled="true">
+						</p:calendar>
+						<p:watermark for="txtFecha1" value="dd/MM/yyyy" />
+						<p:messages for="txtFecha1" />
 					</p:column>
 					<p:column headerText="Valor Depósito"
 						style="text-align: justify ;width:80px;" sortBy="#{d.valor}">
@@ -505,11 +507,11 @@
 						<p:row>
 							<p:inputText
 								value="#{comprobanteModificaBean.comprobante.detalle}"
-								style="width:700px;" >
+								style="width:700px;">
 								<p:ajax event="valueChange"
-											listener="#{comprobanteModificaBean.grabaDetalle(comprobanteModificaBean.comprobante.detalle)}"
-											update="@this" />
-								</p:inputText>
+									listener="#{comprobanteModificaBean.grabaDetalle(comprobanteModificaBean.comprobante.detalle)}"
+									update="@this" />
+							</p:inputText>
 						</p:row>
 					</p:column>
 				</p:row>

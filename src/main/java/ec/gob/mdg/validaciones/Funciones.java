@@ -627,12 +627,12 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositosE7(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			System.out.println("entra a funciones7 " + anio + "- " + id_usuario);
+			//System.out.println("entra a funciones7 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_7(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale7");
+			//System.out.println("sale7");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -641,12 +641,12 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositosE6(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			System.out.println("entra a funciones 6 " + anio + "- " + id_usuario);
+			//System.out.println("entra a funciones 6 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale6 ");
+			//System.out.println("sale6 ");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -655,12 +655,12 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositosE5(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			System.out.println("entra a funciones 5 " + anio + "- " + id_usuario);
+			//System.out.println("entra a funciones 5 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale5 ");
+			//System.out.println("sale5 ");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -669,12 +669,12 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositosE4(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			System.out.println("entra a funciones 4 " + anio + "- " + id_usuario);
+			//System.out.println("entra a funciones 4 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale4 ");
+			//System.out.println("sale4 ");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -683,12 +683,12 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositosE3(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			System.out.println("entra a funciones 3 " + anio + "- " + id_usuario);
+			//System.out.println("entra a funciones 3 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale3 ");
+			//System.out.println("sale3 ");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -715,7 +715,7 @@ public class Funciones implements Serializable {
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
-			System.out.println("sale6 ");
+			//System.out.println("sale6 ");
 		} catch (Exception e) {
 			System.out.println(e);
 		}

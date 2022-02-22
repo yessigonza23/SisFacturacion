@@ -30,14 +30,10 @@ import ec.gob.mdg.service.IUsuarioPuntoService;
 import ec.gob.mdg.service.IVistaRecaudacioDepositoDTOService;
 import ec.gob.mdg.service.IVistaRecaudacionDTOService;
 import ec.gob.mdg.util.UtilsArchivos;
+import ec.gob.mdg.validaciones.FunValidaciones;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleWriterExporterOutput;
-
 @Named
 @ViewScoped
 public class ReportesNacionalBean implements Serializable {
@@ -111,42 +107,28 @@ public class ReportesNacionalBean implements Serializable {
 		try {
 			if (opcion != null) {
 				if (opcion.equals("1")) {
+					System.out.println("reporte Nac 1 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepConsNanPorPuntoFactSerBanCodPres.jasper";
 					nombreGuarda = "RepConsNanPorPuntoFactSerBanCodPres";
 				} else if (opcion.equals("2")) {
+					System.out.println("reporte Nac 2 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepConsNanProcesoCodPresupuestario.jasper";
 					nombreGuarda = "RepConsNanProcesoCodPresupuestario";
 				} else if (opcion.equals("3")) {
+					System.out.println("reporte Nac 3 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepConsNanServicioPunto.jasper";
 					nombreGuarda = "RepConsNanServicioPunto";
 				} else if (opcion.equals("4")) {
+					System.out.println("reporte Nac4 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepConsNanCodPartPresupuestari.jasper";
 					nombreGuarda = "RepConsNanCodPartPresupuestari";
 				} else if (opcion.equals("5")) {
+					System.out.println("reporte Nac 6 " + us.getApellido() + "-" +us.getNombre());
 					nombreReporte = "RepConsNanPlanPresBanProceso.jasper";
 					nombreGuarda = "RepConsNanPlanPresBanProceso";
-				}else if (opcion.equals("20")) {
-					nombreReporte = "RepConsNanRecDetalleXls.jasper";
-					nombreGuarda = "RepConsNanRecDetalleXls";
-				}else if (opcion.equals("21")) {
-					nombreReporte = "RepConsNanRecAnuladasXls.jasper";
-					nombreGuarda = "RepConsNanRecAnuladasXls";
-				}else if (opcion.equals("22")) {
-					nombreReporte = "RepConsNanRecNoAutXls.jasper";
-					nombreGuarda = "RepConsNanRecNoAutXls";
-				}else if (opcion.equals("23")) {
-					nombreReporte = "RepConsNanPuntosSinCierreXls.jasper";
-					nombreGuarda = "RepConsNanPuntosSinCierreXls";
-				}else if (opcion.equals("24")) {
-					nombreReporte = "RepConsNanAutDifXls.jasper";
-					nombreGuarda = "RepConsNanAutDifXls";
-				}
-				else if (opcion.equals("25")) {
-					nombreReporte = "RepConsNanRecDepositosXls.jasper";
-					nombreGuarda = "RepConsNanRecDepositosXls";
 				}
 				
-				generarReporte(nombreReporte,opcion);
+				generarReporte(nombreReporte);
 			}
 
 		} catch (Exception e) {
@@ -154,7 +136,7 @@ public class ReportesNacionalBean implements Serializable {
 		}
 	}
 
-	public void generarReporte(String nombreReporte,String opcion) {
+	public void generarReporte(String nombreReporte) {
 		try {
 
 			String rutaImagenLogo = UtilsArchivos.getRutaLogo() + "logomdg.png";
@@ -174,8 +156,7 @@ public class ReportesNacionalBean implements Serializable {
 			File jasper = new File(path + nombreReporte);
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper.getPath(), parametros, conn);
-			Integer opcionInt = Integer.parseInt(opcion);
-			if (opcionInt < 20) {
+			
 				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 						.getResponse();
 				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
@@ -186,29 +167,7 @@ public class ReportesNacionalBean implements Serializable {
 				stream.flush();
 				stream.close();
 
-			}else if (opcionInt >= 20) {
-				HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-						.getResponse();
-				response.addHeader("Content-disposition", "attachment; filename=" + nombreGuarda + punto.getId() + ".pdf");
-				ServletOutputStream stream = response.getOutputStream();
-								
-				JRCsvExporter exporter = new JRCsvExporter();
-				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-				exporter.setExporterOutput(new SimpleWriterExporterOutput(new File(pathPdf + nombreGuarda + punto.getId() + ".csv")));
-				SimpleCsvExporterConfiguration configuration = new SimpleCsvExporterConfiguration();
-				configuration.setWriteBOM(Boolean.TRUE);
-				configuration.setRecordDelimiter("\r\n");
-				
-				exporter.setConfiguration(configuration);
-				exporter.exportReport();
-				
-				String archivo = nombreGuarda + punto.getId() + ".csv";
-				UtilsArchivos.verXls(archivo);
-				
-				stream.flush();
-				stream.close();
-				
-			}
+			
 		    
 			//////
 
@@ -229,7 +188,7 @@ public class ReportesNacionalBean implements Serializable {
 		if (fecha_inicio != null && fecha_fin != null) {
 			this.listaVistaRecaudacionDTO = this.serviceVistaRecaudacionDTO.listarRecaudacionDetalleNac(fecha_inicio,
 					fecha_fin, proceso_tipo);
-			this.contador = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
+//			this.contador = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
 			total();
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -242,6 +201,7 @@ public class ReportesNacionalBean implements Serializable {
 		total = 0;
 		for (VistaRecaudacionDTO v : listaVistaRecaudacionDTO) {
 			total = total + v.getComp_valor();
+			total = FunValidaciones.formatearDecimales(total, 2);
 		}
 	}
 	////////////////////////
@@ -252,7 +212,7 @@ public class ReportesNacionalBean implements Serializable {
 
 			this.listaVistaRecaudacionDepositoDTO = this.serviceVistaRecaudacionDepositoDTO
 					.listarRecaudacionDepositoNac(fecha_inicio, fecha_fin);
-			this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturasNac(fecha_inicio, fecha_fin);
+//			this.contadord = this.serviceVistaRecaudacionDepositoDTO.cuentaFacturasNac(fecha_inicio, fecha_fin);
 			totald();
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -264,6 +224,7 @@ public class ReportesNacionalBean implements Serializable {
 		totald = 0;
 		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
 			totald = totald + v.getComp_valor();
+			totald = FunValidaciones.formatearDecimales(totald, 2);
 		}
 	}
 
@@ -274,7 +235,7 @@ public class ReportesNacionalBean implements Serializable {
 
 			this.listaVistaRecaudacionAnuladas = this.serviceVistaRecaudacionDTO
 					.listarRecaudacionAnuladasNac(fecha_inicio, fecha_fin, proceso_tipo);
-			this.contadora = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
+//			this.contadora = this.serviceVistaRecaudacionDTO.cuentaFacturasNac(fecha_inicio, fecha_fin, proceso_tipo);
 			totala();
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -287,6 +248,7 @@ public class ReportesNacionalBean implements Serializable {
 		totala = 0;
 		for (VistaRecaudacionDTO v : listaVistaRecaudacionAnuladas) {
 			totala = totala + v.getComp_valor();
+			totala = FunValidaciones.formatearDecimales(totala, 2);
 		}
 	}
 
@@ -298,8 +260,8 @@ public class ReportesNacionalBean implements Serializable {
 
 			this.listaVistaRecaudacionNoAutorizadas = this.serviceVistaRecaudacionDTO
 					.listarRecaudacionNoAutorizadasNac(fecha_inicio, fecha_fin, proceso_tipo);
-			this.contadorn = this.serviceVistaRecaudacionDTO.cuentaFacturasNoAutorizadasNac(fecha_inicio, fecha_fin,
-					proceso_tipo);
+//			this.contadorn = this.serviceVistaRecaudacionDTO.cuentaFacturasNoAutorizadasNac(fecha_inicio, fecha_fin,
+//					proceso_tipo);
 			totaln();
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -311,6 +273,7 @@ public class ReportesNacionalBean implements Serializable {
 		totaln = 0;
 		for (VistaRecaudacionDTO v : listaVistaRecaudacionNoAutorizadas) {
 			totaln = totaln + v.getComp_valor();
+			totaln = FunValidaciones.formatearDecimales(totaln, 2);
 		}
 	}
 

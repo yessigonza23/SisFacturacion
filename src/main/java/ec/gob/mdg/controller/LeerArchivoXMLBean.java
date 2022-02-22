@@ -31,7 +31,8 @@ public class LeerArchivoXMLBean implements Serializable {
 			 dbf.setValidating(false);
 			    DocumentBuilder db = dbf.newDocumentBuilder();
 			    Document doc = db.parse(new FileInputStream(new File("C:\\comprobantes\\firmados\\2402202101176000066000110010030000144561234567810.xml")));
-			    String p = prettyPrint(doc);
+			    @SuppressWarnings("unused")
+				String p = prettyPrint(doc);
 //			    System.out.println("imprime atring " + p);
 		} catch (Exception e) {
 			// TODO: handle exception

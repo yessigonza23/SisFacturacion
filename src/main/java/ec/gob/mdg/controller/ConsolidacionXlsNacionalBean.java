@@ -21,6 +21,7 @@ import ec.gob.mdg.service.IPuntoRecaudacionService;
 import ec.gob.mdg.service.IUsuarioPuntoService;
 import ec.gob.mdg.service.IVistaConciliacionValNoFacturadosDTOService;
 import ec.gob.mdg.service.IVistaRecaudacioDepositoDTOService;
+import ec.gob.mdg.validaciones.FunValidaciones;
 
 @Named
 @ViewScoped
@@ -91,7 +92,9 @@ public class ConsolidacionXlsNacionalBean implements Serializable {
 		totalB = 0.0;
 		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
 			totalF = totalF + v.getDeposito_valor();
+			totalF = FunValidaciones.formatearDecimales(totalF, 2);
 			totalB = totalB + v.getEstadocuenta_valor();
+			totalB = FunValidaciones.formatearDecimales(totalB, 2);
 		}
 	}
 
@@ -106,6 +109,7 @@ public class ConsolidacionXlsNacionalBean implements Serializable {
 		totalF2 = 0.0;
 		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO1) {
 			totalF2 = totalF2 + v.getDeposito_valor();
+			totalF2 = FunValidaciones.formatearDecimales(totalF2, 2);
 		}
 	}
 
@@ -120,6 +124,7 @@ public class ConsolidacionXlsNacionalBean implements Serializable {
 		totalDep = 0.0;
 		for (VistaConciliacionValNoFacturadosDTO v : listaVistaonciliacionValNoFacturadosDTO) {
 			totalDep = totalDep + v.getValor();
+			totalDep = FunValidaciones.formatearDecimales(totalDep, 2);
 		}
 	}
 
@@ -141,7 +146,9 @@ public class ConsolidacionXlsNacionalBean implements Serializable {
 		totalB4 = 0.0;
 		for (VistaRecaudacionDepositoDTO v : listaVistaRecaudacionDepositoDTO) {
 			totalF4 = totalF4 + v.getDeposito_valor();
+			totalF4 = FunValidaciones.formatearDecimales(totalF4, 2);
 			totalB4 = totalB4 + v.getEstadocuenta_valor();
+			totalB4 = FunValidaciones.formatearDecimales(totalB4, 2);
 		}
 	}
 

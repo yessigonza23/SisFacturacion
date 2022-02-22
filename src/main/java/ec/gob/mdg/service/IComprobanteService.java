@@ -60,4 +60,8 @@ public interface IComprobanteService extends IService<Comprobante> {
 	// METODO PARA LISTAR COMPROBANTES POR ID DEL PUNTO DE RECAUDACION PARA NOTAS DE
 	// CREDITO
 	List<Comprobante> listarCompPorIdPtoNotas(Integer id_punto);
+	
+	// Lista de comprobantes para la modificacion de depositos por fecha de inicio y fin, punto y tipo de comprobante
+		// TODAS
+		List<Comprobante> listarComprobanteModDepPorFechas(Date fecha_inicio, Date fecha_fin, Integer id_punto);
 }

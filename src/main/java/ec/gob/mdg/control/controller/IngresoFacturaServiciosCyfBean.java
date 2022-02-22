@@ -530,10 +530,10 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 			det.setId_tmp(id_tmp);
 			listaComprobanteDetalle.add(det);
 
-			for (ComprobanteDetalle c : listaComprobanteDetalle) {
-				System.out.println(
-						"valor dentro del for:" + c.getValorcero() + " " + c.getRecaudaciondetalle().getCodigo());
-			}
+//			for (ComprobanteDetalle c : listaComprobanteDetalle) {
+//				System.out.println(
+//						"valor dentro del for:" + c.getValorcero() + " " + c.getRecaudaciondetalle().getCodigo());
+//			}
 		}
 
 		totalDetalle();

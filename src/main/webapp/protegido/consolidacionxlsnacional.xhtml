@@ -69,19 +69,14 @@
 						actionListener="#{consolidacionXlsNacionalBean.listarComprobantesVsBanco()}"
 						process="@form" update="ingConsolida:Res1">
 					</p:commandButton>
-
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res1" fileName="recaudacion" />
-					</p:commandButton>
+					
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res1','ConsNacRecVsBanco')" />
 
 					<p:dataTable id="Res1" resizableColumns="true"
 						value="#{consolidacionXlsNacionalBean.listaVistaRecaudacionDepositoDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -128,7 +123,6 @@
 							filterMatchMode="contains" style="width:60px;">
 							<p:outputLabel value="#{e.deposito_valor}"
 								style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -199,18 +193,14 @@
 						process="@form" update="ingConsolida:Res2">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res2" fileName="depNoBanco" />
-					</p:commandButton>
+					
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res2','ConsNacDepNoBanco')" />
 
 					<p:dataTable id="Res2" resizableColumns="true"
 						value="#{consolidacionXlsNacionalBean.listaVistaRecaudacionDepositoDTO1}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -256,7 +246,6 @@
 							filterMatchMode="contains" style="width:50px;">
 							<p:outputLabel value="#{e.deposito_valor}"
 								style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -312,19 +301,15 @@
 						process="@form" update="ingConsolida:Res3">
 					</p:commandButton>
 
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res3"
-							fileName="valNoFacturados" />
-					</p:commandButton>
+					
+					<p:commandButton value="Export as XLS"
+						onclick="exportar('ingConsolida:Res3','ConsNacValNoFact')" />
 
 					<p:dataTable id="Res3" resizableColumns="true"
 						value="#{consolidacionXlsNacionalBean.listaVistaonciliacionValNoFacturadosDTO}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción"
-						rowIndexVar="index">
+						var="e" emptyMessage="No hay ningún registro con esa opción"
+						rowIndexVar="index" scrollable="true" scrollHeight="150">
+						
 						<p:column style="text-align: justify;width:35px;">
 							<f:facet name="header">
 								<h:outputText value="No." />
@@ -348,7 +333,6 @@
 						<p:column headerText="Valor" filterBy="#{e.valor}"
 							filterMatchMode="contains" style="text-align:right;width:70px;">
 							<p:outputLabel value="#{e.valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 

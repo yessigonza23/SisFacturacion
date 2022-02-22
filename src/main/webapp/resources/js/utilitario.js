@@ -59,6 +59,7 @@ function sheet2blob(sheet, sheetName) {
 	};
 	var wbout = XLSX.write(workbook, wopts);
 	var blob = new Blob([ s2ab(wbout) ], {
+	//var blob = new Blob([ wbout ], {
 		type : "application/octet-stream"
 	}); // Cadena a ArrayBuffer
 
@@ -66,7 +67,7 @@ function sheet2blob(sheet, sheetName) {
 		var buf = new ArrayBuffer(s.length);
 		var view = new Uint8Array(buf);
 		for (var i = 0; i != s.length; ++i)
-			view[i] = s.charCodeAt(i) & 0xFF;
+			view[i] = s.charCodeAt(i);// & 0xFF;
 		return buf;
 	}
 	return blob;

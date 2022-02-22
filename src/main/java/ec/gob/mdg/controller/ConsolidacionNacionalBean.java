@@ -64,7 +64,7 @@ public class ConsolidacionNacionalBean implements Serializable {
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 			punto = usuPunto.getPuntoRecaudacion();
 			nombre = servicePuntoRecaudacion.listarPorId(punto);
-			listarComprobantes();
+		//	listarComprobantes();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

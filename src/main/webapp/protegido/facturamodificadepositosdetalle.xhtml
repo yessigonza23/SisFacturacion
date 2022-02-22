@@ -26,71 +26,110 @@
 					No. de Depósitos</h2>
 
 				<!-- TABLA DEPOSITO DE DE FACTURA				 -->
-				<p:dataTable id="dep" style="width:900px;"
-					value="#{comprobanteModificaBean.listaComprobanteDep}" var="d"
-					widgetVar="accionTablaDep" rows="5" paginator="true"
+				<p:dataTable id="dep" style="width:900px;" editable="true"
+					value="#{comprobanteModificaDepositosBean.listaComprobanteDep}"
+					var="d" widgetVar="accionTablaDep" rows="5" paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					rowsPerPageTemplate="10,15,20" paginatorPosition="top"
 					emptyMessage="No hay ningún registro con esa opción"
 					rowIndexVar="index">
 
-
-					<p:column style="text-align: justify ;width:120px;">
-						<f:facet name="header">
-							<h:outputText value="Origen" style="text-align: justify" />
-						</f:facet>
-						<h:selectOneMenu id="origen" disabled="true" value="#{d.origen}">
-							<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
-							<f:selectItem itemLabel="Corresponsal" itemValue="C" />
-						</h:selectOneMenu>
+					<p:column style="width:35px" headerText="Editar">
+						<p:rowEditor />
 					</p:column>
+					<p:ajax event="rowEdit"
+						listener="#{comprobanteModificaDepositosBean.modificarComprobanteDeposito(d)}" />
 
-					<p:column headerText="Origen" style="width:130px">
+
+					<p:column headerText="Origen" style="width:100px">
 						<p:cellEditor>
 							<f:facet name="output">
-								<p:outputLabel value="#{d.origen}" />
-							</f:facet>
-
-							<f:facet name="input">
-								<h:selectOneMenu id="origen" disabled="true" value="#{d.origen}">
+								<h:selectOneMenu id="origen" value="#{d.origen}" disabled="true">
 									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
 									<f:selectItem itemLabel="Corresponsal" itemValue="C" />
 								</h:selectOneMenu>
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="origen1" value="#{d.origen}">
+									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
+									<f:selectItem itemLabel="Corresponsal" itemValue="C" />
+								</p:selectOneMenu>
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
 
 
-					<p:column style="text-align: justify ;width:150px;">
-						<f:facet name="header">
-							<h:outputText value="Tipo Transacción"
-								style="text-align: justify" />
-						</f:facet>
-						<h:selectOneMenu id="tipotransaccion" disabled="true"
-							value="#{d.tipotransaccion}" required="true" style="width:100px">
-							<f:selectItem itemLabel="Intermático" itemValue="I" />
-							<f:selectItem itemLabel="Depósito" itemValue="D" />
-							<f:selectItem itemLabel="Transferencia" itemValue="T" />
-						</h:selectOneMenu>
+					<p:column headerText="Tipo Transacción" style="width:100px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:selectOneMenu id="tipotransaccion" disabled="true"
+									value="#{d.tipotransaccion}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Intermático" itemValue="I" />
+									<f:selectItem itemLabel="Depósito" itemValue="D" />
+									<f:selectItem itemLabel="Transferencia" itemValue="T" />
+								</p:selectOneMenu>
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="tipotransaccion1"
+									value="#{d.tipotransaccion}" required="true"
+									style="width:100px">
+									<f:selectItem itemLabel="Intermático" itemValue="I" />
+									<f:selectItem itemLabel="Depósito" itemValue="D" />
+									<f:selectItem itemLabel="Transferencia" itemValue="T" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Identificacion"
-						style="text-align: justify ;width:120px;">
-						<h:outputText value="#{d.identificacion}">
-						</h:outputText>
-					</p:column>
-					<p:column headerText="Nro. Depósito"
-						style="text-align: justify ;width:80px;"
-						sortBy="#{d.num_deposito}">
-						<h:outputLabel value="#{d.num_deposito}" />
+					<p:column headerText="Identificación" style="width:100px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{d.identificacion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<h:inputText value="#{d.identificacion}" size="13" />
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Fecha Depósito"
-						style="text-align: justify ;width:80px;" sortBy="#{d.fecha}">
-						<h:outputLabel value="#{d.fecha}">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
-						</h:outputLabel>
+					<p:column headerText="Nro. Depósito" style="width:90px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{d.num_deposito}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<h:inputText value="#{d.num_deposito}" style="text-align: justify;width:80px;" />
+							</f:facet>
+						</p:cellEditor>
 					</p:column>
+
+
+					<p:column headerText="Fecha Depósito" style="width:90px">
+						<p:cellEditor>
+							<f:facet name="output">			
+								<p:calendar id="txtFecha" pattern="dd/MM/yyyy" mask="true"
+									value="#{d.fecha}" disabled="true" inputStyle="width:80px">
+								</p:calendar>
+								<p:watermark for="txtFecha" value="dd/MM/yyyy" />
+								<p:messages for="txtFecha" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:calendar id="txtFecha1" pattern="dd/MM/yyyy" mask="true"
+									value="#{d.fecha}" inputStyle="width:80px">
+								</p:calendar>
+								<p:watermark for="txtFecha1" value="dd/MM/yyyy" />
+								<p:messages for="txtFecha1" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
 
 				</p:dataTable>
 
@@ -98,12 +137,7 @@
 				<p:panel>
 					<p:panelGrid columns="7" style="display:block; text-align:center"
 						columnClasses="centered">
-						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
-							value="Guardar"
-							action="#{comprobanteModificaDepositosBean.modificarComprobanteDeposito()}"
-							process="@this" update="ingFacturas:btnGuardar"
-							disabled="#{comprobanteModificaDepositosBean.estadeshabilitado}">
-						</p:commandButton>
+						
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
 							action="#{navegarVistasBean.principal()}" process="@this"

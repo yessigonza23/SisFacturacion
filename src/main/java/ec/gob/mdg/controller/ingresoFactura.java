@@ -168,8 +168,8 @@ public class ingresoFactura implements Serializable {
 		try {
 			inicializar(); ///// INICIALIZA LAS VARIABLES
 			el_cliente = "";
-			listaClientes = serviceCliente.listar();
-			listaRecaudacionDetalleTodas = serviceRecaudacionDetalle.listar();
+//			listaClientes = serviceCliente.listar();
+//			listaRecaudacionDetalleTodas = serviceRecaudacionDetalle.listar();
 			fechaActual = UtilsDate.fechaActual();
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 			punto = usuPunto.getPuntoRecaudacion();
@@ -184,6 +184,8 @@ public class ingresoFactura implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+
 
 	//// INICIALIZADOR DE VARIABLES
 	public void inicializar() {
@@ -1067,11 +1069,13 @@ public class ingresoFactura implements Serializable {
 		this.validadorValorIva = validadorValorIva;
 	}
 
-	public List<RecaudacionDetalle> getListaRecaudacionDetalleTodas() {
+	public List<RecaudacionDetalle> getListaRecaudacionDetalleTodas() throws Exception {
+		listaRecaudacionDetalle = serviceRecaudacionDetalle.listar();
 		return listaRecaudacionDetalleTodas;
 	}
 
 	public void setListaRecaudacionDetalleTodas(List<RecaudacionDetalle> listaRecaudacionDetalleTodas) {
+		
 		this.listaRecaudacionDetalleTodas = listaRecaudacionDetalleTodas;
 	}
 

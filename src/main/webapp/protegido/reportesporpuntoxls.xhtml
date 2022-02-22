@@ -107,7 +107,6 @@
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:100px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -141,17 +140,17 @@
 								<p:column />
 								<p:column />
 								<p:column />
-								<p:column />
+
 								<p:column colspan="1" style="text-align:right"
 									footerText="Total:" />
 								<p:column style="text-align:right">
 									<f:facet name="footer">
 										<p:outputLabel id="total"
 											value="#{reportesPorPuntoBean.total}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
+								<p:column />
 								<p:column />
 								<p:column />
 								<p:column />
@@ -173,7 +172,7 @@
 						actionListener="#{reportesPorPuntoBean.listarVistaRecaudacionDeposito(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
 						process="@form" update="ingReportes:factDep">
 					</p:commandButton>
-					
+
 					<p:commandButton value="Descargar"
 						onclick="exportar('ingReportes:factDep','RecaDeposito')" />
 
@@ -198,7 +197,7 @@
 							filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
 							style="width:180px;">
 							<p:outputLabel value="#{e.comp_fechaemision}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+
 							</p:outputLabel>
 						</p:column>
 
@@ -218,19 +217,17 @@
 							style="width:150px;">
 							<p:outputLabel value="#{e.deposito_numero}" />
 						</p:column>
-
 						<p:column headerText="Fecha Depósito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
-							style="width:100px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							filterBy="#{e.deposito_fechastring}" filterMatchMode="contains"
+							style="width:150px;">
+							<p:outputLabel value="#{e.deposito_fechastring}">
+							
 							</p:outputLabel>
+						
 						</p:column>
-
 						<p:column headerText="Valor" filterBy="#{e.comp_valor}"
 							filterMatchMode="contains" style="width:100px;text-align:right">
 							<p:outputLabel value="#{e.comp_valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -260,7 +257,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totald"
 											value="#{reportesPorPuntoBean.totald}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -282,7 +278,7 @@
 						actionListener="#{reportesPorPuntoBean.listarVistaCierre(reportesPorPuntoBean.fecha_inicio,reportesPorPuntoBean.fecha_fin,reportesPorPuntoBean.nombre.id)}"
 						process="@form" update="ingReportes:factCierre">
 					</p:commandButton>
-					
+
 					<p:commandButton value="Descargar"
 						onclick="exportar('ingReportes:factCierre','CierreRecaudacion')" />
 
@@ -346,7 +342,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalc"
 											value="#{reportesPorPuntoBean.totalc}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>

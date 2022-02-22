@@ -5,6 +5,20 @@ public class CedulaRuc {
 	public static String comprobacion(String cadena, String tipo) {
 		String mensaje = "";
 
+		boolean tipoCadena = false;
+		if (cadena != null && tipo != null) {
+			for (int x = 0; x < cadena.length(); x++) {
+				char c = cadena.charAt(x);
+				// Si no está entre a y z, ni entre A y Z, ni es un espacio
+				if (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
+					tipoCadena = false;
+					break;
+				} else {
+					tipoCadena = true;
+				}
+
+			}
+		}
 		if (cadena != null && tipo != null) {
 
 			if (tipo.equals("P")) {
@@ -16,22 +30,31 @@ public class CedulaRuc {
 				mensaje = "No ha ingresado los caracteres suficientes en la identificación para proceder";
 				return mensaje;
 			} else {
+				System.out.println("entra a else");
 				if (cadena.length() == 10 && tipo.equals("R")) {
+					System.out.println("1");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
 
 				} else if (cadena.length() == 13 && tipo.equals("C")) {
-
+					System.out.println("2");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
-				}
+				} else if (tipoCadena == false && tipo.equals("R")) {
+					System.out.println("3");
+					mensaje = "Tipo de identificación no corresponde";
+					return mensaje;
+				} else if (tipoCadena == false && tipo.equals("C")) {
+					System.out.println("4");
+					mensaje = "Tipo de identificación no corresponde";
+					return mensaje;
+				} else {
 
-				else {
 					while (cadena.length() <= 13) {
 						cadena = cadena + " ";
 					}
 					boolean e1 = !(Integer.parseInt(cadena.substring(0, 2)) >= 1
-							&& Integer.parseInt(cadena.substring(0, 2)) <= 24);
+							&& Integer.parseInt(cadena.substring(0, 2)) <= 50);
 					boolean e2 = (!(Integer.parseInt(cadena.substring(2, 3)) >= 0
 							&& Integer.parseInt(cadena.substring(2, 3)) <= 6)
 							&& (Integer.parseInt(cadena.substring(2, 3)) != 9));
@@ -106,7 +129,7 @@ public class CedulaRuc {
 					}
 				}
 			}
-			
+
 		}
 		return mensaje;
 	}

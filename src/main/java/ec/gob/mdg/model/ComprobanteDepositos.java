@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "comprobantedeposito", schema = "financiero")
@@ -33,6 +35,7 @@ public class ComprobanteDepositos implements Serializable {
 	private String num_deposito;
 	
 	@Column(name = "fecha")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fecha;
 	
 	@Column(name = "observacion", length = 100)

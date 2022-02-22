@@ -122,7 +122,6 @@
 						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
 							filterMatchMode="contains" style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.deposito_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -143,7 +142,6 @@
 							filterBy="#{e.estadocuenta_valor}" filterMatchMode="contains"
 							style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.estadocuenta_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -161,7 +159,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalFactura"
 											value="#{consolidacionPorPuntoBean.totalF}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -171,7 +168,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalBanco"
 											value="#{consolidacionPorPuntoBean.totalB}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -244,7 +240,6 @@
 						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
 							filterMatchMode="contains" style="text-align:right;width:50px;">
 							<p:outputLabel value="#{e.deposito_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -275,7 +270,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalFactura"
 											value="#{consolidacionPorPuntoBean.totalF2}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -330,7 +324,6 @@
 						<p:column headerText="Valor" filterBy="#{e.valor}"
 							filterMatchMode="contains" style="text-align:right;width:70px;">
 							<p:outputLabel value="#{e.valor}" style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -379,7 +372,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalFactura"
 											value="#{consolidacionPorPuntoBean.totalDep}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -519,7 +511,6 @@
 						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
 							filterMatchMode="contains" style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.deposito_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -550,7 +541,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="totalFactura"
 											value="#{consolidacionPorPuntoBean.totalF4}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>
@@ -626,14 +616,13 @@
 						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
 							filterMatchMode="contains" style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.deposito_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
 						<p:column headerText="Fecha Deposito"
 							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
 							style="width:70px;">
-							<p:outputLabel value="#{e.comp_fechaemision}">
+							<p:outputLabel value="#{e.deposito_fecha}">
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
 						</p:column>
@@ -641,21 +630,18 @@
 							filterBy="#{e.estadocuenta_valor}" filterMatchMode="contains"
 							style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.estadocuenta_valor}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 						<p:column headerText="Saldo Est.Cuenta"
 							filterBy="#{e.estadocuenta_saldo}" filterMatchMode="contains"
 							style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.estadocuenta_saldo}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 						<p:column headerText="Proceso"
 							filterBy="#{e.consdepositos_tipoconciliaciondesc}"
 							filterMatchMode="contains" style="text-align:right;width:60px;">
 							<p:outputLabel value="#{e.consdepositos_tipoconciliaciondesc}">
-								<f:convertNumber pattern="###,##0.00" />
 							</p:outputLabel>
 						</p:column>
 
@@ -673,7 +659,6 @@
 									<f:facet name="footer">
 										<p:outputLabel id="total1Factura"
 											value="#{consolidacionPorPuntoBean.totalB4}">
-											<f:convertNumber pattern="###,##0.00" />
 										</p:outputLabel>
 									</f:facet>
 								</p:column>

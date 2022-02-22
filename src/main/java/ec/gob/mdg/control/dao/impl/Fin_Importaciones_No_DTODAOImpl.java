@@ -41,7 +41,7 @@ public class Fin_Importaciones_No_DTODAOImpl implements IFin_Importaciones_No_DT
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Fin_Importaciones_No_DTO> listar() throws Exception {
-		System.out.println("entra a lista dao fin importaciones no ");
+	//	System.out.println("entra a lista dao fin importaciones no ");
 
 		List<Object[]> lista = new ArrayList<>();
 		List<Fin_Importaciones_No_DTO> consultas = new ArrayList<>();

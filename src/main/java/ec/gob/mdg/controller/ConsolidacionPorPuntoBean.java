@@ -222,7 +222,7 @@ public class ConsolidacionPorPuntoBean implements Serializable {
 		if (listaVistaConciliacionCompDepositoEstcCuentaDTO != null) {
 			this.listaVistaConciliacionCompDepositoEstcCuentaDTO = this.serviceVistaConciliacionCompDepositoEstcCuentaDTO
 					.listarConsolidados(nombre.getId(), anio, mes);
-			
+			totalFacturasCon();
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Especifique la información"));

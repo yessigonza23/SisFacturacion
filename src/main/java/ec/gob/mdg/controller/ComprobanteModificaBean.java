@@ -230,16 +230,12 @@ public class ComprobanteModificaBean implements Serializable {
 	public void mostrarComprobanteDetalle() {
 		param2 = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
 		id = Integer.parseInt(param2);
-
 		try {
 			this.comprobante = serviceComprobante.listarComprobantePorId(id);
-			
 			this.listaComprobanteDet = this.serviceComprobanteDetalle.listarComDetPorIdComp(id);
 			this.listaComprobanteDep = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
-
 			this.listaComprobanteDetTmp = this.serviceComprobanteDetalle.listarComDetPorIdComp(id);
 			this.listaComprobanteDepTmp = this.serviceComprobanteDepositos.listarComDepPorIdComp(id);
-
 			this.cliente = this.serviceCliente.ClientePorCiParametro(comprobante.getClienteruc());
 
 			this.listaRecaudacionDetalle = this.serviceRecaudacionDetalle.listar();
@@ -573,6 +569,12 @@ public class ComprobanteModificaBean implements Serializable {
 										usuPunto.getUsuario().getUsername(), fechaActual, c.getNum_deposito(),
 										ct.getNum_deposito(), c.getId());
 							}
+							if (!c.getIdentificacion().equals(ct.getIdentificacion())) {
+								serviceAuditoria.insertaModificacion("ComprobanteDeposito", "identificacion", "U",
+										usuPunto.getUsuario().getUsername(), fechaActual, c.getIdentificacion(),
+										ct.getIdentificacion(), c.getId());
+							}
+							
 							@SuppressWarnings("unused")
 							Date date = new Date();
 							SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
@@ -686,7 +688,7 @@ public class ComprobanteModificaBean implements Serializable {
 					String verificador = String.valueOf(ValorMod11.mod11(claveA));
 					claveA = claveA + verificador;
 					comprobante.setClaveacceso(claveA);
-System.out.println("1");
+//System.out.println("1");
 					serviceComprobante.modificar(comprobante);
 					genXml.generarXmlArchivo(punto.getId(), comprobante.getNumero());
 					//// AUDITORIA TABLA COMPROBANTE

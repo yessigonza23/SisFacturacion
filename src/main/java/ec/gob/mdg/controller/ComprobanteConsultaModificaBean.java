@@ -75,6 +75,23 @@ public class ComprobanteConsultaModificaBean implements Serializable {
 	}
 	
 
+	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS NO BLOQUEADOS
+	public void listarComprobantesModDep() {
+		try {
+			if (fecha_inicio !=null && fecha_fin !=null) {
+				this.listaComprobante = serviceComprobante.listarComprobanteModDepPorFechas(fecha_inicio, fecha_fin,
+						punto.getId());
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Sin Datos", "Especifique las fechas"));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+
 	/// METODO PARA LISTAR COMPROBANTES FACTURAS POR FECHAS
 	public void listarComprobantesSinAutor() {
 		try {

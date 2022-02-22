@@ -391,4 +391,27 @@ public class ComprobanteDAOImpl implements IComprobanteDAO, Serializable {
 		return lista;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Comprobante> listarComprobanteModDepPorFechas(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
+		/// SUMAR UN D�A PARA QUE SE MUESTRE LA INFORMACI�N DEL MISMO DIA
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(fecha_fin); // Configuramos la fecha que se recibe
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				fecha_fin = calendar.getTime();
+				List<Comprobante> lstCompro = new ArrayList<Comprobante>();
+				try {
+					Query q = em.createQuery("SELECT c FROM Comprobante c, ComprobanteDepositos cd WHERE c.id = cd.comprobante.id and "
+							+ "fechaemision between ?1 and ?2 and c.puntoRecaudacion.id=?3 " + "and c.tipocomprobante='F' and cd.id_tmp is null "
+							+ "ORDER BY c.fechaemision DESC, c.numero DESC");
+					q.setParameter(1, fecha_inicio);
+					q.setParameter(2, fecha_fin);
+					q.setParameter(3, id_punto);
+					lstCompro = (List<Comprobante>) q.getResultList();
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				return lstCompro;
+	}
+
 }

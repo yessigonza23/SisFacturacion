@@ -105,7 +105,7 @@ public class ImportacionNoBean implements Serializable {
 		if (est) {
 			total = total + mont;
 			total =  FunValidaciones.formatearDecimales(total, 2);
-			System.out.println("total : " + total);
+			//System.out.println("total : " + total);
 		} else {
 			total = total - mont;
 			total =  FunValidaciones.formatearDecimales(total, 2);

@@ -27,7 +27,7 @@ public class ClienteBean implements Serializable {
 	private List<Cliente> lista;
 	private String tipoDialog;
 	private Cliente cliente;
-	private Cliente clientetmp ;
+	private Cliente clientetmp;
 	boolean validador;
 
 	@PostConstruct
@@ -47,31 +47,38 @@ public class ClienteBean implements Serializable {
 
 	@Transactional
 	public void modificar(Cliente cliente) {
-		validaIdentificacion(cliente.getCi(),cliente.getTipoid());
-		
-		if(validador == false) {
-		
-		cliente.setTipoid(cliente.getTipoid());
-		cliente.setCi(cliente.getCi());
-		cliente.setDireccion(cliente.getDireccion().toUpperCase());
-		cliente.setNombre(cliente.getNombre().toUpperCase());
-		cliente.setTelefono(cliente.getTelefono());
-		cliente.setCorreo(cliente.getCorreo());
-		try {
-			this.service.modificar(cliente);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		if (cliente != null) {
+			validaIdentificacion(cliente.getCi(), cliente.getTipoid());
+
+			if (validador == false) {
+
+				cliente.setTipoid(cliente.getTipoid());
+				cliente.setCi(cliente.getCi());
+				cliente.setDireccion(cliente.getDireccion().toUpperCase());
+				cliente.setNombre(cliente.getNombre().toUpperCase());
+				cliente.setTelefono(cliente.getTelefono());
+				cliente.setCorreo(cliente.getCorreo());
+				try {
+					this.service.modificar(cliente);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Tipo de identificación erronea", "No puede modificar el registro"));
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Error"));
 		}
-		}else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Tipo de identificación erronea", "No puede modificar el registro"));
-		}
+
 	}
-	
+
 	// VALIDADOR DE CEDULA-RUC
-		public void validaIdentificacion(String ci,String tipoid) {
-			
+	public void validaIdentificacion(String ci, String tipoid) {
+		if (ci != null && tipoid != null) {
 			String validaIdentificacion = CedulaRuc.comprobacion(ci, tipoid);
 			if (validaIdentificacion.equals("T")) {
 				validador = false;
@@ -80,24 +87,32 @@ public class ClienteBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"Tipo de identificacion erronea", validaIdentificacion));
 			}
-			
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Error"));
 		}
-	
-	///VERIFICA SI EXISTE EL CLIENTE
-		public void verificarExistencia(String ci) {
-			
-			this.clientetmp = service.ClientePorCiParametro(ci);	
-			
-			if(clientetmp.getCi()!=null) {
-				validador=true;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Este cliente ya existe", "Error"));
+
+	}
+
+	/// VERIFICA SI EXISTE EL CLIENTE
+	public void verificarExistencia(String ci) {
+		
+		if (ci != null ) {
+			this.clientetmp = service.ClientePorCiParametro(ci);
+
+			if (clientetmp.getCi() != null) {
+				validador = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Este cliente ya existe", "Error"));
 			}
-			
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sin Datos", "Error"));
 		}
-	
-	
-	////GETTERS Y SETTERS
+
+	}
+
+	//// GETTERS Y SETTERS
 
 	public List<Cliente> getLista() {
 		return lista;

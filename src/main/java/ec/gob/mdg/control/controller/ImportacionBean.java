@@ -104,7 +104,7 @@ public class ImportacionBean implements Serializable {
 	public void totalValor(boolean est, double mont) {
 		if (est) {
 			total = total + mont;
-			System.out.println("total : " + total);
+			//System.out.println("total : " + total);
 		} else {
 			total = total - mont;
 

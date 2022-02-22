@@ -139,6 +139,12 @@ public class ComprobanteServiceImpl implements IComprobanteService, Serializable
 	public List<Comprobante> listarCompPorIdPtoNotas(Integer id_punto) {
 		return dao.listarCompPorIdPtoNotas(id_punto);
 	}
+
+	@Override
+	public List<Comprobante> listarComprobanteModDepPorFechas(Date fecha_inicio, Date fecha_fin, Integer id_punto) {
+		// TODO Auto-generated method stub
+		return dao.listarComprobanteModDepPorFechas(fecha_inicio, fecha_fin, id_punto);
+	}
 	
 
 }

@@ -54,14 +54,13 @@ public class AsignarRolUsuarioBean implements Serializable {
 		idUsuarios = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("idUsuario");
 		idUsuario = Integer.parseInt(idUsuarios);
 		usuario = serviceUsuario.mostrarUsuarioPorId(idUsuario);		
-		listaUsuarioRol = serviceUsuarioRol.listarRolesPorUsuario(usuario);
-		listaRol = serviceUsuarioRol.listarRolesPendientes(usuario);
+//		listaUsuarioRol = serviceUsuarioRol.listarRolesPorUsuario(usuario);
+//		listaRol = serviceUsuarioRol.listarRolesPendientes(usuario);
 	}
 	
-	public void quitar(Integer id_usuario, Integer id_rol) {
-		
+	public void quitar(Integer id_usuario, Integer id_rol) {		
 		usuario = serviceUsuario.mostrarUsuarioPorId(id_usuario);		
-		System.out.println(" id usuario " + id_usuario + " , id rol " + id_rol);
+//		System.out.println(" id usuario " + id_usuario + " , id rol " + id_rol);
 		this.serviceUsuarioRol.eliminarRolUsuario(id_usuario, id_rol);	
 		
 		listaUsuarioRol = serviceUsuarioRol.listarRolesPorUsuario(usuario);
@@ -72,7 +71,7 @@ public class AsignarRolUsuarioBean implements Serializable {
 	}
 
 	public void asignar(Integer id_usuario, Integer id_rol) {
-		System.out.println("");
+//		System.out.println("");
 		usuario = serviceUsuario.mostrarUsuarioPorId(id_usuario);
 		rol = this.serviceRol.mostrarRolPorId(id_rol);
 		UsuarioRol usuarioRol = new UsuarioRol();
@@ -117,6 +116,7 @@ public class AsignarRolUsuarioBean implements Serializable {
 	}
 
 	public List<UsuarioRol> getListaUsuarioRol() {
+		listaUsuarioRol = serviceUsuarioRol.listarRolesPorUsuario(usuario);
 		return listaUsuarioRol;
 	}
 
@@ -133,6 +133,7 @@ public class AsignarRolUsuarioBean implements Serializable {
 	}
 
 	public List<Rol> getListaRol() {
+		listaRol = serviceUsuarioRol.listarRolesPendientes(usuario);
 		return listaRol;
 	}
 
