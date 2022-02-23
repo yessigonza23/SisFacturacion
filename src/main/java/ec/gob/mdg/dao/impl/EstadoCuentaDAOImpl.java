@@ -77,7 +77,7 @@ public class EstadoCuentaDAOImpl implements IEstadoCuentaDAO, Serializable {
 	public List<EstadoCuenta> listarEstadoCuentaCargado(Integer anio, Integer mes) {
 		List<EstadoCuenta> lista = new ArrayList<EstadoCuenta>();
 		try {
-			Query q = em.createQuery("SELECT c FROM EstadoCuenta c WHERE c.anio=?1 AND c.mes=?2"); // query de la entidad del model
+			Query q = em.createQuery("SELECT c FROM EstadoCuenta c WHERE c.anio=?1 AND c.mes=?2"); 
 			q.setParameter(1,anio);
 			q.setParameter(2,mes);
 			lista = (List<EstadoCuenta>) q.getResultList();

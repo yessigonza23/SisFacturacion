@@ -39,24 +39,24 @@ public class CambioPuntoBean implements Serializable{
 	@PostConstruct
 	public void init() {
 		try {	
-			listarPuntos();
+//			listarPuntos();
 			//Punto en el que estoy logueada
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
      		punto_actual = usuPunto.getPuntoRecaudacion();
-			listarPuntos();
+//			listarPuntos();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void listarPuntos() {
-		try {
-			this.listaPuntoRecaudacion = this.servicePuntoRecaudacion.listar();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
+//	private void listarPuntos() {
+//		try {
+//			this.listaPuntoRecaudacion = this.servicePuntoRecaudacion.listar();
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
 	@Transactional
 	public void modificarPunto(PuntoRecaudacion punto_nuevo) {
 		try {		
@@ -101,7 +101,8 @@ public class CambioPuntoBean implements Serializable{
 
 	
 
-	public List<PuntoRecaudacion> getListaPuntoRecaudacion() {
+	public List<PuntoRecaudacion> getListaPuntoRecaudacion() throws Exception {
+		this.listaPuntoRecaudacion = this.servicePuntoRecaudacion.listar();
 		return listaPuntoRecaudacion;
 	}
 

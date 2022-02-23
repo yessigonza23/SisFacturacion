@@ -92,8 +92,8 @@ public class SRIMasivoBean implements Serializable {
 
 	public void listarComprobantes() {
 		try {
-			this.listaComprobante = serviceComprobante
-					.listarNoAutorizadasPorPunto(usuPunto.getPuntoRecaudacion().getId());
+//			this.listaComprobante = serviceComprobante
+//					.listarNoAutorizadasPorPunto(usuPunto.getPuntoRecaudacion().getId());
 			total();
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -381,6 +381,8 @@ public class SRIMasivoBean implements Serializable {
 
 /////// GETTERS Y SETTERS
 	public List<Comprobante> getListaComprobante() {
+		this.listaComprobante = serviceComprobante
+				.listarNoAutorizadasPorPunto(usuPunto.getPuntoRecaudacion().getId());
 		return listaComprobante;
 	}
 

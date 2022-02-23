@@ -59,11 +59,10 @@ public class CargaBancoBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-
 			estado1 = false;
 			estado2 = true;
 			estado3 = true;
-			fechaMaxEstado();
+//			fechaMaxEstado();
 			id_usuario = p.getId();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -270,6 +269,7 @@ public class CargaBancoBean implements Serializable {
 
 	
 	public Date getFechamax() {
+		fechamax = fun.fechaMaxEstadoCuenta();
 		return fechamax;
 	}
 

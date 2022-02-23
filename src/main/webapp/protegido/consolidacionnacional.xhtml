@@ -116,8 +116,11 @@
 								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</p:outputLabel>
 						</p:column>
-	
 
+						<p:column headerText="Bloqueado" filterBy="#{e.bloqueado}"
+							filterMatchMode="contains" style="width:70px;">
+							<p:selectBooleanCheckbox value="#{e.bloqueado}" disabled="true"/>
+						</p:column>
 					</p:dataTable>
 				</p:panel>
 

@@ -182,12 +182,13 @@ public class EstadoCuenta implements Serializable{
 		this.codigoservicio = codigoservicio;
 	}
 
-	public boolean isBloqueado() {
-		return bloqueado;
-	}
 
 	public void setBloqueado(boolean bloqueado) {
 		this.bloqueado = bloqueado;
+	}
+
+	public boolean isBloqueado() {
+		return bloqueado;
 	}
 
 	public String getFechahora() {

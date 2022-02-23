@@ -39,7 +39,6 @@ import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.model.RecaudacionDetalle;
 import ec.gob.mdg.model.Usuario;
 import ec.gob.mdg.model.UsuarioPunto;
-import ec.gob.mdg.service.IClienteService;
 import ec.gob.mdg.service.IComprobanteDetalleService;
 import ec.gob.mdg.service.IComprobanteService;
 import ec.gob.mdg.service.IInstitucionService;
@@ -60,8 +59,7 @@ public class IngresoNotasAutoBean implements Serializable {
 	@Inject
 	private IInstitucionService institucionService;
 
-	@Inject
-	private IClienteService serviceCliente;
+	
 
 	@Inject
 	private IComprobanteService serviceComprobante;
@@ -130,8 +128,7 @@ public class IngresoNotasAutoBean implements Serializable {
 		cliente = new Cliente();
 		try {
 			el_cliente = "";
-			listaClientes = serviceCliente.listar();
-			listaRecaudacionDetalle = serviceRecaudacionDetalle.listar();
+//			listaRecaudacionDetalle = serviceRecaudacionDetalle.listar();
 			fechaActual = UtilsDate.fechaActual();
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 			punto = usuPunto.getPuntoRecaudacion();
@@ -481,7 +478,8 @@ public class IngresoNotasAutoBean implements Serializable {
 		this.recaudacionDetalle = recaudacionDetalle;
 	}
 
-	public List<RecaudacionDetalle> getListaRecaudacionDetalle() {
+	public List<RecaudacionDetalle> getListaRecaudacionDetalle() throws Exception {
+		listaRecaudacionDetalle = serviceRecaudacionDetalle.listar();
 		return listaRecaudacionDetalle;
 	}
 

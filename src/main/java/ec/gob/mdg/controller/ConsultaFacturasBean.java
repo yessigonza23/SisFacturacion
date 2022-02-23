@@ -28,9 +28,7 @@ public class ConsultaFacturasBean implements Serializable {
 	private IComprobanteService serviceComprobante;
 
 	@Inject
-	private IComprobanteDepositosService serviceComprobanteDep;
-
-	
+	private IComprobanteDepositosService serviceComprobanteDep;	
 
 	private Cliente cliente;
 	private Comprobante comprobante;
@@ -45,7 +43,7 @@ public class ConsultaFacturasBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			listarClientes("F");
+//			listarClientes("F");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -179,6 +177,7 @@ public class ConsultaFacturasBean implements Serializable {
 	}
 
 	public List<Cliente> getListaClientes() {
+		this.listaClientes = this.serviceComprobante.listarClientesComprobantes("F");
 		return listaClientes;
 	}
 

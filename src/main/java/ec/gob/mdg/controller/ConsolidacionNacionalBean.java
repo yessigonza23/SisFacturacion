@@ -39,11 +39,11 @@ public class ConsolidacionNacionalBean implements Serializable {
 
 	@Inject
 	private IEstadoCuentaService serviceEstadoCuenta;
-	
+
 	@Inject
 	private IComprobanteService serviceComprobante;
-	
-	private EstadoCuenta estadoCuenta =new EstadoCuenta();
+
+	private EstadoCuenta estadoCuenta = new EstadoCuenta();
 
 	private List<EstadoCuenta> listaEstadoCuenta = new ArrayList<EstadoCuenta>();
 	private List<VistaRecaudacionDepositoDTO> listaVistaRecaudacionDepositoDTO = new ArrayList<>();
@@ -57,37 +57,32 @@ public class ConsolidacionNacionalBean implements Serializable {
 	Integer anio;
 	Integer mes;
 
-	
 	@PostConstruct
 	public void init() {
 		try {
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 			punto = usuPunto.getPuntoRecaudacion();
 			nombre = servicePuntoRecaudacion.listarPorId(punto);
-		//	listarComprobantes();
+			// listarComprobantes();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
 
-	/////LISTAR ESTADO DE CUENTA
+	///// LISTAR ESTADO DE CUENTA
 	public void listarEstado() {
-		
 		listaEstadoCuenta = serviceEstadoCuenta.listarEstadoCuentaCargado(anio, mes);
 	}
-		
-	////LISTAR COMPROBANTE DEPOSITO
-	public void listarVistaDepositos() {
-	
-		listaVistaRecaudacionDepositoDTO = serviceVistaRecaudacionDepositoDTO.listarVista(anio, mes);
-	}
-	
-    public void liberarDeposito(Integer id_estadoCuenta) {
-    	
-    }
 
-	
-	///LISTAR COMPROBANTES
+	//// LISTAR COMPROBANTE DEPOSITO
+	public void listarVistaDepositos() {
+		if (anio != null && mes != null) {
+			listaVistaRecaudacionDepositoDTO = serviceVistaRecaudacionDepositoDTO.listarVista(anio, mes);
+		}
+
+	}
+
+	/// LISTAR COMPROBANTES
 	public void listarComprobantes() {
 		try {
 			listaComprobantes = serviceComprobante.listar();
@@ -96,8 +91,8 @@ public class ConsolidacionNacionalBean implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	////GETTERS Y SETTERS/
+
+	//// GETTERS Y SETTERS/
 	public List<EstadoCuenta> getListaEstadoCuenta() {
 		return listaEstadoCuenta;
 	}
@@ -110,7 +105,8 @@ public class ConsolidacionNacionalBean implements Serializable {
 		return listaVistaRecaudacionDepositoDTO;
 	}
 
-	public void setListaVistaRecaudacionDepositoDTO(List<VistaRecaudacionDepositoDTO> listaVistaRecaudacionDepositoDTO) {
+	public void setListaVistaRecaudacionDepositoDTO(
+			List<VistaRecaudacionDepositoDTO> listaVistaRecaudacionDepositoDTO) {
 		this.listaVistaRecaudacionDepositoDTO = listaVistaRecaudacionDepositoDTO;
 	}
 
@@ -177,6 +173,5 @@ public class ConsolidacionNacionalBean implements Serializable {
 	public void setEstadoCuenta(EstadoCuenta estadoCuenta) {
 		this.estadoCuenta = estadoCuenta;
 	}
-
 
 }
