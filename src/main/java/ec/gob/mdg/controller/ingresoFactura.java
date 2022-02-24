@@ -184,8 +184,6 @@ public class ingresoFactura implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-
 
 	//// INICIALIZADOR DE VARIABLES
 	public void inicializar() {
@@ -456,6 +454,20 @@ public class ingresoFactura implements Serializable {
 		}
 	}
 
+	public boolean soloLetras(String e) {
+		boolean respuesta=false;
+		if (e != null) {
+			respuesta = fun.letras(e);
+			if (respuesta) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Error en el nombre del cliente"));
+				return respuesta;
+			}
+		}
+		return respuesta;
+		
+	}
+
 	// MOSTRAR DATOS DE DETALLE
 	public void mostrarData(ComprobanteDetalle i) {
 		this.comprobanteDetalle = i;
@@ -523,91 +535,100 @@ public class ingresoFactura implements Serializable {
 									new FacesMessage(FacesMessage.SEVERITY_ERROR,
 											"Error los valores de los detalles es diferente", "Error"));
 						} else {
-							// para validar la cedula
-							Long a = fun.buscarCliente(cliente);
+							boolean respuesta1=soloLetras(cliente.getNombre());
 
-							if (a == 0) {
-								Cliente c = new Cliente();
-								c = cliente;
-								String clave = this.cliente.getCi();
-								String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
-								c.setClave(claveHash);
-								cliente.setCi(cliente.getCi());
-								cliente.setDireccion(cliente.getDireccion());
-								cliente.setNombre(cliente.getNombre());
-								cliente.setCorreo(cliente.getCorreo());
+							if (!respuesta1) {
+								// para validar la cedula
+								Long a = fun.buscarCliente(cliente);
+								if (a == 0) {
+									Cliente c = new Cliente();
+									c = cliente;
+									String clave = this.cliente.getCi();
+									String claveHash = BCrypt.hashpw(clave, BCrypt.gensalt());
+									c.setClave(claveHash);
+									cliente.setCi(cliente.getCi());
+									cliente.setDireccion(cliente.getDireccion());
 
-								serviceCliente.registrar(c);
-							} else {
-								cliente.setCi(cliente.getCi());
-								cliente.setDireccion(cliente.getDireccion());
-								cliente.setNombre(cliente.getNombre());
-								cliente.setCorreo(cliente.getCorreo());
-								serviceCliente.modificar(cliente);
-							}
-							usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
-							// saca el secuencial +1
-							num1 = (Integer) fun.secFactura(usuPunto);
-							Comprobante comp = new Comprobante();
-							comp.setNumero(num1);
-							comp.setClienteruc(cliente.getCi());
-							comp.setClientenombre(cliente.getNombre());
-							comp.setClientedireccion(cliente.getDireccion());
-							comp.setClientetelefono(cliente.getTelefono());
-							fechaActual = UtilsDate.fechaActual();
-							comp.setFechaemision(fechaActual);
-							comp.setDetalle(detalle);
-							comp.setCliente(cliente);
-							comp.setUsuarioPunto(usuPunto);
-							comp.setTipocomprobante("F");
-							comp.setValor(totaldet);
-							comp.setPuntoRecaudacion(punto);
-							//// GENERAR CLAVE ACCESO
-							Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-							calendar.setTime(fechaActual);
-							String anio = String.valueOf(calendar.get(Calendar.YEAR));
-							String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
-							String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-							if (calendar.get(Calendar.MONTH) < 10) {
-								mes = "0" + mes;
-							}
-							if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
-								dia = "0" + dia;
-							}
-							claveA = dia + mes + anio + "01" + institucion.getRuc() + institucion.getAmbiente()
-									+ punto.getEstablecimiento() + punto.getPuntoemision()
-									+ StringUtils.leftPad(String.valueOf(num1), 9, "0") + "12345678" + "1";
-							String verificador = String.valueOf(ValorMod11.mod11(claveA));
-							claveA = claveA + verificador;
-							comp.setClaveacceso(claveA);
-							////////////////////////////////////////////
-							id_comprobante = serviceComprobante.registrar(comp);
-							// actualiza la secuencia
-							fun.actualizaSecuencialFactura(usuPunto, num1);
-							for (ComprobanteDetalle det : listaComprobanteDet) {
-								ComprobanteDetalle det1 = new ComprobanteDetalle();
-								det1.setValorcero(det.getRecaudaciondetalle().getValor());
-								det1.setValoriva(det.getRecaudaciondetalle().getValoriva());
-								det1.setCantidad(det.getCantidad());
-								det1.setSubtotal(det.getSubtotal());
-								det1.setComprobante(comp);
-								det1.setRecaudaciondetalle(det.getRecaudaciondetalle());
-								serviceComprobanteDetalle.registrar(det1);
-							}
-							for (ComprobanteDepositos dep : listaComprobanteDep) {
-								dep.setComprobante(comp);
-								serviceComprobanteDepositos.registrar(dep);
-							}
-							comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
-							/// GENERAR XML PARA LA FACTURA
-							genXml.generarXmlArchivo(punto.getId(), num1);
-							mostrarFactura();
+									cliente.setNombre(cliente.getNombre());
 
-							estadeshabilitado = true;
-							estadeshabilitadoEnv = false;
-							validador = true;
-							FacesContext.getCurrentInstance().addMessage(null,
-									new FacesMessage(FacesMessage.SEVERITY_INFO, "Se grabó con éxito", "Aviso"));
+									cliente.setCorreo(cliente.getCorreo());
+
+									serviceCliente.registrar(c);
+								} else {
+									cliente.setCi(cliente.getCi());
+									cliente.setDireccion(cliente.getDireccion());
+									cliente.setNombre(cliente.getNombre());
+									cliente.setCorreo(cliente.getCorreo());
+									serviceCliente.modificar(cliente);
+								}
+
+								usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
+								// saca el secuencial +1
+								num1 = (Integer) fun.secFactura(usuPunto);
+								Comprobante comp = new Comprobante();
+								comp.setNumero(num1);
+								comp.setClienteruc(cliente.getCi());
+								comp.setClientenombre(cliente.getNombre());
+								comp.setClientedireccion(cliente.getDireccion());
+								comp.setClientetelefono(cliente.getTelefono());
+								fechaActual = UtilsDate.fechaActual();
+								comp.setFechaemision(fechaActual);
+								comp.setDetalle(detalle);
+								comp.setCliente(cliente);
+								comp.setUsuarioPunto(usuPunto);
+								comp.setTipocomprobante("F");
+								comp.setValor(totaldet);
+								comp.setPuntoRecaudacion(punto);
+								//// GENERAR CLAVE ACCESO
+								Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+								calendar.setTime(fechaActual);
+								String anio = String.valueOf(calendar.get(Calendar.YEAR));
+								String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+								String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+								if (calendar.get(Calendar.MONTH) < 10) {
+									mes = "0" + mes;
+								}
+								if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
+									dia = "0" + dia;
+								}
+								claveA = dia + mes + anio + "01" + institucion.getRuc() + institucion.getAmbiente()
+										+ punto.getEstablecimiento() + punto.getPuntoemision()
+										+ StringUtils.leftPad(String.valueOf(num1), 9, "0") + "12345678" + "1";
+								String verificador = String.valueOf(ValorMod11.mod11(claveA));
+								claveA = claveA + verificador;
+								comp.setClaveacceso(claveA);
+								////////////////////////////////////////////
+								id_comprobante = serviceComprobante.registrar(comp);
+								// actualiza la secuencia
+								fun.actualizaSecuencialFactura(usuPunto, num1);
+								for (ComprobanteDetalle det : listaComprobanteDet) {
+									ComprobanteDetalle det1 = new ComprobanteDetalle();
+									det1.setValorcero(det.getRecaudaciondetalle().getValor());
+									det1.setValoriva(det.getRecaudaciondetalle().getValoriva());
+									det1.setCantidad(det.getCantidad());
+									det1.setSubtotal(det.getSubtotal());
+									det1.setComprobante(comp);
+									det1.setRecaudaciondetalle(det.getRecaudaciondetalle());
+									serviceComprobanteDetalle.registrar(det1);
+								}
+								for (ComprobanteDepositos dep : listaComprobanteDep) {
+									dep.setComprobante(comp);
+									serviceComprobanteDepositos.registrar(dep);
+								}
+								comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
+								/// GENERAR XML PARA LA FACTURA
+								genXml.generarXmlArchivo(punto.getId(), num1);
+								mostrarFactura();
+
+								estadeshabilitado = true;
+								estadeshabilitadoEnv = false;
+								validador = true;
+								System.out.println("Factura:" + comprobante.getNumero() + ", usuario: "
+										+ p.getApellido() + " " + p.getNombre());
+								FacesContext.getCurrentInstance().addMessage(null,
+										new FacesMessage(FacesMessage.SEVERITY_INFO, "Se grabó con éxito", "Aviso"));
+							}
+
 						} // cierre de if
 					}
 				}
@@ -1075,7 +1096,7 @@ public class ingresoFactura implements Serializable {
 	}
 
 	public void setListaRecaudacionDetalleTodas(List<RecaudacionDetalle> listaRecaudacionDetalleTodas) {
-		
+
 		this.listaRecaudacionDetalleTodas = listaRecaudacionDetalleTodas;
 	}
 

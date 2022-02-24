@@ -30,22 +30,22 @@ public class CedulaRuc {
 				mensaje = "No ha ingresado los caracteres suficientes en la identificación para proceder";
 				return mensaje;
 			} else {
-				System.out.println("entra a else");
+//				System.out.println("entra a else");
 				if (cadena.length() == 10 && tipo.equals("R")) {
-					System.out.println("1");
+//					System.out.println("1");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
 
 				} else if (cadena.length() == 13 && tipo.equals("C")) {
-					System.out.println("2");
+//					System.out.println("2");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
 				} else if (tipoCadena == false && tipo.equals("R")) {
-					System.out.println("3");
+//					System.out.println("3");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
 				} else if (tipoCadena == false && tipo.equals("C")) {
-					System.out.println("4");
+//					System.out.println("4");
 					mensaje = "Tipo de identificación no corresponde";
 					return mensaje;
 				} else {

@@ -107,25 +107,33 @@ public class ReportesNacionalBean implements Serializable {
 		try {
 			if (opcion != null) {
 				if (opcion.equals("1")) {
-					System.out.println("reporte Nac 1 " + us.getApellido() + "-" +us.getNombre());
+				
 					nombreReporte = "RepConsNanPorPuntoFactSerBanCodPres.jasper";
 					nombreGuarda = "RepConsNanPorPuntoFactSerBanCodPres";
 				} else if (opcion.equals("2")) {
-					System.out.println("reporte Nac 2 " + us.getApellido() + "-" +us.getNombre());
+					
 					nombreReporte = "RepConsNanProcesoCodPresupuestario.jasper";
 					nombreGuarda = "RepConsNanProcesoCodPresupuestario";
 				} else if (opcion.equals("3")) {
-					System.out.println("reporte Nac 3 " + us.getApellido() + "-" +us.getNombre());
+					
 					nombreReporte = "RepConsNanServicioPunto.jasper";
 					nombreGuarda = "RepConsNanServicioPunto";
 				} else if (opcion.equals("4")) {
-					System.out.println("reporte Nac4 " + us.getApellido() + "-" +us.getNombre());
+				
 					nombreReporte = "RepConsNanCodPartPresupuestari.jasper";
 					nombreGuarda = "RepConsNanCodPartPresupuestari";
 				} else if (opcion.equals("5")) {
-					System.out.println("reporte Nac 6 " + us.getApellido() + "-" +us.getNombre());
+					
 					nombreReporte = "RepConsNanPlanPresBanProceso.jasper";
 					nombreGuarda = "RepConsNanPlanPresBanProceso";
+				}else if (opcion.equals("6")) {
+					
+					nombreReporte = "RepEstadoCuentaNoFacturadoTotalDetallado.jasper";
+					nombreGuarda = "RepEstadoCuentaNoFacturadoTotalDetallado";
+				}else if (opcion.equals("7")) {
+					
+					nombreReporte = "RepEstadoCuenta.jasper";
+					nombreGuarda = "RepEstadoCuenta";
 				}
 				
 				generarReporte(nombreReporte);

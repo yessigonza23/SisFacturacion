@@ -82,7 +82,7 @@ public class SRIBean implements Serializable {
 	public void enviar(Integer id_comprobante) {// GEN-FIRST:event_btnEnviarActionPerformed
 
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
-		System.out.println("Enviar: " +p.getApellido() + " - "+ comprobante.getNumero());
+//		System.out.println("Enviar: " +p.getApellido() + " - "+ comprobante.getNumero());
 		if (comprobante.getAutorizacion() != null) {
 			estadeshabilitadoEnv = true;
 			estadeshabilitado = true;
@@ -148,7 +148,7 @@ public class SRIBean implements Serializable {
 
 							MensajeSri = "Enviado con Exito";
 							MensajeSriError = "Sin errores";
-							System.out.println("Termina Enviar: " +p.getApellido() + " - "+ comprobante.getNumero());
+//							System.out.println("Termina Enviar: " +p.getApellido() + " - "+ comprobante.getNumero());
 						} catch (Exception e) {
 							// TODO: handle exception
 							System.out.println("ERROR " + e);
@@ -194,7 +194,7 @@ public class SRIBean implements Serializable {
 	///////////////////////////////////////////////////////////
 	public void autorizar(Integer id_comprobante) {
 		comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
-		System.out.println("Autorizar: " +p.getApellido() + " - "+ comprobante.getNumero());
+//		System.out.println("Autorizar: " +p.getApellido() + " - "+ comprobante.getNumero());
 		if (comprobante.getAutorizacion() != null) {
 			estadeshabilitadoAut = true;
 			estadeshabilitadoA = true;
@@ -264,7 +264,7 @@ public class SRIBean implements Serializable {
 						MensajeSri = "Autorización con Exito";
 						MensajeSriError = "Sin errores";
 						
-						System.out.println("termina Autorizar: " +p.getApellido() + " - "+ comprobante.getNumero());
+//						System.out.println("termina Autorizar: " +p.getApellido() + " - "+ comprobante.getNumero());
 
 					} catch (Exception e) {
 						e.printStackTrace();

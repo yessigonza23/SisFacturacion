@@ -25,7 +25,7 @@ public class UtilsArchivos {
 	public static final String sep = p.getProperty("file.separator");
 	private static final String rutaRaiz = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "/opt"
 			: p.getProperty("user.home")) + sep + "comprobanteselectronicos" + sep;
-	
+
 	private static final String sistemaOperativo = (p.getProperty("os.name").compareToIgnoreCase("linux") == 0 ? "UTF-8"
 			: "Cp1252");
 
@@ -65,7 +65,7 @@ public class UtilsArchivos {
 	}
 
 	public static String getRutaGenerados() {
-		System.out.println("generados UtilArchivos ");
+//		System.out.println("generados UtilArchivos ");
 		return crearRuta(getRutaRaiz() + "generados" + sep);
 	}
 
@@ -82,7 +82,7 @@ public class UtilsArchivos {
 	}
 	// metodo para cargar archivos de cualquier tipo a una ubicacion determinada.
 	// valido
-	
+
 	public static String upload(UploadedFile file, String nombreArchivo) throws IOException {
 		String rutaAdjuntos = "";
 		try {
@@ -96,28 +96,24 @@ public class UtilsArchivos {
 			int length;
 			while ((length = in.read(buffer)) > 0) {
 				out1.write(buffer, 0, length);
-			}		
-			
+			}
+
 			String path = rutaAdjuntos + nombreArchivo;
-			String pathS = rutaAdjuntos + "S"+nombreArchivo;
-			
+			String pathS = rutaAdjuntos + "S" + nombreArchivo;
+
 			String line = "";
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-		            new FileInputStream(path),
-		            "Cp1252"));		
-		     Writer out = new BufferedWriter(
-		            new OutputStreamWriter(new FileOutputStream(
-		                    pathS), sistemaOperativo));
-		    try {
-		        while ((line = br.readLine()) != null) {
-		            out.write(line);
-		            out.write("\n");
-		        }	
-		    } finally {
-		        br.close();
-		        out.close();
-		    }
-		    out1.close();
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "Cp1252"));
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pathS), sistemaOperativo));
+			try {
+				while ((line = br.readLine()) != null) {
+					out.write(line);
+					out.write("\n");
+				}
+			} finally {
+				br.close();
+				out.close();
+			}
+			out1.close();
 			in.close();
 
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
@@ -129,30 +125,29 @@ public class UtilsArchivos {
 		return rutaAdjuntos;
 
 	}
-	
+
 	public static String uploadFirma(UploadedFile file, String nombreArchivo) throws IOException {
 		String rutaAdjuntos = "";
-		
-		
+
 		try {
 			rutaAdjuntos = UtilsArchivos.getRutaCertificados();
-			
+
 			InputStream in = (InputStream) file.getInputstream();
-			
+
 			File f = new File(rutaAdjuntos + nombreArchivo);
-		
+
 			f.createNewFile();
-			
+
 			FileOutputStream out = new FileOutputStream(f);
-			
+
 			byte[] buffer = new byte[1024];
-			
+
 			int length;
 			while ((length = in.read(buffer)) > 0) {
 				out.write(buffer, 0, length);
-			}	
-	
-		    out.close();
+			}
+
+			out.close();
 			in.close();
 
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto",
@@ -164,7 +159,7 @@ public class UtilsArchivos {
 		return rutaAdjuntos;
 
 	}
-	
+
 	@SuppressWarnings("resource")
 	public static void verXls(String archivo) throws IOException {
 		File ficheroXLS = new File(UtilsArchivos.getRutaReportes() + archivo);
@@ -174,7 +169,7 @@ public class UtilsArchivos {
 		byte bytes[] = new byte[1000];
 		int read = 0;
 		if (!ctx.getResponseComplete()) {
-			String nombre =archivo;
+			String nombre = archivo;
 			String contentType = "application/vnd.ms-excel";
 			HttpServletResponse response = (HttpServletResponse) ctx.getExternalContext().getResponse();
 			response.setContentType(contentType);
@@ -185,9 +180,10 @@ public class UtilsArchivos {
 				out.write(bytes, 0, read);
 			out.flush();
 			out.close();
-			//System.out.println("Descargado");
+			// System.out.println("Descargado");
 			ctx.responseComplete();
 		}
 	}
 
+	
 }

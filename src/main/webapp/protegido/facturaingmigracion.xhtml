@@ -165,8 +165,12 @@
 								<p:inputText id="txtNombres" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									requiredMessage="Requerido Nombres" style="width:200px"
-									onkeyup="mayusculas(this)" />
+									onkeyup="mayusculas(this)"
+									requiredMessage="Requerido Nombres" style="width:200px" >
+									<p:ajax event="valueChange"
+										listener="#{ingresoFactura.soloLetras(ingresoFactura.cliente.nombre)}"
+										update="@this" />
+									</p:inputText>
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>

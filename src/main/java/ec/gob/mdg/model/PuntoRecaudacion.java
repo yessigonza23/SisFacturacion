@@ -61,7 +61,8 @@ public class PuntoRecaudacion implements Serializable {
 	@Column(name = "jefecargo")
 	private String jefecargo;
 	
-
+	@Column(name = "id_analista")
+	private Integer id_analista;
 	
 	///////
 	
@@ -210,7 +211,15 @@ public class PuntoRecaudacion implements Serializable {
 	public void setProvincia(Provincia provincia) {
 		this.provincia = provincia;
 	}
-	
-	
+
+	public Integer getId_analista() {
+		return id_analista;
+	}
+
+	public void setId_analista(Integer id_analista) {
+		this.id_analista = id_analista;
+	}
+
+
 		
 }

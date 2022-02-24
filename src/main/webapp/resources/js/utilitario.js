@@ -25,6 +25,8 @@ function solonumeros(e) {
 	}
 }
 
+
+
 function deshabilitarEnter(e) {
 	var k = window.event ? window.event.keyCode : e.which;
 	return (k != 13);
@@ -33,11 +35,13 @@ function deshabilitarEnter(e) {
 function exportar(tabla, nombre) {
 	var table = document.getElementById(tabla);
 	var sheet = XLSX.utils.table_to_sheet(table); // Convertir un objeto de
-													// tabla en un objeto de
-													// hoja
-	openDownloadDialog(sheet2blob(sheet), nombre+'.xlsx'); // Nombre del
-															// archivo
+	// tabla en un objeto de
+	// hoja
+	openDownloadDialog(sheet2blob(sheet), nombre + '.xlsx'); // Nombre del
+	// archivo
 }
+
+
 
 function sheet2blob(sheet, sheetName) {
 	sheetName = sheetName || 'sheet1';
@@ -46,20 +50,20 @@ function sheet2blob(sheet, sheetName) {
 		Sheets : {}
 	};
 	workbook.Sheets[sheetName] = sheet; // Generar elementos de configuración de
-										// Excel
+	// Excel
 
 	var wopts = {
 		bookType : 'xlsx', // El tipo de archivo que se generará
 		bookSST : false, // Ya sea para generar una tabla de cadenas
-							// compartidas, la explicación oficial es que si
-							// activa la velocidad de generación, disminuirá,
-							// pero tiene una mejor compatibilidad en
-							// dispositivos IOS inferiores
+		// compartidas, la explicación oficial es que si
+		// activa la velocidad de generación, disminuirá,
+		// pero tiene una mejor compatibilidad en
+		// dispositivos IOS inferiores
 		type : 'binary'
 	};
 	var wbout = XLSX.write(workbook, wopts);
 	var blob = new Blob([ s2ab(wbout) ], {
-	//var blob = new Blob([ wbout ], {
+		// var blob = new Blob([ wbout ], {
 		type : "application/octet-stream"
 	}); // Cadena a ArrayBuffer
 

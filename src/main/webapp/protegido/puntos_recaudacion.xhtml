@@ -229,6 +229,22 @@
 										required="true" maxlength="9" />
 									<p:messages for="SecuencialNotas" display="icon" />
 								</p:column>
+								
+								<p:column style="border-style: hidden;width:50px;"></p:column>
+								<p:column style="border-style: hidden; width:130px;">Analista Responsable: </p:column>
+								<p:column style="border-style: hidden;">
+									<p:selectOneMenu id="cboUsuario"
+										value="#{puntoRecaudacionBean.puntoRecaudacion.id_analista}"
+										effect="fade" converter="omnifaces.SelectItemsConverter"
+										filter="true" filterMatchMode="startsWith">
+										<f:selectItem itemLabel="Seleccione: ..."
+											noSelectionOption="true" />
+										<f:selectItems value="#{usuarioBean.listaUsuario}" var="e"
+											itemLabel="#{e.nombre}" itemValue="#{e.id}" />
+										<f:ajax render="selected_item" />
+									</p:selectOneMenu>
+									<p:messages for="cboUsuario" />
+								</p:column>
 
 							</p:panelGrid>
 

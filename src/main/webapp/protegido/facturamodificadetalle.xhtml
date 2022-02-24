@@ -733,7 +733,7 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Origen: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:selectOneMenu id="origen"
+								<p:selectOneMenu id="origen" disabled="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.origen}"
 									style="width:100px">
 									<f:selectItem itemLabel="Banco Pacífico" itemValue="P" />
@@ -746,9 +746,9 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Tipo Transacción: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:selectOneMenu id="tipotransaccion"
+								<p:selectOneMenu id="tipotransaccion" disabled="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.tipotransaccion}"
-									style="width:100px">
+									style="width:100px" >
 									<f:selectItem itemLabel="Intermático" itemValue="I" />
 									<f:selectItem itemLabel="Depósito" itemValue="D" />
 									<f:selectItem itemLabel="Transferencia" itemValue="T" />
@@ -762,7 +762,7 @@
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtIdentificacionDeposito" maxlength="13"
 									placeholder="Ci/RUC/Pasaporte del Deposito"
-									onkeyup="mayusculas(this)"
+									onkeyup="mayusculas(this)" readonly="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.identificacion}">
 								</p:inputText>
 							</p:column>
@@ -773,7 +773,7 @@
 							<p:column style="border-style: hidden; width:130px;">No. Depósito: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtNumeroDeposito" maxlength="10"
-									placeholder="Numero del Deposito"
+									placeholder="Numero del Deposito" readonly="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.num_deposito}">
 								</p:inputText>
 							</p:column>
@@ -783,7 +783,7 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Fecha Depósito: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
+								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy" disabled="true"
 									mask="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.fecha}">
 								</p:calendar>
