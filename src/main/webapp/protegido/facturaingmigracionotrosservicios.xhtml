@@ -162,7 +162,11 @@
 									disabled="#{ingresoFactura.validador}"
 									onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									requiredMessage="Requerido Nombres" style="width:200px;" />
+									requiredMessage="Requerido Nombres" style="width:200px;" >
+									<p:ajax event="valueChange"
+										listener="#{ingresoFactura.soloLetras(ingresoFactura.cliente.nombre)}"
+										update="@this" />
+									</p:inputText>
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>

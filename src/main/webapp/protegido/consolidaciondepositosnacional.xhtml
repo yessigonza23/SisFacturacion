@@ -16,7 +16,6 @@
 				<p:growl id="growl" showDetail="true" sticky="true">
 					<p:autoUpdate />
 				</p:growl>
-
 				<!-- 				<p:panel> -->
 				<p:panelGrid columns="3"
 					style="display:block; text-align:center; width:50%; margin:0px auto;"
@@ -121,7 +120,7 @@
 						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
 							value="Reversar"
 							action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id,consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
-							 update="@form">
+							 onclick="location.reload()" update="@form" >
 
 						</p:commandButton>
 

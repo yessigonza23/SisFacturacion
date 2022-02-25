@@ -103,7 +103,7 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 	public void actualizaEstadoComprobante(Integer id_estado, Integer id_comprobantedeposito,
 			Integer id_consolidadepositos, Integer anio, Integer mes) {
 		
-		if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null) {
+		if (id_comprobantedeposito != null && id_estado != null && id_consolidadepositos != null && anio!=null && mes!=null) {
 			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
 			try {
 				
@@ -131,19 +131,21 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 
 				comprobanteDepositos.setId_tmp(null);
 				serviceComprobanteDepositos.modificar(comprobanteDepositos);				
-
-				listarVistaConsolidaDepositos(anio, mes);
 				
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se reversa exitosamente"));
 
 				listarVistaConsolidaDepositos(anio, mes);
+				
+				
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
-
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Faltan datos para la nueva consulta", "Ingrese el año y mes"));
 		}
 
 	}
