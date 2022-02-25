@@ -602,21 +602,6 @@ public class Funciones implements Serializable {
 
 	}
 
-//	@Transactional
-//	public void consolidaDepositos(Integer anio) throws Exception {
-//		try {
-//			Query query = em.createNativeQuery("CALL financiero.consolidadeposito_7(:panio)");
-//			query = em.createNativeQuery("CALL financiero.consolidadeposito_6(:panio)");
-//			query = em.createNativeQuery("CALL financiero.consolidadeposito_5(:panio)");
-//			query = em.createNativeQuery("CALL financiero.consolidadeposito_4(:panio)");
-//			query = em.createNativeQuery("CALL financiero.consolidadeposito_3(:panio)");
-//			query.setParameter("panio", anio);
-//			query.executeUpdate();
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//	}
-
 	public Date fechaMaxEstadoCuenta() {
 		Date fecha;
 		Query query = em.createQuery("SELECT max(fechacarga) FROM EstadoCuenta c");
@@ -625,10 +610,10 @@ public class Funciones implements Serializable {
 	}
 
 	@Transactional
-	public void consolidaDepositosE7(Integer anio, Integer id_usuario) throws Exception {
+	public void consolidaDepositos(Integer anio, Integer id_usuario) throws Exception {
 		try {
 			//System.out.println("entra a funciones7 " + anio + "- " + id_usuario);
-			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_7(:panio,:pusuario)");
+			Query query = em.createNativeQuery("CALL financiero.consolidadepositos(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
 			query.executeUpdate();
@@ -638,101 +623,6 @@ public class Funciones implements Serializable {
 		}
 	}
 
-	@Transactional
-	public void consolidaDepositosE6(Integer anio, Integer id_usuario) throws Exception {
-		try {
-			//System.out.println("entra a funciones 6 " + anio + "- " + id_usuario);
-			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-			//System.out.println("sale6 ");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositosE5(Integer anio, Integer id_usuario) throws Exception {
-		try {
-			//System.out.println("entra a funciones 5 " + anio + "- " + id_usuario);
-			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-			//System.out.println("sale5 ");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositosE4(Integer anio, Integer id_usuario) throws Exception {
-		try {
-			//System.out.println("entra a funciones 4 " + anio + "- " + id_usuario);
-			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-			//System.out.println("sale4 ");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositosE3(Integer anio, Integer id_usuario) throws Exception {
-		try {
-			//System.out.println("entra a funciones 3 " + anio + "- " + id_usuario);
-			Query query = em.createNativeQuery("CALL financiero.consolidadepositoe_6(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-			//System.out.println("sale3 ");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositos7(Integer anio, Integer id_usuario) throws Exception {
-		try {
-
-			Query query = em.createNativeQuery("CALL financiero.consolidadeposito7(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositos6(Integer anio, Integer id_usuario) throws Exception {
-		try {
-
-			Query query = em.createNativeQuery("CALL financiero.consolidadeposito6(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-			//System.out.println("sale6 ");
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	@Transactional
-	public void consolidaDepositos5(Integer anio, Integer id_usuario) throws Exception {
-		try {
-			Query query = em.createNativeQuery("CALL financiero.consolidadeposito5(:panio,:pusuario)");
-			query.setParameter("panio", anio);
-			query.setParameter("pusuario", id_usuario);
-			query.executeUpdate();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-	
 	public boolean letras(String cadena) {
 		boolean tipoCadena = false;
 		if (cadena != null) {
@@ -749,6 +639,33 @@ public class Funciones implements Serializable {
 			}
 		}
 		return tipoCadena;
+	}
+	
+	public Number cuentaEstCuentaConsolidacion(Integer anio) throws Exception {///para recorrer la consolidacion 
+		
+		Number contador = null;
+		// usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
+		try {
+			Query query = em
+					.createNativeQuery("select count(*)from(\r\n" + 
+							"SELECT DISTINCT  a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito num_deposito,c.numtransaccion,b.fecha,b.valor as comdep_valor,a.comp_estado,\r\n" + 
+							"	c.fecha,c.valor as estcue_valor,c.servicio,	c.ruc,c.anio,c.mes,max(b.id) comdep_id,c.id estcue_id,c.saldo\r\n" + 
+							"	FROM financiero.vista_recaudacion a,financiero.comprobantedeposito b,financiero.estadocuenta c\r\n" + 
+							"	WHERE a.comp_id = b.id_comprobante 	and c.numtransaccion = b.num_deposito\r\n" + 
+							"	and a.comp_estado = 'A' and a.comp_tipo = 'F'\r\n" + 
+							"	and b.num_deposito=c.numtransaccion	and (c.saldo >= b.valor and c.saldo>0)\r\n" + 
+							"	and b.identificacion =c.ruc and c.anio = a.comp_anio_i\r\n" + 
+							"	and c.anio=?1 and c.bloqueado =false and b.id_tmp is null\r\n" + 
+							"	group by a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito,c.numtransaccion,b.fecha,b.valor,a.comp_estado,\r\n" + 
+							"	c.fecha,c.valor,c.servicio,	c.ruc,c.anio,c.mes,c.id,c.saldo)a");
+		
+			query.setParameter(1, anio);
+			contador =  (Number) query.getSingleResult();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	
+		return contador;
 	}
 
 }

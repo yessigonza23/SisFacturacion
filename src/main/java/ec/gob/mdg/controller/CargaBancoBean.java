@@ -3,6 +3,7 @@ package ec.gob.mdg.controller;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,19 +152,17 @@ public class CargaBancoBean implements Serializable {
 		fechamax = fun.fechaMaxEstadoCuenta();
 	}
 	
+	
 	public void consolida(Integer anio,Integer id_usuario) {
-		try {
-//			fun.consolidaDepositos(anio);
-			
-			fun.consolidaDepositosE7(anio,id_usuario);
-			fun.consolidaDepositosE6(anio,id_usuario);
-			fun.consolidaDepositosE5(anio,id_usuario);
-			fun.consolidaDepositosE4(anio,id_usuario);
-			fun.consolidaDepositosE3(anio,id_usuario);
-			fun.consolidaDepositos7(anio,id_usuario);
-			fun.consolidaDepositos6(anio,id_usuario);
-			fun.consolidaDepositos5(anio,id_usuario);
-			
+		try {		
+			BigInteger contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
+				
+			do{
+				fun.consolidaDepositos(anio,id_usuario);
+				contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
+				
+	        }while (contadorFaltantes.intValueExact()>0) ;
+			System.out.println("termina consolidacion");
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se consolidaron los datos", "Exitoso"));
 		} catch (Exception e) {

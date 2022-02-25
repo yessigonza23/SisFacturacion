@@ -107,17 +107,9 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 			comprobanteDepositos = serviceComprobanteDepositos.mostrarComprobanteDepositoPorId(id_comprobantedeposito);
 			try {
 				
-				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
-
-				estadoCuenta.setBloqueado(false);
-				estadoCuenta.setSaldo(estadoCuenta.getSaldo() + comprobanteDepositos.getValor());
-				serviceEstadoCuenta.modificar(estadoCuenta);
-
-				comprobanteDepositos.setId_tmp(null);
-				serviceComprobanteDepositos.modificar(comprobanteDepositos);
-
 				consolidaDepositos = serviceConsolidaDeposito.listarPorId(id_consolidadepositos);
-
+				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
+				
 				Auditoria auditoria = new Auditoria();
 				
 				auditoria.setNombretabla("ConsolidaDeposito");
@@ -128,11 +120,20 @@ public class ConsolidacionDepositoNacionalBean implements Serializable {
 				auditoria.setValoractual("EstadoCuenta:" +estadoCuenta.getNumtransaccion());
 				auditoria.setValoranterior("ComprobanteDep:"+comprobanteDepositos.getId());
 				
-				auditoria.setClaveprimaria(Integer.parseInt(String.valueOf(comprobanteDepositos.getId())+String.valueOf(estadoCuenta.getId())));
+				auditoria.setClaveprimaria(estadoCuenta.getId());
 				serviceAuditoria.registrar(auditoria);
 				
-				serviceConsolidaDeposito.eliminar(consolidaDepositos);
+				serviceConsolidaDeposito.eliminar(consolidaDepositos);				
 
+				estadoCuenta.setBloqueado(false);
+				estadoCuenta.setSaldo(estadoCuenta.getSaldo() + comprobanteDepositos.getValor());
+				serviceEstadoCuenta.modificar(estadoCuenta);
+
+				comprobanteDepositos.setId_tmp(null);
+				serviceComprobanteDepositos.modificar(comprobanteDepositos);				
+
+				listarVistaConsolidaDepositos(anio, mes);
+				
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se reversa exitosamente"));
 

@@ -17,119 +17,118 @@
 					<p:autoUpdate />
 				</p:growl>
 
-				<p:panel>
-					<p:panelGrid columns="3"
-						style="display:block; text-align:center; width:50%; margin:0px auto;"
-						columnClasses="centered">
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:40px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Año: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
-									placeholder="Año"
-									value="#{consolidacionDepositoNacionalBean.anio}">
-								</p:inputText>
-							</p:column>
-						</p:row>
-
-						<p:row style="border-style: hidden;">
-							<p:column style="border-style: hidden;width:50px;"></p:column>
-							<p:column style="border-style: hidden; width:130px;">Mes: </p:column>
-							<p:column style="border-style: hidden;">
-								<p:selectOneMenu id="txtMes"
-									value="#{consolidacionDepositoNacionalBean.mes}" effect="fade"
-									converter="omnifaces.SelectItemsConverter" filter="true">
-									<f:selectItem itemLabel="Seleccionar" noSelectionOption="true" />
-									<f:selectItem itemLabel="Enero" itemValue="1" />
-									<f:selectItem itemLabel="Febrero" itemValue="2" />
-									<f:selectItem itemLabel="Marzo" itemValue="3" />
-									<f:selectItem itemLabel="Abril" itemValue="4" />
-									<f:selectItem itemLabel="Mayo" itemValue="5" />
-									<f:selectItem itemLabel="Junio" itemValue="6" />
-									<f:selectItem itemLabel="Julio" itemValue="7" />
-									<f:selectItem itemLabel="Agosto" itemValue="8" />
-									<f:selectItem itemLabel="Septiembre" itemValue="9" />
-									<f:selectItem itemLabel="Octubre" itemValue="10" />
-									<f:selectItem itemLabel="Noviembre" itemValue="11" />
-									<f:selectItem itemLabel="Diciembre" itemValue="12" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:row>
-						<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
-							action="#{navegarVistasBean.principal()}" process="@this"
-							update="@this" />
-					</p:panelGrid>
-				</p:panel>
-				<p:panel header="Archivo Banco - Estado de cuenta">
-
-					<p:commandButton icon="ui-icon-disk" id="btnEstadoCuenta"
-						value="Consultar"
-						actionListener="#{consolidacionDepositoNacionalBean.listarVistaConsolidaDepositos(consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
-						process="@form" update="ingConsolida:Res1">
-					</p:commandButton>
-
-					<p:commandButton value="Export as XLS" ajax="false">
-						<p:dataExporter type="xls" target="Res1" fileName="EstadoCuenta" />
-					</p:commandButton>
-
-					<p:dataTable id="Res1" resizableColumns="true"
-						value="#{consolidacionDepositoNacionalBean.listaVistaConciliacionCompDepositoEstcCUentaDTOs}"
-						var="e" rows="5" paginator="true"
-						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" sortOrder="descending"
-						paginatorPosition="top"
-						emptyMessage="No hay ningún registro con esa opción">
-
-						<p:commandLink styleClass="fa fa-fw fa-trash" id="linkDetalle"
-							action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id)}"
-							ajax="true" process="@form">
-						</p:commandLink>
-
-						<p:column headerText="No.Depósito" filterBy="#{e.deposito_numero}"
-							filterMatchMode="contains" style="width:70px;">
-							<p:outputLabel value="#{e.deposito_numero}" />
+				<!-- 				<p:panel> -->
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:50%; margin:0px auto;"
+					columnClasses="centered">
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:40px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Año: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
+								placeholder="Año"
+								value="#{consolidacionDepositoNacionalBean.anio}">
+							</p:inputText>
 						</p:column>
-						<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
-							filterMatchMode="contains" style="width:60px;">
-							<p:outputLabel value="#{e.deposito_valor}"
-								style="text-align:right">
-								<f:convertNumber pattern="###,##0.00" />
-							</p:outputLabel>
-						</p:column>
-						<p:column headerText="Factura" filterBy="#{e.comp_numero}"
-							filterMatchMode="contains" style="width:70px;">
-							<p:outputLabel value="#{e.comp_numero}" />
-						</p:column>
-						<p:column headerText="Factura Valor" filterBy="#{e.comp_valor}"
-							filterMatchMode="contains" style="width:100px;">
-							<p:outputLabel value="#{e.comp_valor}" />
-						</p:column>
-						<p:column headerText="Cliente" filterBy="#{e.cliente_nombre}"
-							filterMatchMode="contains" style="width:250px;">
-							<p:outputLabel value="#{e.cliente_nombre}" />
-						</p:column>
-						<p:column headerText="Fecha Factura"
-							filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
-							style="width:70px;">
-							<p:outputLabel value="#{e.comp_fechaemision}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</p:outputLabel>
-						</p:column>
+					</p:row>
 
-
-
-						<p:column>
-							<p:commandButton icon="ui-icon-disk" id="btnGuardar"
-								value="Reversar"
-								action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id,consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
-								update="ingConsolida:Res1">
-							</p:commandButton>
-
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:50px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Mes: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:selectOneMenu id="txtMes"
+								value="#{consolidacionDepositoNacionalBean.mes}" effect="fade"
+								converter="omnifaces.SelectItemsConverter" filter="true">
+								<f:selectItem itemLabel="Seleccionar" noSelectionOption="true" />
+								<f:selectItem itemLabel="Enero" itemValue="1" />
+								<f:selectItem itemLabel="Febrero" itemValue="2" />
+								<f:selectItem itemLabel="Marzo" itemValue="3" />
+								<f:selectItem itemLabel="Abril" itemValue="4" />
+								<f:selectItem itemLabel="Mayo" itemValue="5" />
+								<f:selectItem itemLabel="Junio" itemValue="6" />
+								<f:selectItem itemLabel="Julio" itemValue="7" />
+								<f:selectItem itemLabel="Agosto" itemValue="8" />
+								<f:selectItem itemLabel="Septiembre" itemValue="9" />
+								<f:selectItem itemLabel="Octubre" itemValue="10" />
+								<f:selectItem itemLabel="Noviembre" itemValue="11" />
+								<f:selectItem itemLabel="Diciembre" itemValue="12" />
+							</p:selectOneMenu>
 						</p:column>
+					</p:row>
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+				<!-- 				</p:panel> -->
+				<!-- 				<p:panel id="panelEstado" header="Archivo Banco - Estado de cuenta"> -->
 
-					</p:dataTable>
-				</p:panel>
+				<p:commandButton icon="ui-icon-disk" id="btnEstadoCuenta"
+					value="Consultar"
+					actionListener="#{consolidacionDepositoNacionalBean.listarVistaConsolidaDepositos(consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
+					process="@form" update="ingConsolida:Res1">
+				</p:commandButton>
+
+				<p:commandButton value="Export as XLS" ajax="false">
+					<p:dataExporter type="xls" target="Res1" fileName="EstadoCuenta" />
+				</p:commandButton>
+
+				<p:dataTable id="Res1" resizableColumns="true"
+					value="#{consolidacionDepositoNacionalBean.listaVistaConciliacionCompDepositoEstcCUentaDTOs}"
+					var="e" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción">
+
+					<p:commandLink styleClass="fa fa-fw fa-trash" id="linkDetalle"
+						action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id)}"
+						ajax="true" process="@form">
+					</p:commandLink>
+
+					<p:column headerText="No.Depósito" filterBy="#{e.deposito_numero}"
+						filterMatchMode="contains" style="width:70px;">
+						<p:outputLabel value="#{e.deposito_numero}" />
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{e.deposito_valor}"
+						filterMatchMode="contains" style="width:60px;">
+						<p:outputLabel value="#{e.deposito_valor}"
+							style="text-align:right">
+							<f:convertNumber pattern="###,##0.00" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Factura" filterBy="#{e.comp_numero}"
+						filterMatchMode="contains" style="width:70px;">
+						<p:outputLabel value="#{e.comp_numero}" />
+					</p:column>
+					<p:column headerText="Factura Valor" filterBy="#{e.comp_valor}"
+						filterMatchMode="contains" style="width:100px;">
+						<p:outputLabel value="#{e.comp_valor}" />
+					</p:column>
+					<p:column headerText="Cliente" filterBy="#{e.cliente_nombre}"
+						filterMatchMode="contains" style="width:250px;">
+						<p:outputLabel value="#{e.cliente_nombre}" />
+					</p:column>
+					<p:column headerText="Fecha Factura"
+						filterBy="#{e.comp_fechaemision}" filterMatchMode="contains"
+						style="width:70px;">
+						<p:outputLabel value="#{e.comp_fechaemision}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column>
+						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
+							value="Reversar"
+							action="#{consolidacionDepositoNacionalBean.actualizaEstadoComprobante(e.estado_id,e.deposito_id,e.consdepositos_id,consolidacionDepositoNacionalBean.anio,consolidacionDepositoNacionalBean.mes)}"
+							 update="@form">
+
+						</p:commandButton>
+
+					</p:column>
+
+				</p:dataTable>
+				<!-- 				</p:panel> -->
 
 
 			</h:form>
