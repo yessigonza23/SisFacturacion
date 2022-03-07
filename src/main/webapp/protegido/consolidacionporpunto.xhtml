@@ -126,12 +126,13 @@
 						</p:column>
 
 						<p:column headerText="Fecha Deposito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
-							style="width:70px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							filterBy="#{e.deposito_fechastring}" filterMatchMode="contains"
+							style="width:150px;">
+							<p:outputLabel value="#{e.deposito_fechastring}">
 							</p:outputLabel>
 						</p:column>
+						
+					
 
 						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}"
 							filterMatchMode="contains" style="width:100px;">
@@ -244,10 +245,10 @@
 						</p:column>
 
 						<p:column headerText="Fecha Deposito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
+							filterBy="#{e.deposito_fechastring}" filterMatchMode="contains"
 							style="width:70px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							<p:outputLabel value="#{e.deposito_fechastring}">
+
 							</p:outputLabel>
 						</p:column>
 
@@ -515,12 +516,13 @@
 						</p:column>
 
 						<p:column headerText="Fecha Deposito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
+							filterBy="#{e.deposito_fechastring}" filterMatchMode="contains"
 							style="width:70px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							<p:outputLabel value="#{e.deposito_fechastring}">
+
 							</p:outputLabel>
 						</p:column>
+									
 
 						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}"
 							filterMatchMode="contains" style="width:100px;">
@@ -620,10 +622,10 @@
 						</p:column>
 
 						<p:column headerText="Fecha Deposito"
-							filterBy="#{e.deposito_fecha}" filterMatchMode="contains"
+							filterBy="#{e.deposito_fechastring}" filterMatchMode="contains"
 							style="width:70px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							<p:outputLabel value="#{e.deposito_fechastring}">
+
 							</p:outputLabel>
 						</p:column>
 						<p:column headerText="Valor Est.Cuenta"

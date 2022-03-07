@@ -16,27 +16,41 @@
 				<p:growl id="mensaje" autoUpdate="false" 
 					showSummary="false" showDetail="true" />
 				<br />
-				<p:panelGrid style="text-align: center" columns="4">
+					<p:panelGrid style="text-align: center" columns="4">
 
 				<p:row style="border-style: hidden;">
 					<p:column style="border-style: hidden;width:50px;"></p:column>
-					<p:column style="border-style: hidden; width:130px;">Seleccione el Cliente: </p:column>
+					<p:column style="border-style: hidden; width:130px;">Cliente: </p:column>
+					<p:column style="border-style: hidden;">
+						<p:inputText id="txtCliente" maxlength="20"
+								value="#{consultaFacturasBean.nomCliente}" required="true"
+								requiredMessage="Escriba el apellido a buscar "
+								style="width:200px;">
+								
+							</p:inputText>
+					</p:column>
+				</p:row>
+				<p:commandButton id="btnConsultar" value="Consultar"
+							 update="frm:fact" 
+							action="#{consultaFacturasBean.listarClientes(consultaFacturasBean.nomCliente)}"/>
+				
+				<p:row style="border-style: hidden;">
+					<p:column style="border-style: hidden;width:50px;"></p:column>
+					<p:column style="border-style: hidden; width:130px;">Cliente: </p:column>
 					<p:column style="border-style: hidden;">
 						<p:selectOneMenu value="#{consultaFacturasBean.cliente}"
 							converter="omnifaces.SelectItemsConverter" autoWidth="false"
 								style="width:500px;" filter="true" required="true"
 								requiredMessage="Cliente requerido">
-							<p:ajax event="change" process="@this"
-								listener="#{consultaFacturasBean.listarComprobantePorCliente(consultaFacturasBean.cliente)}"
-								update="frm:fact" />
 							<f:selectItem itemLabel="--Seleccione--" itemValue="#{null}"
 								noSelectionOption="true" />
 							<f:selectItems value="#{consultaFacturasBean.listaClientes}" var="e"
 								itemValue="#{e}" itemLabel="#{e.nombre}" /> 
-					</p:selectOneMenu>
-						
+					</p:selectOneMenu>						
 					</p:column>
 				</p:row>
+
+				
 				<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
 							action="#{navegarVistasBean.principal()}"/>

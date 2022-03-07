@@ -25,7 +25,24 @@ function solonumeros(e) {
 	}
 }
 
+function soloLetras(e) {
+    var key = e.keyCode || e.which,
+      tecla = String.fromCharCode(key).toLowerCase(),
+      letras = " áéíóúabcdefghijklmnñopqrstuvwxyz",
+      especiales = [8, 37, 39, 46],
+      tecla_especial = false;
 
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      return false;
+    }
+  }
 
 function deshabilitarEnter(e) {
 	var k = window.event ? window.event.keyCode : e.which;
@@ -71,7 +88,7 @@ function sheet2blob(sheet, sheetName) {
 		var buf = new ArrayBuffer(s.length);
 		var view = new Uint8Array(buf);
 		for (var i = 0; i != s.length; ++i)
-			view[i] = s.charCodeAt(i);// & 0xFF;
+			view[i] = s.charCodeAt(i) & 0xFF;
 		return buf;
 	}
 	return blob;

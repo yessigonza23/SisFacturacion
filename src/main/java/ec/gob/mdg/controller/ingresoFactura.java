@@ -461,6 +461,7 @@ public class ingresoFactura implements Serializable {
 			if (respuesta) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Error en el nombre del cliente"));
+				
 				return respuesta;
 			}
 		}
@@ -535,9 +536,9 @@ public class ingresoFactura implements Serializable {
 									new FacesMessage(FacesMessage.SEVERITY_ERROR,
 											"Error los valores de los detalles es diferente", "Error"));
 						} else {
-							boolean respuesta1=soloLetras(cliente.getNombre());
+//							boolean respuesta1=soloLetras(cliente.getNombre());
 
-							if (!respuesta1) {
+//							if (!respuesta1) {
 								// para validar la cedula
 								Long a = fun.buscarCliente(cliente);
 								if (a == 0) {
@@ -627,7 +628,7 @@ public class ingresoFactura implements Serializable {
 										+ p.getApellido() + " " + p.getNombre());
 								FacesContext.getCurrentInstance().addMessage(null,
 										new FacesMessage(FacesMessage.SEVERITY_INFO, "Se grabó con éxito", "Aviso"));
-							}
+//							}
 
 						} // cierre de if
 					}

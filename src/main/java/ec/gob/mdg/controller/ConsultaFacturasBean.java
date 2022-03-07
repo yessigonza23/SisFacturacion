@@ -17,6 +17,7 @@ import ec.gob.mdg.model.ComprobanteDepositos;
 import ec.gob.mdg.model.PuntoRecaudacion;
 import ec.gob.mdg.service.IComprobanteDepositosService;
 import ec.gob.mdg.service.IComprobanteService;
+import ec.gob.mdg.validaciones.Funciones;
 
 @Named
 @ViewScoped
@@ -29,11 +30,15 @@ public class ConsultaFacturasBean implements Serializable {
 
 	@Inject
 	private IComprobanteDepositosService serviceComprobanteDep;	
+	
+	@Inject
+	private Funciones fun;
 
 	private Cliente cliente;
 	private Comprobante comprobante;
 	private PuntoRecaudacion puntoRecaudacion;
 	String numDeposito;
+	String nomCliente;
 
 	private List<Cliente> listaClientes = new ArrayList<Cliente>();
 	private List<Cliente> listaClientesF = new ArrayList<Cliente>();
@@ -115,9 +120,15 @@ public class ConsultaFacturasBean implements Serializable {
 	}
 
 	// LISTAR CLIENTE NOTAS
-	public void listarClientes(String tipoComprobante) {
+	public void listarClientes(String nombre) {
 		try {
-			this.listaClientes = this.serviceComprobante.listarClientesComprobantes(tipoComprobante);
+			if (nombre !=null) {
+				this.listaClientes = this.fun.ClientePorNombre(nombre);
+				for(Cliente c:listaClientes) {
+					System.out.println(c.getNombre());
+				}
+			}
+			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -191,6 +202,14 @@ public class ConsultaFacturasBean implements Serializable {
 
 	public void setListaClientesF(List<Cliente> listaClientesF) {
 		this.listaClientesF = listaClientesF;
+	}
+
+	public String getNomCliente() {
+		return nomCliente;
+	}
+
+	public void setNomCliente(String nomCliente) {
+		this.nomCliente = nomCliente;
 	}
 
 

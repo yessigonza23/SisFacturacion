@@ -69,7 +69,7 @@ public class VistaConciliacionCompDepositoEstcCuentaDTODAOImpl implements IVista
 		try {
 			Query q = em.createNativeQuery("SELECT v.comp_numero,v.comp_fechaemision,comp_valor,comp_estado,"
 					+ " v.deposito_numero,v.deposito_fecha,v.deposito_valor,v.consdepositos_tipoconciliaciondesc ,v.punto_nombre,v.cliente_nombre,v.cliente_ci, "
-					+ " v.estcuenta_valor,v.estcuenta_saldo"
+					+ " v.estcuenta_valor,v.estcuenta_saldo,v.deposito_fechastring"
 					+ " FROM financiero.Vista_Conciliacion_CompDeposito_EstCUenta v WHERE v.punto_id=?1 and  v.comp_anio=?2 AND v.comp_mes=?3");
 			q.setParameter(1, id_punto);
 			q.setParameter(2, anioS);
@@ -91,6 +91,7 @@ public class VistaConciliacionCompDepositoEstcCuentaDTODAOImpl implements IVista
 		        v.setCliente_ci(String.valueOf(x[10]));
 		        v.setEstadocuenta_valor(Double.parseDouble(String.valueOf(x[11])));
 		        v.setEstadocuenta_saldo(Double.parseDouble(String.valueOf(x[12])));
+		        v.setDeposito_fechastring(String.valueOf(x[13]));
 				listaFin.add(v);
 			});
 		
@@ -111,7 +112,7 @@ public class VistaConciliacionCompDepositoEstcCuentaDTODAOImpl implements IVista
 		try {
 			Query q = em.createNativeQuery("SELECT v.comp_numero,v.comp_fechaemision,comp_valor,comp_estado,"
 					+ " v.deposito_numero,v.deposito_fecha,v.deposito_valor,v.consdepositos_tipoconciliaciondesc ,v.punto_nombre,v.cliente_nombre,v.cliente_ci, "
-					+ " v.estcuenta_valor,v.estcuenta_saldo,v.estcuenta_id,v.deposito_id,v.consdepositos_id"
+					+ " v.estcuenta_valor,v.estcuenta_saldo,v.estcuenta_id,v.deposito_id,v.consdepositos_id,v.deposito_fechastring"
 					+ " FROM financiero.Vista_Conciliacion_CompDeposito_EstCUenta v WHERE  v.estado_anio=?1 AND v.estado_mes=?2");
 			
 			q.setParameter(1, anio);
@@ -136,6 +137,7 @@ public class VistaConciliacionCompDepositoEstcCuentaDTODAOImpl implements IVista
 		        v.setEstado_id(Integer.parseInt(String.valueOf(x[13])));
 		        v.setDeposito_id(Integer.parseInt(String.valueOf(x[14])));
 		        v.setConsdepositos_id(Integer.parseInt(String.valueOf(x[15])));
+		        v.setDeposito_fechastring(String.valueOf(x[16]));
 				listaFin.add(v);
 			});
 		

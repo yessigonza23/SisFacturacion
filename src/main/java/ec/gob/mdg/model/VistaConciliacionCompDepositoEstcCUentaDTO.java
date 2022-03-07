@@ -139,7 +139,36 @@ public class VistaConciliacionCompDepositoEstcCUentaDTO implements Serializable{
 	
 	@Column(name = "cliente_ci")
 	private String cliente_ci;
+	
+	@Column(name = "deposito_fechastring")
+	private String deposito_fechastring;
 
+
+	
+	
+	public Integer getEstado_anio() {
+		return estado_anio;
+	}
+
+	public void setEstado_anio(Integer estado_anio) {
+		this.estado_anio = estado_anio;
+	}
+
+	public Integer getEstado_mes() {
+		return estado_mes;
+	}
+
+	public void setEstado_mes(Integer estado_mes) {
+		this.estado_mes = estado_mes;
+	}
+
+	public String getDeposito_fechastring() {
+		return deposito_fechastring;
+	}
+
+	public void setDeposito_fechastring(String deposito_fechastring) {
+		this.deposito_fechastring = deposito_fechastring;
+	}
 
 	public String getInst_nombre() {
 		return inst_nombre;
