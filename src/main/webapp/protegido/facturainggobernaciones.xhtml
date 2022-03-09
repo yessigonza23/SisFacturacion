@@ -574,6 +574,8 @@
 								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
 									mask="true"
 									value="#{ingresoFactura.comprobanteDepositos.fecha}">
+									<p:ajax event="valueChange" listener="#{funValidaciones.validarFechasNoMayorHoy()}">
+									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
 							</p:column>

@@ -9,101 +9,44 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<!-- <h:form id="frm" enctype="multipart/form-data"> -->
-			<h:form id="frm" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+			<h:form id="frm" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
 				<h2 style="color: #003778; text-align: center">CONSULTA DE
 					FACTURAS - POR CLIENTE</h2>
 
-				<p:growl id="mensaje" autoUpdate="false" 
-					showSummary="false" showDetail="true" />
+				<p:growl id="mensaje" autoUpdate="false" showSummary="false"
+					showDetail="true" />
 				<br />
-					<p:panelGrid style="text-align: center" columns="4">
-
-				<p:row style="border-style: hidden;">
-					<p:column style="border-style: hidden;width:50px;"></p:column>
+				<p:panelGrid style="text-align: center" columns="4">
 					<p:column style="border-style: hidden; width:130px;">Cliente: </p:column>
 					<p:column style="border-style: hidden;">
-						<p:inputText id="txtCliente" maxlength="20"
-								value="#{consultaFacturasBean.nomCliente}" required="true"
-								requiredMessage="Escriba el apellido a buscar "
-								style="width:200px;">
-								
-							</p:inputText>
+						<p:inputText value="#{consultaFacturasBean.nomCliente}"
+							onkeyup="mayusculas(this)" required="true"
+							requiredMessage="Requerido Nombres" style="width:200px;" />
 					</p:column>
-				</p:row>
-				<p:commandButton id="btnConsultar" value="Consultar"
-							 update="frm:fact" 
-							action="#{consultaFacturasBean.listarClientes(consultaFacturasBean.nomCliente)}"/>
-				
-				<p:row style="border-style: hidden;">
-					<p:column style="border-style: hidden;width:50px;"></p:column>
-					<p:column style="border-style: hidden; width:130px;">Cliente: </p:column>
-					<p:column style="border-style: hidden;">
-						<p:selectOneMenu value="#{consultaFacturasBean.cliente}"
-							converter="omnifaces.SelectItemsConverter" autoWidth="false"
-								style="width:500px;" filter="true" required="true"
-								requiredMessage="Cliente requerido">
-							<f:selectItem itemLabel="--Seleccione--" itemValue="#{null}"
-								noSelectionOption="true" />
-							<f:selectItems value="#{consultaFacturasBean.listaClientes}" var="e"
-								itemValue="#{e}" itemLabel="#{e.nombre}" /> 
-					</p:selectOneMenu>						
-					</p:column>
-				</p:row>
+					<p:commandButton id="btnConsultar" value="Cargar Lista de Clientes"
+						action="#{consultaFacturasBean.listarClientes(consultaFacturasBean.nomCliente)}"
+						update="frm:cboCliente" />
 
-				
-				<p:commandButton id="btnRegresar" value="Principal"
-							icon="fa fa-fw fa-hand-o-left"
-							action="#{navegarVistasBean.principal()}"/>
-					
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" />
 				</p:panelGrid>
-
-				<p:dataTable id="fact"
-					value="#{consultaFacturasBean.listaComprobante}" var="e"
-					widgetVar="wdgFact" rows="15" paginator="true"
-					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					rowsPerPageTemplate="10,15,20" sortOrder="descending"
-					paginatorPosition="top"
-					scrollable="true"
-					currentPageReportTemplate="Facturas Registradas - {totalRecords}"
-					style="margin-left:1%; margin-right: 1%;"
-					emptyMessage="No hay ningún registro con esa opción">
-
-					<p:column headerText="Número Factura" filterBy="#{e.numero}"
-						filterMatchMode="contains">
-						<p:outputLabel
-							value="#{e.puntoRecaudacion.establecimiento}-#{e.puntoRecaudacion.puntoemision}-#{e.numero}" />
+				<p:separator></p:separator>
+				<p:panelGrid style="text-align: center" columns="4">
+					<p:column style="border-style: hidden;">
+						<p:selectOneMenu id="cboCliente"
+							value="#{consultaFacturasBean.cliente}"
+							
+							style="width:500px;" filter="true">
+							<f:selectItem itemLabel="- Seleccione -" itemValue="" />
+							<f:selectItems
+								value="#{consultaFacturasBean.listaClientesB}"
+								var="r" itemLabel="#{r.nombre}"
+								itemValue="#{r}" />
+						</p:selectOneMenu>
 					</p:column>
-
-					<p:column headerText="Cliente" filterBy="#{e.clientenombre}"
-						filterMatchMode="contains">
-						<p:outputLabel
-							value="#{e.clientenombre}" />
-					</p:column>
-					
-					<p:column headerText="Detalle" filterBy="#{e.detalle}"
-						filterMatchMode="contains">
-						<p:outputLabel
-							value="#{e.detalle}" />
-					</p:column>
-
-					<p:column headerText="Fecha de Emisión"
-						filterBy="#{e.fechaemision}" filterMatchMode="contains">
-						<p:outputLabel value="#{e.fechaemision}" />
-					</p:column>
-					
-					<p:column headerText="Valor"
-						filterBy="#{e.valor}" filterMatchMode="contains">
-						<p:outputLabel value="#{e.valor}" />
-					</p:column>
-
-					<p:column headerText="Acciones1" exportable="false"
-						style="width: 100px">
-						<h:commandButton action="#{consultaFacturasBean.irDetalle(e.id)}"
-							value="Ver Detalle" />
-					</p:column>
-
-
-				</p:dataTable>
+				</p:panelGrid>
 			</h:form>
 
 			<!-- Script de estilos para el contenido fel formulario-->

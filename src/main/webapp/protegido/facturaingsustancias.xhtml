@@ -158,13 +158,12 @@
 								<p:inputText id="txtNombres" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									requiredMessage="Requerido Nombres"
-									onkeyup="mayusculas(this)"
-									style="width:200px;" >
+									requiredMessage="Requerido Nombres" onkeyup="mayusculas(this)"
+									style="width:200px;">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.soloLetras(ingresoFactura.cliente.nombre)}"
 										update="@this" />
-									</p:inputText>
+								</p:inputText>
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>
@@ -177,8 +176,7 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.direccion}" required="true"
 									requiredMessage="Dirección Requerida"
-									onkeyup="mayusculas(this)"
-									style="width:300px;" />
+									onkeyup="mayusculas(this)" style="width:300px;" />
 								<p:message for="txtDireccion" display="icon" />
 							</p:column>
 						</p:row>
@@ -202,8 +200,7 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.correo}" required="true"
 									requiredMessage="Requerido Correo electronico"
-									onkeyup="minusculas(this)"
-									style="width:300px;"
+									onkeyup="minusculas(this)" style="width:300px;"
 									validatorMessage="Correo electrónico no es válido">
 									<f:validateRegex
 										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -571,8 +568,9 @@
 								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
 									mask="true"
 									value="#{ingresoFactura.comprobanteDepositos.fecha}">
-									<p:ajax event="valueChange" process="@this"
-										listener="#{ingresoFactura.validaFechaActual(ingresoFactura.comprobanteDepositos.fecha)}" />
+									<p:ajax event="valueChange"
+										listener="#{funValidaciones.validarFechasNoMayorHoy()}">
+									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
 							</p:column>

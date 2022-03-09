@@ -144,7 +144,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	@Inject
 	private IFin_Reptecnicos_DTOService serviceRepTecnicos;
-	
+
 	@Inject
 	private IInstitucionService institucionService;
 
@@ -226,6 +226,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 	double valorRMU = 0.0;
 	Integer idtec;
 	Integer contador = 0;
+	boolean validaFecha;
 
 	@PostConstruct
 	public void init() {
@@ -418,7 +419,8 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 		for (Sanciones_Admin_DTO f : listaSanciones) {
 			detalle = detalle + f.getNumero_juicio() + ", ";
-		};
+		}
+		;
 		for (Sanciones_Admin_DTO f : listaSancionesRec) {
 			ComprobanteDetalle det = new ComprobanteDetalle();
 			this.recaudacionDetalle = serviceRecaudacionDetalle
@@ -511,7 +513,8 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		detalle = detalle + "de las licencias de importaciones: ";
 		for (Fin_Importaciones_DTO f : listaImportaciones) {
 			detalle = detalle + f.getNum_solicitud() + ", ";
-		};
+		}
+		;
 
 		for (Fin_Importaciones_DTO f : listaImportacionesRec) {
 			ComprobanteDetalle det = new ComprobanteDetalle();
@@ -564,8 +567,8 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		detalle = detalle + "de las licencias de certificados: ";
 		for (Fin_Importaciones_No_DTO f : listaImportacionesNo) {
 			detalle = detalle + f.getNum_solicitud() + ", ";
-		};
-		
+		}
+		;
 
 		parametroDetalle = serviceParametroDetalle.mostrarValorDescripcion("RMU");
 
@@ -743,6 +746,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	/// CARGAR LOS DATOS DEL DEPOSITO
 	public void registrarCompDeposito() {
+		validaFechaActual(comprobanteDepositos.getFecha());
 		ComprobanteDepositos dep = new ComprobanteDepositos();
 		dep.setComprobante(comprobante);
 		dep.setNum_deposito(comprobanteDepositos.getNum_deposito());
@@ -753,6 +757,20 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 		dep.setOrigen(comprobanteDepositos.getOrigen());
 		listaComprobanteDepositos.add(dep);
 		totalDeposito();
+	}
+
+	// VALIDA LA FECHA QUE NO SEA MAYOR A LA ACTUAL
+	public void validaFechaActual(Date fecha) {
+		if (fecha != null) {
+			Date fechaactual = new Date(System.currentTimeMillis());
+			validaFecha = false;
+			if (fecha.after(fechaactual)) {
+				validaFecha = true;
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Fecha es mayor a la fecha de hoy"));
+			}
+		}
+
 	}
 
 	// SUMAR TOTAL DEPOSITOS
@@ -777,7 +795,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	// GUARDAR COMPROBANTE
 	@Transactional
-	public void registrarComprobante() {		
+	public void registrarComprobante() {
 		try {
 			contador = (Integer) serviceComprobante.validaCierre(usuPunto);
 			if (contador > 0) {
@@ -786,17 +804,20 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 			} else {
 				totalDetalle();
 				totalDeposito();
-				
+
 				if (totaldet != totaldep) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Error los valores de los detalles es diferente", "Error"));
-				} else {		
-					
+				} else if (validaFecha == true) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Error, debe cambiar la fecha del depósito", "Error"));
+				} else {
+
 					// para validar la cedula
 					Long a = fun.buscarCliente(cliente);
-					
+
 					if (a == 0) {
-						
+
 						Cliente c = new Cliente();
 						c = cliente;
 						String clave = this.ruc;
@@ -807,13 +828,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 						c.setTipoid(tipoIdentificacion);
 						serviceCliente.registrar(c);
 					} else {
-						
+
 						cliente.setCi(cliente.getCi().toUpperCase());
 						cliente.setNombre(cliente.getNombre().toUpperCase());
 						serviceCliente.modificar(cliente);
 					}
-					
-					
+
 					usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(us);
 					// saca el secuencial +1
 					num1 = (Integer) fun.secFactura(usuPunto);
@@ -831,8 +851,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					comp.setTipocomprobante("F");
 					comp.setValor(totaldet);
 					comp.setPuntoRecaudacion(punto);
-					
-					
+
 					//// GENERAR CLAVE ACCESO
 					Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 					calendar.setTime(fechaActual);
@@ -852,8 +871,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					claveA = claveA + verificador;
 					comp.setClaveacceso(claveA);
 					////////////////////////////////////////////
-					
-					
+
 					id_comprobante = serviceComprobante.registrar(comp);
 					// actualiza la secuencia
 					fun.actualizaSecuencialFactura(usuPunto, num1);
@@ -861,12 +879,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 						det.setComprobante(comp);
 						serviceComprobanteDetalle.registrar(det);
 					}
-					
+
 					for (ComprobanteDepositos dep : listaComprobanteDepositos) {
 						dep.setComprobante(comp);
 						serviceComprobanteDepositos.registrar(dep);
 					}
-				
+
 					comprobante = serviceComprobante.listarComprobantePorId(id_comprobante);
 					/// GENERAR XML PARA LA FACTURA
 					genXml.generarXmlArchivo(punto.getId(), num1);
@@ -895,45 +913,45 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 
 	@Transactional
 	public void ejecutar(Integer codigo, String factura) throws Exception {
-		
+
 		if (contador > 0) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Error, debe realizar el cierre del día anterior, no podrá facturar", "Error"));
 		} else {
 			int factura_int = Integer.parseInt(factura);
 
-			if (paramtipo2 == "C" && factura_int!=0) {
+			if (paramtipo2 == "C" && factura_int != 0) {
 				factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 						+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
 				dbcyf.actualiza("A", Integer.parseInt(param2), factura, 0, "null");
-			} else if (paramtipo2 == "E" && factura_int!=0) {
+			} else if (paramtipo2 == "E" && factura_int != 0) {
 				for (Fin_Exportaciones_DTO exp : listaExportaciones) {
 					dbcyf.actualiza("E", exp.getCod_entidad(), factura, 0, exp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "S" && factura_int!=0) {
+			} else if (paramtipo2 == "S" && factura_int != 0) {
 				for (Sanciones_Admin_DTO s : listaSanciones) {
 					dbsanciones.actualiza("S", s.getCodigo_empresa(), factura, s.getNumero_juicio());
 				}
-			} else if (paramtipo2 == "I" && factura_int!=0) {
+			} else if (paramtipo2 == "I" && factura_int != 0) {
 				for (Fin_Importaciones_DTO imp : listaImportaciones) {
 					dbcyf.actualiza("I", imp.getCod_entidad(), factura, 0, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "N" && factura_int!=0) {
+			} else if (paramtipo2 == "N" && factura_int != 0) {
 				for (Fin_Importaciones_No_DTO imp : listaImportacionesNo) {
 
 					dbcyf.actualizaimpno("N", imp.getCod_entidad(), factura, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "G" && factura_int!=0) {
+			} else if (paramtipo2 == "G" && factura_int != 0) {
 				for (Fin_Guias_DTO imp : listaGuias) {
 					dbcyf.actualiza("G", imp.getCod_entidad(), factura, 0, imp.getNum_solicitud());
 				}
-			} else if (paramtipo2 == "R" && factura_int!=0) {
+			} else if (paramtipo2 == "R" && factura_int != 0) {
 				for (Fin_Cal_Ren_DTO emp : listaCalRen) {
 					factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 							+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
 					dbcyf.actualiza("R", emp.getCodigo(), factura, emp.getCodigo_renovacion(), null);
 				}
-			} else if (paramtipo2 == "T" && factura_int!=0) {
+			} else if (paramtipo2 == "T" && factura_int != 0) {
 				for (Fin_Reptecnicos_DTO rt : listaCalRenRepTecnicos) {
 					factura = punto.getEstablecimiento() + "-" + punto.getPuntoemision() + "-"
 							+ StringUtils.leftPad(String.valueOf(factura), 9, "0");
@@ -983,7 +1001,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 				+ "<br><br>Atentamente,<br>" + "Ministerio de Gobierno <br><br>" + "</body></html>";
 
 		Session session = Session.getInstance(props, null);
-	//	session.setDebug(true);
+		// session.setDebug(true);
 
 		try {
 			MimeBodyPart textoMensaje = new MimeBodyPart();
@@ -997,7 +1015,7 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
 			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
 
-            //// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+			//// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);
@@ -1015,12 +1033,12 @@ public class IngresoFacturaServiciosCyfBean implements Serializable {
 			transport.close();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se envió con éxito", "Aviso"));
- 
+
 		} catch (Exception e) {
 			System.out.println("Error " + e);
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR: No se Envió por correo", "ERROR"));
- 
+
 		}
 	}
 

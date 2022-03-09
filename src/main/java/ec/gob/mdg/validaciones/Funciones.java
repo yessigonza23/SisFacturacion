@@ -671,12 +671,11 @@ public class Funciones implements Serializable {
 	//CONSULTA DE CLIENTES POR EL NOMBRE
 	@SuppressWarnings("unchecked")
 	public List<Cliente> ClientePorNombre(String nombre) {
-		String nombreSep=nombre.replace(' ', '%');
-		System.out.println("nombreSep Funciones " + nombreSep);
+		
 		List<Cliente> lstCliente = new ArrayList<>();
 		try {
 			Query query = em.createQuery("FROM Cliente c where c.nombre like ?1");
-			query.setParameter(1,nombreSep);
+			query.setParameter(1,nombre);
 			lstCliente = (List<Cliente>) query.getResultList();
 			
 			

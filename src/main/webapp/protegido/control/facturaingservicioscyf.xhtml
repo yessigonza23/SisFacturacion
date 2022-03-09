@@ -169,8 +169,7 @@
 									<p:inputText id="txtNombres" maxlength="150"
 										value="#{ingresoFacturaServiciosCyfBean.nombre}"
 										required="true" requiredMessage="Requerido Nombres"
-										style="width:200px;"
-										onkeyup="mayusculas(this)"
+										style="width:200px;" onkeyup="mayusculas(this)"
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}" />
 									<p:message for="txtNombres" display="icon" />
 								</p:column>
@@ -184,8 +183,7 @@
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.cliente.direccion}"
 										required="true" requiredMessage="Dirección Requerida"
-										onkeyup="mayusculas(this)"
-										style="width:300px;" />
+										onkeyup="mayusculas(this)" style="width:300px;" />
 									<p:message for="txtDireccion" display="icon" />
 								</p:column>
 							</p:row>
@@ -210,8 +208,7 @@
 										disabled="#{ingresoFacturaServiciosCyfBean.estadeshabilitado}"
 										value="#{ingresoFacturaServiciosCyfBean.cliente.correo}"
 										required="true" requiredMessage="Requerido Correo electronico"
-										onkeyup="minusculas(this)"
-										style="width:300px;"
+										onkeyup="minusculas(this)" style="width:300px;"
 										validatorMessage="Correo electrónico no es válido">
 										<f:validateRegex
 											pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -555,10 +552,15 @@
 								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
 									mask="true"
 									value="#{ingresoFacturaServiciosCyfBean.comprobanteDepositos.fecha}">
+									<p:ajax event="valueChange"
+										listener="#{funValidaciones.validarFechasNoMayorHoy(ingresoFacturaServiciosCyfBean.comprobanteDepositos.fecha)}">
+									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
 							</p:column>
 						</p:row>
+						
+											
 
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>

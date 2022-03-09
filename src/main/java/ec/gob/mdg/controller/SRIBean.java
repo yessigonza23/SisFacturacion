@@ -103,7 +103,9 @@ public class SRIBean implements Serializable {
 
 				//// AMBIENTE DE PRODUCCIoN
 				url = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl";
+				
 				host = "cel.sri.gob.ec";
+//				host = "204.199.145.75";
 			}
 
 			try {

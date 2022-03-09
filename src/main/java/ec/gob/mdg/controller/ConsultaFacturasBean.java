@@ -40,19 +40,11 @@ public class ConsultaFacturasBean implements Serializable {
 	String numDeposito;
 	String nomCliente;
 
-	private List<Cliente> listaClientes = new ArrayList<Cliente>();
+	private List<Cliente> listaClientesB = new ArrayList<Cliente>();
 	private List<Cliente> listaClientesF = new ArrayList<Cliente>();
 	private List<ComprobanteDepositos> listaComprobanteDep = new ArrayList<ComprobanteDepositos>();
 	private List<Comprobante> listaComprobante = new ArrayList<Comprobante>();
 
-	@PostConstruct
-	public void init() {
-		try {
-//			listarClientes("F");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
 	
 	// IR A DETALLE DE FACTURA A CONSULTAR
 	public String irDetalle(String id) {
@@ -121,12 +113,13 @@ public class ConsultaFacturasBean implements Serializable {
 
 	// LISTAR CLIENTE NOTAS
 	public void listarClientes(String nombre) {
+//		System.out.println("entra a listar clientes " +nombre);
 		try {
 			if (nombre !=null) {
-				this.listaClientes = this.fun.ClientePorNombre(nombre);
-				for(Cliente c:listaClientes) {
-					System.out.println(c.getNombre());
-				}
+				this.listaClientesB = this.fun.ClientePorNombre(nombre);
+//				for(Cliente c:listaClientesB) {
+//					System.out.println(c.getNombre());
+//				}
 			}
 			
 			
@@ -187,13 +180,14 @@ public class ConsultaFacturasBean implements Serializable {
 		this.cliente = cliente;
 	}
 
-	public List<Cliente> getListaClientes() {
-		this.listaClientes = this.serviceComprobante.listarClientesComprobantes("F");
-		return listaClientes;
+
+
+	public List<Cliente> getListaClientesB() {
+		return listaClientesB;
 	}
 
-	public void setListaClientes(List<Cliente> listaClientes) {
-		this.listaClientes = listaClientes;
+	public void setListaClientesB(List<Cliente> listaClientesB) {
+		this.listaClientesB = listaClientesB;
 	}
 
 	public List<Cliente> getListaClientesF() {

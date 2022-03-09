@@ -153,7 +153,7 @@
 									<f:selectItem itemLabel="Pasaporte" itemValue="P" />
 									<f:selectItem itemLabel="Cédula" itemValue="C" />
 									<f:selectItem itemLabel="RUC" itemValue="R" />
-									
+
 								</p:selectOneMenu>
 							</p:column>
 						</p:row>
@@ -165,12 +165,12 @@
 								<p:inputText id="txtNombres" maxlength="150"
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									onkeyup="mayusculas(this)"
-									requiredMessage="Requerido Nombres" style="width:200px" >
+									onkeyup="mayusculas(this)" requiredMessage="Requerido Nombres"
+									style="width:200px">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.soloLetras(ingresoFactura.cliente.nombre)}"
 										update="@this" />
-									</p:inputText>
+								</p:inputText>
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>
@@ -581,6 +581,9 @@
 								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
 									mask="true"
 									value="#{ingresoFactura.comprobanteDepositos.fecha}">
+									<p:ajax event="valueChange"
+										listener="#{funValidaciones.validarFechasNoMayorHoy()}">
+									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
 							</p:column>

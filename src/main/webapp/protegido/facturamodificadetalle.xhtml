@@ -748,7 +748,7 @@
 							<p:column style="border-style: hidden;">
 								<p:selectOneMenu id="tipotransaccion" disabled="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.tipotransaccion}"
-									style="width:100px" >
+									style="width:100px">
 									<f:selectItem itemLabel="Intermático" itemValue="I" />
 									<f:selectItem itemLabel="Depósito" itemValue="D" />
 									<f:selectItem itemLabel="Transferencia" itemValue="T" />
@@ -783,9 +783,12 @@
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Fecha Depósito: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy" disabled="true"
+								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
 									mask="true"
 									value="#{comprobanteModificaBean.comprobanteDepositos.fecha}">
+									<p:ajax event="valueChange"
+										listener="#{funValidaciones.validarFechasNoMayorHoy()}">
+									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />
 							</p:column>
