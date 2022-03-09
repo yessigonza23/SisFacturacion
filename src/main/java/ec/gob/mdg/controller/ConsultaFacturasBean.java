@@ -11,6 +11,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.poi.util.SystemOutLogger;
+
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
 import ec.gob.mdg.model.ComprobanteDepositos;
@@ -84,6 +86,7 @@ public class ConsultaFacturasBean implements Serializable {
 
 	// CONSULTA DE COMPROBANTES POR CLIENTE:FACTURAS
 	public void listarComprobantePorCliente(Cliente cliente) {
+		
 		try {
 
 			this.listaComprobante = this.serviceComprobante.comprobantePorCliente(cliente);

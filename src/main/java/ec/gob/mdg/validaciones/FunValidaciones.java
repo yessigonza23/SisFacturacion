@@ -60,7 +60,7 @@ public class FunValidaciones implements Serializable {
 
 	/// VALIDA FECHA QUE NO SEA MAYOR A LA ACTUAL
 	public void validarFechasNoMayorHoy(Date fecha) throws Exception {
-		System.out.println("entra a funValidaciones " + fecha);
+		
 		fechaInicialFinalMayoraHoy = false;
 
 		if (fecha != null) {
