@@ -391,7 +391,7 @@ public class VistaRecaudacionDepositoDTODAOImpl implements IVistaRecaudacionDepo
 		List<VistaRecaudacionDepositoDTO> listaFin = new ArrayList<VistaRecaudacionDepositoDTO>();
 		try {
 			Query q = em.createNativeQuery(
-					"SELECT DISTINCT c.punto_nombre,c.comp_anio,c.comp_mes,c.comp_numero,c.comp_fechaemision,c.cliente_nombre,"
+					"SELECT  c.punto_nombre,c.comp_anio,c.comp_mes,c.comp_numero,c.comp_fechaemision,c.cliente_nombre,"
 							+ " c.cliente_ci,c.deposito_numero,c.deposito_fecha,c.deposito_valor,c.usuario_nombre,c.deposito_fechastring "
 							+ " FROM financiero.vista_recaudacion_deposito c "
 							+ "WHERE c.punto_id=?1 and c.comp_anio =?2 and c.comp_mes=?3 and c.deposito_id_tmp is null ORDER BY 4");
