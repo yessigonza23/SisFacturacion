@@ -63,7 +63,6 @@ public class CargaBancoBean implements Serializable {
 			estado1 = false;
 			estado2 = true;
 			estado3 = true;
-//			fechaMaxEstado();
 			id_usuario = p.getId();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,10 +101,8 @@ public class CargaBancoBean implements Serializable {
 
 					// use comma as separator
 					String[] leerEstados = line.split(cvsSplitBy);
-
 					String respuesta = leerEstados[0];
 					double valor = Double.parseDouble(leerEstados[1].replace(",", "."));
-
 					String cliente = leerEstados[2];
 					String fecha_tmp = leerEstados[3];
 					java.text.DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -150,19 +147,32 @@ public class CargaBancoBean implements Serializable {
 	
 	public void fechaMaxEstado() {
 		fechamax = fun.fechaMaxEstadoCuenta();
-	}
-	
+	}	
 	
 	public void consolida(Integer anio,Integer id_usuario) {
 		try {		
-			BigInteger contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
-				
-			do{
-				fun.consolidaDepositos(anio,id_usuario);
-				contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
-				
-	        }while (contadorFaltantes.intValueExact()>0) ;
-			System.out.println("termina consolidacion");
+			
+			if (anio != null && id_usuario != null) {
+				if (tipoTransaccion.equals("T")) {
+					System.out.println("entra a Transferencias");
+					BigInteger contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacionTransfer(anio);
+					do{
+						fun.consolidaDepositosTransfer(anio,id_usuario);
+						contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
+						
+			        }while (contadorFaltantes.intValueExact()>0) ;
+				}else {
+					System.out.println("Diferente de transferencias");
+					BigInteger contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
+					do{
+						fun.consolidaDepositos(anio,id_usuario);
+						contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
+						
+			        }while (contadorFaltantes.intValueExact()>0) ;
+				}
+			}
+						
+			System.out.println("Termina consolidacion");
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Se consolidaron los datos", "Exitoso"));
 		} catch (Exception e) {

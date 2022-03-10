@@ -124,8 +124,7 @@
 							<p:column style="border-style: hidden; width:130px;">Ci/RUC/Pasaporte: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:inputText id="txtCi" maxlength="13"
-									placeholder="cedula cliente" 
-									onkeyup="mayusculas(this)"
+									placeholder="cedula cliente" onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.cliente.ci}">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.buscarClientes()}"
@@ -162,11 +161,11 @@
 									disabled="#{ingresoFactura.validador}"
 									onkeyup="mayusculas(this)"
 									value="#{ingresoFactura.cliente.nombre}" required="true"
-									requiredMessage="Requerido Nombres" style="width:200px;" >
+									requiredMessage="Requerido Nombres" style="width:200px;">
 									<p:ajax event="valueChange"
 										listener="#{ingresoFactura.soloLetras(ingresoFactura.cliente.nombre)}"
 										update="@this" />
-									</p:inputText>
+								</p:inputText>
 								<p:message for="txtNombres" display="icon" />
 							</p:column>
 						</p:row>
@@ -179,8 +178,7 @@
 									disabled="#{ingresoFactura.validador}"
 									value="#{ingresoFactura.cliente.direccion}" required="true"
 									requiredMessage="Dirección Requerida"
-									onkeyup="mayusculas(this)"
-									style="width:300px;" />
+									onkeyup="mayusculas(this)" style="width:300px;" />
 								<p:message for="txtDireccion" display="icon" />
 							</p:column>
 						</p:row>
@@ -572,9 +570,10 @@
 							<p:column style="border-style: hidden; width:130px;">Fecha Depósito: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:calendar id="txtFechaDeposito" pattern="dd/MM/yyyy"
-									mask="true"
+									mask="true" 
 									value="#{ingresoFactura.comprobanteDepositos.fecha}">
-									<p:ajax event="valueChange" listener="#{funValidaciones.validarFechasNoMayorHoy()}">
+									<p:ajax event="valueChange"
+										listener="#{funValidaciones.validarFechasNoMayorHoy(ingresoFactura.comprobanteDepositos.fecha)}">
 									</p:ajax>
 								</p:calendar>
 								<p:watermark for="txtFechaDeposito" value="dd/mm/aaaa" />

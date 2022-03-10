@@ -623,27 +623,21 @@ public class Funciones implements Serializable {
 		}
 	}
 
-	public boolean letras(String cadena) {
-		boolean tipoCadena = false;
-		if (cadena != null) {
-			for (int x = 0; x < cadena.length(); x++) {
-				char c = cadena.charAt(x);
-				// Si no está entre a y z, ni entre A y Z, ni es un espacio
-				if (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ' || c == '.' || c == '&'
-						|| (c >= 'Á' && c <= 'Ú') || c == ';')) {
-					tipoCadena = false;
-
-				} else {
-					tipoCadena = true;
-					break;
-				}
-			}
+	@Transactional
+	public void consolidaDepositosTransfer(Integer anio, Integer id_usuario) throws Exception {
+		try {
+			
+			Query query = em.createNativeQuery("CALL financiero.consolidadepositos_transfer(:panio,:pusuario)");
+			query.setParameter("panio", anio);
+			query.setParameter("pusuario", id_usuario);
+			query.executeUpdate();
+			// System.out.println("sale7");
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		return tipoCadena;
 	}
-
+	
 	public Number cuentaEstCuentaConsolidacion(Integer anio) throws Exception {/// para recorrer la consolidacion
-
 		Number contador = null;
 		// usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 		try {
@@ -666,6 +660,50 @@ public class Funciones implements Serializable {
 		}
 
 		return contador;
+	}
+	
+	public Number cuentaEstCuentaConsolidacionTransfer(Integer anio) throws Exception {/// para recorrer la consolidacion
+		Number contador = null;
+		// usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
+		try {
+			Query query = em.createNativeQuery("select count(*)from(\r\n"
+					+ "SELECT DISTINCT  a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito num_deposito,c.numtransaccion,b.fecha,b.valor as comdep_valor,a.comp_estado,\r\n"
+					+ "	c.fecha,c.valor as estcue_valor,c.servicio,	c.ruc,c.anio,c.mes,max(b.id) comdep_id,c.id estcue_id,c.saldo\r\n"
+					+ "	FROM financiero.vista_recaudacion a,financiero.comprobantedeposito b,financiero.estadocuenta c\r\n"
+					+ "	WHERE a.comp_id = b.id_comprobante 	and c.numtransaccion = b.num_deposito\r\n"
+					+ "	and a.comp_estado = 'A' and a.comp_tipo = 'F'\r\n"
+					+ "	and b.num_deposito=c.numtransaccion	and (c.saldo >= b.valor and c.saldo>0)\r\n"
+					+ "	and c.anio = a.comp_anio_i and c.tipotransaccion='T'\r\n"
+					+ "	and c.anio=?1 and c.bloqueado =false and b.id_tmp is null\r\n"
+					+ "	group by a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito,c.numtransaccion,b.fecha,b.valor,a.comp_estado,\r\n"
+					+ "	c.fecha,c.valor,c.servicio,	c.ruc,c.anio,c.mes,c.id,c.saldo)a");
+
+			query.setParameter(1, anio);
+			contador = (Number) query.getSingleResult();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return contador;
+	}
+	
+	public boolean letras(String cadena) {
+		boolean tipoCadena = false;
+		if (cadena != null) {
+			for (int x = 0; x < cadena.length(); x++) {
+				char c = cadena.charAt(x);
+				// Si no está entre a y z, ni entre A y Z, ni es un espacio
+				if (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ' || c == '.' || c == '&'
+						|| (c >= 'Á' && c <= 'Ú') || c == ';')) {
+					tipoCadena = false;
+
+				} else {
+					tipoCadena = true;
+					break;
+				}
+			}
+		}
+		return tipoCadena;
 	}
 	
 	//CONSULTA DE CLIENTES POR EL NOMBRE
