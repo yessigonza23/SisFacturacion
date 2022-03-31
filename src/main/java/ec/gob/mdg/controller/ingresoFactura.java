@@ -355,15 +355,17 @@ public class ingresoFactura implements Serializable {
 	// CALCULA SUBTOTAL DETALLE
 	public double calculaSubtotalDetalle(Integer cantidad, Double valor, Double valorIva) {
 		subtotaldet = 0;
+		//valIva =0;
+		//valorIva =0.00;
 		if (cantidad != null && valor != null && valorIva != null) {
 
 			if (valorIva == 0) {
 				subtotaldet = (cantidad * valor);
 				subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2);
 			} else {
-				subtotaldet = cantidad * (valorIva * fun.valorIva() / 100);
-				valIva = (valorIva * fun.valorIva() / 100);
-				subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2) + valorIva;
+				subtotaldet = (cantidad *valorIva)+ (cantidad *valorIva * fun.valorIva() / 100);
+				valIva = (cantidad *valorIva * fun.valorIva() / 100);
+				subtotaldet = FunValidaciones.formatearDecimales(subtotaldet, 2);// + valorIva;
 			}
 		}
 

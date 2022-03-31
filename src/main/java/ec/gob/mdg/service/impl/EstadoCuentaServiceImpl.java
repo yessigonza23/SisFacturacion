@@ -74,6 +74,12 @@ public class EstadoCuentaServiceImpl implements IEstadoCuentaService, Serializab
 		return dao.estadoCuentaPorId(id);
 	}
 
+	@Override
+	public List<EstadoCuenta> listarEstadoCuentaPendiente(Integer anio) {
+		// TODO Auto-generated method stub
+		return dao.listarEstadoCuentaPendiente(anio);
+	}
+
 
 	
 }

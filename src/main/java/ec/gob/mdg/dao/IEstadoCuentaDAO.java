@@ -1,6 +1,5 @@
 package ec.gob.mdg.dao;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -20,9 +19,11 @@ public interface IEstadoCuentaDAO extends ICRUD<EstadoCuenta> {
 
 	// LISTAR ESTADO DE CUENTA POR A�O, MES Y FECHA
 	List<EstadoCuenta> listarEstadoCuentaCargado(Integer anio, Integer mes, Date fecha);
-	
-	//LISTAR ESTADO DE CUENTA POR ID
+
+	// LISTAR ESTADO DE CUENTA POR ID
 	EstadoCuenta estadoCuentaPorId(Integer id);
 
+	// LISTAR ESTADO DE CUENTA SIN CONCILIAR
+	List<EstadoCuenta> listarEstadoCuentaPendiente(Integer anio);
 
 }

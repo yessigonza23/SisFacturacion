@@ -240,7 +240,7 @@
 										<f:selectItem itemLabel="Seleccione: ..."
 											noSelectionOption="true" />
 										<f:selectItems value="#{usuarioBean.listaUsuario}" var="e"
-											itemLabel="#{e.nombre}" itemValue="#{e.id}" />
+											itemLabel="#{e.nombre} #{e.apellido}" itemValue="#{e.id}" />
 										<f:ajax render="selected_item" />
 									</p:selectOneMenu>
 									<p:messages for="cboUsuario" />

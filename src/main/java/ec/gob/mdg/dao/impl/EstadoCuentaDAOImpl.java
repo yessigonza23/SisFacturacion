@@ -137,6 +137,20 @@ public class EstadoCuentaDAOImpl implements IEstadoCuentaDAO, Serializable {
 		return estadoCuenta;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EstadoCuenta> listarEstadoCuentaPendiente(Integer anio) {
+		List<EstadoCuenta> lista = new ArrayList<EstadoCuenta>();
+		try {
+			Query q = em.createQuery("SELECT c FROM EstadoCuenta c WHERE c.anio=?1  AND bloqueado = false AND saldo=valor AND respuesta = 'Proceso O.K.'"); // query de la entidad del model
+			q.setParameter(1,anio);
+			lista = (List<EstadoCuenta>) q.getResultList();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return lista;
+	}
+
 	
 
 }

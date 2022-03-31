@@ -138,6 +138,18 @@ public class ReportesNacionalBean implements Serializable {
 					
 					nombreReporte = "RepConsNanPorPuntoFactSerBanCodPresAn.jasper";
 					nombreGuarda = "RepConsNanPorPuntoFactSerBanCodPresAn";
+				}else if (opcion.equals("9")) {
+					
+					nombreReporte = "RepNacConsDepositoNoConsolidado.jasper";
+					nombreGuarda = "RepNacConsDepositoNoConsolidado";
+				}else if (opcion.equals("10")) {
+					
+					nombreReporte = "RepNacEstCuenDevoluciones.jasper";
+					nombreGuarda = "RepNacEstCuenDevoluciones";
+				}else if (opcion.equals("11")) {
+					
+					nombreReporte = "RepNacConsEstadoCuenta.jasper";
+					nombreGuarda = "RepNacConsEstadoCuenta";
 				}
 				
 				generarReporte(nombreReporte);

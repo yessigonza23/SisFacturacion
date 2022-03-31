@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+		<ui:define name="content">
+			<h:form id="ingConsolida" enctype="multipart/form-data"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<h2 style="color: #003778; text-align: center">CAMBIO DE ESTADO
+					A DEVOLUCIÓN DE ESTADO DE CUENTA</h2>
+
+				<p:growl id="growl" showDetail="true" sticky="true">
+					<p:autoUpdate />
+				</p:growl>
+				<p:panelGrid columns="3"
+					style="display:block; text-align:center; width:50%; margin:0px auto;"
+					columnClasses="centered">
+					<p:row style="border-style: hidden;">
+						<p:column style="border-style: hidden;width:40px;"></p:column>
+						<p:column style="border-style: hidden; width:130px;">Año: </p:column>
+						<p:column style="border-style: hidden;">
+							<p:inputText id="txtAnio" maxlength="4" style="width:50px;"
+								placeholder="Año" value="#{consolidacionDevolucionBean.anio}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+					<p:commandButton id="btnRegresar" value="Principal"
+						icon="fa fa-fw fa-hand-o-left"
+						action="#{navegarVistasBean.principal()}" process="@this"
+						update="@this" />
+				</p:panelGrid>
+
+				<p:commandButton icon="ui-icon-disk" id="btnEstadoCuenta"
+					value="Consultar"
+					actionListener="#{consolidacionDevolucionBean.listarEstadoPendiente(consolidacionDevolucionBean.anio)}"
+					process="@form" update="ingConsolida:Res1">
+				</p:commandButton>
+
+				<p:commandButton value="Export as XLS" ajax="false">
+					<p:dataExporter type="xls" target="Res1" fileName="EstadoCuenta" />
+				</p:commandButton>
+
+				<p:dataTable id="Res1" resizableColumns="true" editable="true"
+					value="#{consolidacionDevolucionBean.listaEstadoPendiente}" var="e"
+					rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" sortOrder="descending"
+					paginatorPosition="top"
+					emptyMessage="No hay ningún registro con esa opción" rowIndexVar="index">
+
+					<p:column style="width:35px" headerText="Editar">
+						<p:rowEditor />
+					</p:column>
+					<p:ajax event="rowEdit"
+						listener="#{consolidacionDevolucionBean.actualizaRespuesta(e.id,consolidacionDevolucionBean.observacion)}" />
+
+
+
+					<p:column headerText="No.Depósito" filterBy="#{e.numtransaccion}"
+						filterMatchMode="contains" style="width:70px;">
+						<p:outputLabel value="#{e.numtransaccion}" />
+					</p:column>
+					<p:column headerText="Fecha" filterBy="#{e.fecha}"
+						filterMatchMode="contains" style="width:70px;">
+						<p:outputLabel value="#{e.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{e.valor}"
+						filterMatchMode="contains" style="width:60px;">
+						<p:outputLabel value="#{e.valor}" style="text-align:right">
+							<f:convertNumber pattern="###,##0.00" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Respuesta" style="width:120px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:selectOneMenu id="respuesta" value="#{e.respuesta}"
+									disabled="true">
+									<f:selectItem itemLabel="Proceso O.K." itemValue="Proceso O.K." />
+									<f:selectItem itemLabel="Devolución." itemValue="Devolución." />
+								</h:selectOneMenu>
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="respuesta1" value="#{e.respuesta}">
+									<f:selectItem itemLabel="Proceso O.K." itemValue="Proceso O.K." />
+									<f:selectItem itemLabel="Devolución." itemValue="Devolución." />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Observacion" style="width:200px">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputLabel value="#{consolidacionDevolucionBean.observacion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<h:inputText value="#{consolidacionDevolucionBean.observacion}"
+									style="text-align: justify;width:195px;" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Cliente" filterBy="#{e.cliente}"
+						filterMatchMode="contains" style="width:200px;">
+						<p:outputLabel value="#{e.cliente}" />
+					</p:column>
+
+					<p:column headerText="Ruc" filterBy="#{e.ruc}"
+						filterMatchMode="contains" style="width:110px;">
+						<p:outputLabel value="#{e.ruc}" />
+					</p:column>
+					<p:column headerText="Servicio" filterBy="#{e.servicio}"
+						filterMatchMode="contains" style="width:100px;">
+						<p:outputLabel value="#{e.servicio}" />
+					</p:column>
+
+
+
+
+				</p:dataTable>
+				<!-- 				</p:panel> -->
+
+
+			</h:form>
+			<!-- Script de estilos para el contenido fel formulario-->
+			<h:outputStylesheet library="css" name="buscar.css" />
+			<h:outputStylesheet library="css" name="registroUsuario.css" />
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>

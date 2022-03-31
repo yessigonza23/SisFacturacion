@@ -21,5 +21,8 @@ public interface IEstadoCuentaService extends IService<EstadoCuenta> {
 	// LISTAR ESTADO DE CUENTA POR ID
 	EstadoCuenta estadoCuentaPorId(Integer id);
 
+	// LISTAR ESTADO DE CUENTA SIN CONCILIAR
+		List<EstadoCuenta> listarEstadoCuentaPendiente(Integer anio);
+
 
 }
