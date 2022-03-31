@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.poi.util.SystemOutLogger;
 
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
@@ -116,13 +114,9 @@ public class ConsultaFacturasBean implements Serializable {
 
 	// LISTAR CLIENTE NOTAS
 	public void listarClientes(String nombre) {
-//		System.out.println("entra a listar clientes " +nombre);
 		try {
 			if (nombre !=null) {
 				this.listaClientesB = this.fun.ClientePorNombre(nombre);
-//				for(Cliente c:listaClientesB) {
-//					System.out.println(c.getNombre());
-//				}
 			}
 			
 			

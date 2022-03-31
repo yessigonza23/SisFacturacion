@@ -156,7 +156,7 @@ public class VistaRecaudacionDepositoDTODAOImpl implements IVistaRecaudacionDepo
 		List<VistaRecaudacionDepositoDTO> listaFin = new ArrayList<VistaRecaudacionDepositoDTO>();
 		try {
 			Query q = em.createNativeQuery(
-					"SELECT a.punto_nombre,a.comp_numero,a.comp_fechaemision,a.cliente_nombre,a.cliente_ci ,a.deposito_numero ,a.deposito_fecha,a.deposito_valor,to_char(a.deposito_fecha,'dd/mm/yyyy') fechastring FROM financiero.vista_recaudacion_deposito a WHERE  a.comp_fechaemision between ?1 and ?2  and a.comp_tipo ='F' and a.comp_estado = 'A' ORDER BY 3,2");
+					"SELECT a.punto_nombre,a.comp_numero,a.comp_fechaemision,a.cliente_nombre,a.cliente_ci ,a.deposito_numero ,a.deposito_fecha,a.deposito_valor,a.deposito_fechastring fechastring FROM financiero.vista_recaudacion_deposito a WHERE  a.comp_fechaemision between ?1 and ?2  and a.comp_tipo ='F' and a.comp_estado = 'A' ORDER BY 3,2");
 			q.setParameter(1, fecha_inicio);
 			q.setParameter(2, fecha_fin);
 			lista = q.getResultList();
@@ -174,7 +174,7 @@ public class VistaRecaudacionDepositoDTODAOImpl implements IVistaRecaudacionDepo
 				v.setDeposito_fechastring(String.valueOf(x[8]));
 				listaFin.add(v);
 			});
-
+    
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

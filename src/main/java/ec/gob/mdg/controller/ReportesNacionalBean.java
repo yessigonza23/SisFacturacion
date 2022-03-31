@@ -161,6 +161,7 @@ public class ReportesNacionalBean implements Serializable {
 			parametros.put("PROCESO", proceso);
 			parametros.put("LOGO", rutaImagenLogo);
 			parametros.put("LOGOPIE", rutaImagenLogoPie);
+			parametros.put("ANALISTA", us.getId());
 			String path = UtilsArchivos.getRutaReportesJasper();
 			String pathPdf = UtilsArchivos.getRutaReportes();
 

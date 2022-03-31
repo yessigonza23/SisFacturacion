@@ -547,10 +547,10 @@
 							<p:outputLabel value="#{e.deposito_numero}" />
 						</p:column>
 
-						<p:column headerText="Fec.Depósito" filterBy="#{e.deposito_fecha}"
+						<p:column headerText="Fec.Depósito" filterBy="#{e.deposito_fechastring}"
 							filterMatchMode="contains" style="width:100px;">
-							<p:outputLabel value="#{e.deposito_fecha}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
+							<p:outputLabel value="#{e.deposito_fechastring}">
+								
 							</p:outputLabel>
 						</p:column>
 
@@ -560,11 +560,6 @@
 							</p:outputLabel>
 						</p:column>
 
-
-<!-- 						<p:column headerText="Responsable" filterBy="#{e.usuario_nombre}" -->
-<!-- 							filterMatchMode="contains" style="width:150px;"> -->
-<!-- 							<p:outputLabel value="#{e.usuario_nombre}" /> -->
-<!-- 						</p:column> -->
 
 						<p:columnGroup type="footer">
 							<p:row>
