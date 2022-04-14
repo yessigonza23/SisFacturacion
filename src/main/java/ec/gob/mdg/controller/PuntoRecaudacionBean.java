@@ -1,6 +1,7 @@
 package ec.gob.mdg.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,9 +14,11 @@ import javax.inject.Named;
 import ec.gob.mdg.model.Institucion;
 import ec.gob.mdg.model.Provincia;
 import ec.gob.mdg.model.PuntoRecaudacion;
+import ec.gob.mdg.model.Usuario;
 import ec.gob.mdg.service.IInstitucionService;
 import ec.gob.mdg.service.IProvinciaService;
 import ec.gob.mdg.service.IPuntoRecaudacionService;
+import ec.gob.mdg.service.IUsuarioService;
 
 @Named
 @ViewScoped
@@ -32,7 +35,28 @@ public class PuntoRecaudacionBean implements Serializable {
 	@Inject
 	private IProvinciaService serviceProvincia;
 	
-	private List<PuntoRecaudacion> lista;	
+	@Inject
+	private IUsuarioService serviceUsuario;
+	
+	public IUsuarioService getServiceUsuario() {
+		return serviceUsuario;
+	}
+
+	public void setServiceUsuario(IUsuarioService serviceUsuario) {
+		this.serviceUsuario = serviceUsuario;
+	}
+
+	public List<Usuario> getListaUsuarioAnalista() {
+		return serviceUsuario.listarAnalistas();
+	}
+
+	public void setListaUsuarioAnalista(List<Usuario> listaUsuarioAnalista) {
+		this.listaUsuarioAnalista = listaUsuarioAnalista;
+	}
+
+	private List<PuntoRecaudacion> lista;
+	@SuppressWarnings("unused")
+	private List<Usuario> listaUsuarioAnalista = new ArrayList<Usuario>() ;
 	
 	private String tipoDialog;
 	private PuntoRecaudacion puntoRecaudacion;
@@ -49,6 +73,7 @@ public class PuntoRecaudacionBean implements Serializable {
 		this.listar();
 		this.listari();
 		this.listarProvincia();
+//		this.listarUsuarioAnalista();
 		this.tipoDialog = "Nuevo";
 	}
 	
@@ -56,43 +81,11 @@ public class PuntoRecaudacionBean implements Serializable {
 		try {
 			if(accion.equalsIgnoreCase("R")) {
 				PuntoRecaudacion p = new PuntoRecaudacion();
-//				p.setId(puntoRecaudacion.getId());
-//				p.setInstitucion(puntoRecaudacion.getInstitucion());
-//				p.setNombre(puntoRecaudacion.getNombre().toUpperCase());
-//				p.setProvincia(puntoRecaudacion.getProvincia());
-//				p.setTelefono(puntoRecaudacion.getTelefono());
-//				p.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
-//				p.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
-//				p.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
-//				p.setJefe(puntoRecaudacion.getJefe().toUpperCase());
-//				p.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
-//				p.setEstado(puntoRecaudacion.getEstado());
-//				p.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
-//				p.setPuntoemision(puntoRecaudacion.getPuntoemision());
-//				p.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
-//				p.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
-//				p.setId_analista(puntoRecaudacion.getId_analista());
 				this.service.registrar(p);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Se grabó con éxito", "Satisfactoriamente"));
 			}else if(accion.equalsIgnoreCase("M")) {
-				//PuntoRecaudacion p = puntoRecaudacion;
-//				puntoRecaudacion.setInstitucion(puntoRecaudacion.getInstitucion());
-//				puntoRecaudacion.setNombre(puntoRecaudacion.getNombre().toUpperCase());
-//				puntoRecaudacion.setProvincia(puntoRecaudacion.getProvincia());
-//				puntoRecaudacion.setTelefono(puntoRecaudacion.getTelefono());
-//				puntoRecaudacion.setDireccion(puntoRecaudacion.getDireccion().toUpperCase());
-//				puntoRecaudacion.setResponsable(puntoRecaudacion.getResponsable().toUpperCase());
-//				puntoRecaudacion.setResponsablecargo(puntoRecaudacion.getResponsablecargo().toUpperCase());
-//				puntoRecaudacion.setJefe(puntoRecaudacion.getJefe().toUpperCase());
-//				puntoRecaudacion.setJefecargo(puntoRecaudacion.getJefecargo().toUpperCase());
-//				puntoRecaudacion.setEstado(puntoRecaudacion.getEstado());
-//				puntoRecaudacion.setEstablecimiento(puntoRecaudacion.getEstablecimiento());
-//				puntoRecaudacion.setPuntoemision(puntoRecaudacion.getPuntoemision());
-//				puntoRecaudacion.setSecuencialfactura(puntoRecaudacion.getSecuencialfactura());
-//				puntoRecaudacion.setSecuencialnotas(puntoRecaudacion.getSecuencialnotas());
-//				puntoRecaudacion.setId_analista(puntoRecaudacion.getId_analista());
-				this.service.modificar(puntoRecaudacion);
+					this.service.modificar(puntoRecaudacion);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Se grabó con éxito", "Satisfactoriamente"));
 			}
@@ -125,6 +118,17 @@ public class PuntoRecaudacionBean implements Serializable {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+//	public void listarUsuarioAnalista() {
+//		try {
+//			this.listaUsuarioAnalista = this.serviceUsuario.listarAnalistas();
+//			for (Usuario u:listaUsuarioAnalista) {
+//				System.out.println("usuario " + u.getApellido());
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public void mostrarData(PuntoRecaudacion i) {
 		this.puntoRecaudacion = i;

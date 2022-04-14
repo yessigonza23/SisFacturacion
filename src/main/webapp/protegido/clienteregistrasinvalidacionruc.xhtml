@@ -46,10 +46,7 @@
 									value="#{clienteRegistroBean.cliente.tipoid}" effect="fade"
 									converter="omnifaces.SelectItemsConverter" filter="true"
 									disabled="#{clienteRegistroBean.validador}">
-									<p:ajax event="change"
-										listener="#{clienteRegistroBean.validaIdentificacion(clienteRegistroBean.cliente.ci)}"
-										process="@this"
-										update="cliente:txtTipo, cliente:txtNombres, cliente:txtDireccion, cliente:txtTelefono, cliente:txtCorreo" />
+									
 									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
 									<f:selectItem itemLabel="Cédula" itemValue="C" />
 									<f:selectItem itemLabel="RUC" itemValue="R" />

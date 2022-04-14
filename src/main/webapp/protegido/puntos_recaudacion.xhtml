@@ -239,7 +239,7 @@
 										filter="true" filterMatchMode="startsWith">
 										<f:selectItem itemLabel="Seleccione: ..."
 											noSelectionOption="true" />
-										<f:selectItems value="#{usuarioBean.listaUsuario}" var="e"
+										<f:selectItems value="#{puntoRecaudacionBean.listaUsuarioAnalista}" var="e"
 											itemLabel="#{e.nombre} #{e.apellido}" itemValue="#{e.id}" />
 										<f:ajax render="selected_item" />
 									</p:selectOneMenu>

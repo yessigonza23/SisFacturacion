@@ -1,5 +1,7 @@
 package ec.gob.mdg.dao;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 import ec.gob.mdg.model.Usuario;
@@ -21,4 +23,7 @@ public interface IUsuarioDAO extends ICRUD<Usuario> {
 	
 	//EXISTENCIA DE USUARIO
 	boolean existeUsuario(String us);
+	
+	//LISTA ANALISTAS
+	List<Usuario> listarAnalistas();
 }

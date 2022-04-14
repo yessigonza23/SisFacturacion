@@ -1,5 +1,7 @@
 package ec.gob.mdg.service;
 
+import java.util.List;
+
 import ec.gob.mdg.model.Usuario;
 
 public interface IUsuarioService extends IService<Usuario> {
@@ -18,4 +20,7 @@ public interface IUsuarioService extends IService<Usuario> {
 
 	// EXISTENCIA DE USUARIO
 	boolean existeUsuario(String us);
+	
+	//LISTA ANALISTAS
+		List<Usuario> listarAnalistas();
 }

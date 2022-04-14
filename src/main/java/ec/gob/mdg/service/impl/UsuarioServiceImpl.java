@@ -83,5 +83,10 @@ public class UsuarioServiceImpl implements IUsuarioService,  Serializable
 		return dao.existeUsuario(us);
 	}
 
+	@Override
+	public List<Usuario> listarAnalistas() {
+		return dao.listarAnalistas();
+	}
+
 	
 }

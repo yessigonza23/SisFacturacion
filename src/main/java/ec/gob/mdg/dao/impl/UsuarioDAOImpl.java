@@ -207,6 +207,19 @@ public class UsuarioDAOImpl implements IUsuarioDAO, Serializable{
 			throw e;
 		}
 		return respuesta ;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Usuario> listarAnalistas() {
+		List<Usuario> lista = new ArrayList<Usuario>();
+		try {
+			 Query q= em.createQuery("SELECT u FROM Usuario u WHERE u.tipo not in ('A','R','J')"); //query de la entidad del model
+			 lista =(List<Usuario>) q.getResultList();
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return lista;
 	}	
 
 }

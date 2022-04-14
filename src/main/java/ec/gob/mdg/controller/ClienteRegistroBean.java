@@ -11,9 +11,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 
+import ec.gob.mdg.dinardap.modelo.RegistroCivilCedulaDTO;
+import ec.gob.mdg.dinardap.modelo.SriRucDTO;
+import ec.gob.mdg.dinardap.servicios.ServiciosWeb;
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.service.IClienteService;
-import ec.gob.mdg.util.CedulaRuc;
 import ec.gob.mdg.validaciones.Funciones;
 
 @Named
@@ -35,9 +37,11 @@ public class ClienteRegistroBean implements Serializable {
 	private String tipoDialog;
 	private Cliente cliente;
 	private Cliente clientetmp;
-	boolean validador = false;
+	boolean validador ;
 	boolean valida = false;
 	boolean estadeshabilitado = false;
+	RegistroCivilCedulaDTO clienteRegCivil = new RegistroCivilCedulaDTO();
+	SriRucDTO clienteSRI = new SriRucDTO();
 
 	@PostConstruct
 	public void init() {
@@ -98,19 +102,43 @@ public class ClienteRegistroBean implements Serializable {
 	}
 
 	// VALIDADOR DE CEDULA-RUC
-	public void validaIdentificacion() {
+	public void validaIdentificacion(String ci) throws Exception {
+//		System.out.println("ci "+ ci);
 		if (cliente == null) {
 			validador = true;
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Tipo de identificacion erronea", "error"));
-		} else {
-			String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());
-			if (validaIdentificacion.equals("T")) {
+		} else if (this.cliente.getCi() != null && this.cliente.getTipoid().equals("P")) {
+			validador = false;
+		}
+		else if (this.cliente.getCi() != null && !(this.cliente.getTipoid().equals("P"))){
+//			System.out.println("entra a diferente de p");
+//			String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(), this.cliente.getTipoid());
+//			if (validaIdentificacion.equals("T")) {
+//				validador = false;
+//			} else {
+//				validador = true;
+//				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//						"Tipo de identificacion erronea", validaIdentificacion));
+//			}
+//			System.out.println("cliente.getid "+ this.cliente.getCi());
+			clienteRegCivil = ServiciosWeb.consultarCiudadanoRegistroCivil(this.cliente.getCi());
+			clienteSRI = ServiciosWeb.consultarPersonaServicioRentasInternas(this.cliente.getCi());
+//			System.out.println("cliente sri "+ clienteSRI.getRazonSocial());
+			
+		
+			if (!(clienteRegCivil.getNombre() == null)) {
+				cliente.setNombre(clienteRegCivil.getNombre());
+				cliente.setTipoid("C");
 				validador = false;
-			} else {
+			}else  if (!(clienteSRI.getRazonSocial() == null)) {
+				cliente.setNombre(clienteSRI.getRazonSocial());
+				cliente.setTipoid("R");
+				validador = false;
+			}else {
 				validador = true;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Tipo de identificacion erronea", validaIdentificacion));
+						"Tipo de identificacion erronea", "ERROR"));
 			}
 		}
 
@@ -121,23 +149,10 @@ public class ClienteRegistroBean implements Serializable {
 			if (cliente == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese el No. de Identificación", "Sin Datos"));
-			} else {
+			} else if (cliente != null){
 				Long a = fun.buscarCliente(cliente);
-				if (a == 0) {
-
-					if (this.cliente.getCi() != null && this.cliente.getTipoid() != null) {
-						validador = false;
-						String validaIdentificacion = CedulaRuc.comprobacion(this.cliente.getCi(),
-								this.cliente.getTipoid());
-						if (!validaIdentificacion.equals("T")) {
-							validador = true;
-							FacesContext.getCurrentInstance().addMessage(null,
-									new FacesMessage(FacesMessage.SEVERITY_ERROR,
-											"Tipo de identificacion erronea buscar", validaIdentificacion));
-						}
-					}
-
-				} else {
+//				System.out.println("impreme a: " + a);
+				if (a != 0) {
 					validador = true;
 					this.cliente = serviceCliente.ClientePorCiParametro(cliente.getCi());
 				}

@@ -40,6 +40,7 @@ public class UsuarioBean implements Serializable {
 
 	private Institucion institucion;
 	private List<Usuario> listaUsuario = new ArrayList<>();
+	private List<Usuario> listaUsuarioAnalista = new ArrayList<>();
 	private Usuario usuario = new Usuario();
 	boolean estadeshabilitado;
 	boolean estadeshabilitado_ap = true;
@@ -110,6 +111,14 @@ public class UsuarioBean implements Serializable {
 	public void listarUsuarioPunto() {
 		try {
 			this.listaUsuario = this.serviceUsuario.listar();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void listarUsuarioAnalista() {
+		try {
+			this.listaUsuarioAnalista = this.serviceUsuario.listarAnalistas();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -268,6 +277,14 @@ public class UsuarioBean implements Serializable {
 
 	public void setClaveNueva(String claveNueva) {
 		this.claveNueva = claveNueva;
+	}
+
+	public List<Usuario> getListaUsuarioAnalista() {
+		return listaUsuarioAnalista;
+	}
+
+	public void setListaUsuarioAnalista(List<Usuario> listaUsuarioAnalista) {
+		this.listaUsuarioAnalista = listaUsuarioAnalista;
 	}
 	
 

@@ -642,16 +642,14 @@ public class Funciones implements Serializable {
 		// usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 		try {
 			Query query = em.createNativeQuery("select count(*)from(\r\n"
-					+ "SELECT DISTINCT  a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito num_deposito,c.numtransaccion,b.fecha,b.valor as comdep_valor,a.comp_estado,\r\n"
-					+ "	c.fecha,c.valor as estcue_valor,c.servicio,	c.ruc,c.anio,c.mes,max(b.id) comdep_id,c.id estcue_id,c.saldo\r\n"
+					+ "SELECT DISTINCT  a.punto_id,b.valor as comdep_valor,min(b.id) comdep_id,c.id estcue_id,c.saldo\r\n"
 					+ "	FROM financiero.vista_recaudacion a,financiero.comprobantedeposito b,financiero.estadocuenta c\r\n"
 					+ "	WHERE a.comp_id = b.id_comprobante 	and c.numtransaccion = b.num_deposito\r\n"
 					+ "	and a.comp_estado = 'A' and a.comp_tipo = 'F'\r\n"
 					+ "	and b.num_deposito=c.numtransaccion	and (c.saldo >= b.valor and c.saldo>0)\r\n"
 					+ "	and b.identificacion =c.ruc and c.anio = a.comp_anio_i\r\n"
 					+ "	and c.anio=?1 and c.bloqueado =false and b.id_tmp is null\r\n"
-					+ "	group by a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito,c.numtransaccion,b.fecha,b.valor,a.comp_estado,\r\n"
-					+ "	c.fecha,c.valor,c.servicio,	c.ruc,c.anio,c.mes,c.id,c.saldo)a");
+					+ "	group by a.punto_id,b.valor,c.id ,c.saldo)a");
 
 			query.setParameter(1, anio);
 			contador = (Number) query.getSingleResult();
@@ -663,20 +661,19 @@ public class Funciones implements Serializable {
 	}
 	
 	public Number cuentaEstCuentaConsolidacionTransfer(Integer anio) throws Exception {/// para recorrer la consolidacion
+
 		Number contador = null;
 		// usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 		try {
 			Query query = em.createNativeQuery("select count(*)from(\r\n"
-					+ "SELECT DISTINCT  a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito num_deposito,c.numtransaccion,b.fecha,b.valor as comdep_valor,a.comp_estado,\r\n"
-					+ "	c.fecha,c.valor as estcue_valor,c.servicio,	c.ruc,c.anio,c.mes,max(b.id) comdep_id,c.id estcue_id,c.saldo\r\n"
+					+ "SELECT DISTINCT  a.punto_id,b.valor as comdep_valor,min(b.id) comdep_id,c.id estcue_id,c.saldo\r\n"
 					+ "	FROM financiero.vista_recaudacion a,financiero.comprobantedeposito b,financiero.estadocuenta c\r\n"
 					+ "	WHERE a.comp_id = b.id_comprobante 	and c.numtransaccion = b.num_deposito\r\n"
 					+ "	and a.comp_estado = 'A' and a.comp_tipo = 'F'\r\n"
 					+ "	and b.num_deposito=c.numtransaccion	and (c.saldo >= b.valor and c.saldo>0)\r\n"
-					+ "	and c.anio = a.comp_anio_i and c.tipotransaccion='T'\r\n"
+					+ "	and c.anio = a.comp_anio_i and c.tipotransaccion='T' and b.tipotransaccion ='T'\r\n"
 					+ "	and c.anio=?1 and c.bloqueado =false and b.id_tmp is null\r\n"
-					+ "	group by a.punto_id, a.punto_nombre, a.comp_anio,a.comp_mes,a.cliente_nombre, c.cliente,a.cliente_ci,b.num_deposito,c.numtransaccion,b.fecha,b.valor,a.comp_estado,\r\n"
-					+ "	c.fecha,c.valor,c.servicio,	c.ruc,c.anio,c.mes,c.id,c.saldo)a");
+					+ "	group by a.punto_id,b.valor,c.id ,c.saldo)a");
 
 			query.setParameter(1, anio);
 			contador = (Number) query.getSingleResult();

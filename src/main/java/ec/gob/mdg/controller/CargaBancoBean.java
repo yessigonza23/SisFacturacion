@@ -159,9 +159,8 @@ public class CargaBancoBean implements Serializable {
 					do{
 						fun.consolidaDepositosTransfer(anio,id_usuario);
 						contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacionTransfer(anio);
-						
 			        }while (contadorFaltantes.intValueExact()>0) ;
-					System.out.println("termina transfer");
+					
 				}else {
 					System.out.println("Diferente de transferencias");
 					BigInteger contadorFaltantes =   (BigInteger) fun.cuentaEstCuentaConsolidacion(anio);
