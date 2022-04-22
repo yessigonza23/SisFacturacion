@@ -612,7 +612,7 @@ public class Funciones implements Serializable {
 	@Transactional
 	public void consolidaDepositos(Integer anio, Integer id_usuario) throws Exception {
 		try {
-			// System.out.println("entra a funciones7 " + anio + "- " + id_usuario);
+			 System.out.println("entra a funciones7 " + anio + "- " + id_usuario);
 			Query query = em.createNativeQuery("CALL financiero.consolidadepositos(:panio,:pusuario)");
 			query.setParameter("panio", anio);
 			query.setParameter("pusuario", id_usuario);
@@ -647,7 +647,7 @@ public class Funciones implements Serializable {
 					+ "	WHERE a.comp_id = b.id_comprobante 	and c.numtransaccion = b.num_deposito\r\n"
 					+ "	and a.comp_estado = 'A' and a.comp_tipo = 'F'\r\n"
 					+ "	and b.num_deposito=c.numtransaccion	and (c.saldo >= b.valor and c.saldo>0)\r\n"
-					+ "	and b.identificacion =c.ruc and c.anio = a.comp_anio_i\r\n"
+					+ "	and b.identificacion =c.ruc and c.anio = a.comp_anio_i and c.tipotransaccion<>'T' and b.tipotransaccion <>'T'\r\n"
 					+ "	and c.anio=?1 and c.bloqueado =false and b.id_tmp is null\r\n"
 					+ "	group by a.punto_id,b.valor,c.id ,c.saldo)a");
 

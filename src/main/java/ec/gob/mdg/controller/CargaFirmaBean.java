@@ -21,6 +21,7 @@ import ec.gob.mdg.service.IPuntoRecaudacionService;
 import ec.gob.mdg.service.IUsuarioPuntoService;
 import ec.gob.mdg.service.IUsuarioService;
 import ec.gob.mdg.util.UtilsArchivos;
+import ec.gob.mdg.util.ValidarClaveFirmaElectronica;
 
 @Named
 @ViewScoped
@@ -74,12 +75,17 @@ public class CargaFirmaBean implements Serializable {
 		}
 	}
 
+	public void validaFirma(String clave) {
+		String nombreFirma = "certificado" + punto.getId() + ".p12";
+		desactiva=ValidarClaveFirmaElectronica.LoadCertificate(clave, nombreFirma);
+	}
+
 	public void modificaUsuario() {
 
 		try {
 			usuario.setNombrefirmaelectronica(nombreArchivo);
 			String clave = this.usuario.getClavefirma();
-			String claveBase64 = cifrarBase64(clave);			
+			String claveBase64 = cifrarBase64(clave);
 			usuario.setClavefirma(claveBase64);
 			serviceUsuario.modificar(usuario);
 			desactiva = true;
@@ -98,7 +104,6 @@ public class CargaFirmaBean implements Serializable {
 		return b;
 	}
 
-	
 	////////////// GETTERS Y SETTERS
 
 	public PuntoRecaudacion getNombre() {

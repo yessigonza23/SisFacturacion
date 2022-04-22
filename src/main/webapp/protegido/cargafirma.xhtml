@@ -19,16 +19,16 @@
 					<p:autoUpdate />
 				</p:growl>
 
-				<p:fieldset  tyle="width:50%">
-				<p:panelGrid columns="3"
+				<p:fieldset tyle="width:50%">
+					<p:panelGrid columns="3"
 						style="display:block; text-align:center; width:110%; margin:0px auto;"
 						columnClasses="centered">
 						<p:fileUpload id="cargaArchivo" value="#{cargaFirmaBean.file}"
 							immediate="true" label="Ubicar Certificado..." mode="simple"
-							skinSimple="true" allowTypes=""  />
-						
+							skinSimple="true" allowTypes="" />
+
 						<p:commandButton id="botonCargar" value="Cargar Certificado"
-							ajax="false" actionListener="#{cargaFirmaBean.upload()}" >
+							ajax="false" actionListener="#{cargaFirmaBean.upload()}">
 						</p:commandButton>
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
@@ -39,7 +39,7 @@
 							</p:column>
 						</p:row>
 
-					</p:panelGrid>	
+					</p:panelGrid>
 					<p:panelGrid columns="3" id="pg"
 						style="display:block; text-align:center;width:500px;"
 						columnClasses="centered">
@@ -49,29 +49,38 @@
 							<p:column style="border-style: hidden; width:130px;">Digite Clave para Certificado Electrónico: </p:column>
 							<p:column style="border-style: hidden;">
 								<p:password id="Clave" size="40"
-									value="#{cargaFirmaBean.usuario.clavefirma}"  
-									match="RepiteClave" />
+									value="#{cargaFirmaBean.usuario.clavefirma}"
+									match="RepiteClave">
+									<p:ajax event="valueChange"
+										listener="#{cargaFirmaBean.validaFirma(cargaFirmaBean.usuario.clavefirma)}"
+										update=":frm:btnGuardar" />
+								</p:password>
 							</p:column>
 						</p:row>
 						<p:row style="border-style: hidden;">
 							<p:column style="border-style: hidden;width:50px;"></p:column>
 							<p:column style="border-style: hidden; width:130px;">Confirme Clave para Certificado Electrónico: </p:column>
 							<p:column style="border-style: hidden;">
-								<p:password id="RepiteClave" size="40" 
-									value="#{cargaFirmaBean.usuario.clavefirma}" />
+								<p:password id="RepiteClave" size="40"
+									value="#{cargaFirmaBean.usuario.clavefirma}">
+									<p:ajax event="valueChange"
+										listener="#{cargaFirmaBean.validaFirma(cargaFirmaBean.usuario.clavefirma)}"
+										update=":frm:btnGuardar" />
+								</p:password>
 							</p:column>
 						</p:row>
 
 
 					</p:panelGrid>
-					
-					
+
+
 					<p:panelGrid columns="2" style="display:block; text-align:center"
 						columnClasses="centered">
 						<p:commandButton icon="ui-icon-disk" id="btnGuardar"
 							value="Guardar" style="text-align: center"
 							actionListener="#{cargaFirmaBean.modificaUsuario()}"
-							process="@form" update="@form" disabled="#{cargaFirmaBean.desactiva}">
+							process="@form" update="@form"
+							disabled="#{cargaFirmaBean.desactiva}">
 						</p:commandButton>
 						<p:commandButton id="btnRegresar" value="Principal"
 							icon="fa fa-fw fa-hand-o-left"
