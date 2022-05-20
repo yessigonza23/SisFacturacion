@@ -33,9 +33,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.primefaces.model.UploadedFile;
 import org.w3c.dom.Document;
+
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.TimeZone;
 
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
@@ -62,6 +66,7 @@ import ec.gob.mdg.sri.util.FileUtil;
 import ec.gob.mdg.sri.util.XML_Utilidades;
 import ec.gob.mdg.util.UtilsArchivos;
 import ec.gob.mdg.util.UtilsDate;
+import ec.gob.mdg.util.ValorMod11;
 import ec.gob.mdg.validaciones.FunValidaciones;
 import ec.gob.mdg.validaciones.Funciones;
 
@@ -342,7 +347,38 @@ public class ComprobanteModificaNotasBean implements Serializable {
 				comprobante.setValor(totaldet);
 				comprobante.setDetalle(comprobante.getDetalle());
 				comprobante.setMotivonotacredito(comprobante.getMotivonotacredito());
+				
+			//// GENERAR CLAVE ACCESO
+				Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+
+				calendar.setTime(fechaActual);
+
+				String anio = String.valueOf(calendar.get(Calendar.YEAR));
+				String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+				String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+				if (calendar.get(Calendar.MONTH) < 10) {
+					mes = "0" + mes;
+				}
+
+				if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
+					dia = "0" + dia;
+				}
+
+				claveA = dia + mes + anio + "04" + institucion.getRuc() + institucion.getAmbiente()
+						+ punto.getEstablecimiento() + punto.getPuntoemision()
+						+ StringUtils.leftPad(String.valueOf(comprobante.getNumero()), 9, "0") + "12345678" + "1";
+
+				String verificador = String.valueOf(ValorMod11.mod11(claveA));
+
+				claveA = claveA + verificador;
+
+				comprobante.setClaveacceso(claveA);
+				
 				serviceComprobante.modificar(comprobante);
+				/// GENERAR XML PARA LA FACTURA
+				System.out.println("punto.getId(), comprobante.getNumero(): "+punto.getId() +"-" + comprobante.getNumero());
+				genXml.generarXmlArchivo(punto.getId(), comprobante.getNumero());
 
 				//// AUDITORIA TABLA COMPROBANTE
 				// CAMPO comprobante.getValor)
@@ -380,7 +416,6 @@ public class ComprobanteModificaNotasBean implements Serializable {
 	///////////////////////////////////
 	/// CARGAR NUEVA RECAUDACION
 	public void cargaRecaudacion() {
-
 		comprobanteDetalle.setCantidad(0);
 		comprobanteDetalle.setValorcero(comprobanteDetalle.getRecaudaciondetalle().getValor());
 		comprobanteDetalle.setValoriva(comprobanteDetalle.getRecaudaciondetalle().getValoriva());
@@ -422,26 +457,16 @@ public class ComprobanteModificaNotasBean implements Serializable {
 
 	// ELIMINAR DETALLE
 	public void eliminarCompDetalle(int index, Integer id_comprobanteDetalle) {
-//		System.out.println("id_comprobanteDetalle: " + id_comprobanteDetalle);
 		for (ComprobanteDetalle cd : listaComprobanteDet) {
 			ComprobanteDetalle compdet = new ComprobanteDetalle();
 			compdet = cd;
-//			System.out.println("cd.getId(): " + cd.getId());
 			if (cd.getId() == id_comprobanteDetalle) {
-//				System.out.println("entra a if): " + cd.getId());
 				listaComprobanteDetEliminadas.add(compdet);
-//				System.out.println(cd.getId() + " pasa antes de remover");
-
-				// serviceComprobanteDetalle.eliminarComprobanteDetalle(index);
 			} else {
 				listaComprobanteDetNot.add(compdet);
 			}
-
 		}
-
 		listaComprobanteDet.remove(index);
-//		System.out.println("pasa termina");
-
 		totalDetalle();
 	}
 

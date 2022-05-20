@@ -78,6 +78,7 @@ public class CargaFirmaBean implements Serializable {
 	public void validaFirma(String clave) {
 		String nombreFirma = "certificado" + punto.getId() + ".p12";
 		desactiva=ValidarClaveFirmaElectronica.LoadCertificate(clave, nombreFirma);
+		
 	}
 
 	public void modificaUsuario() {

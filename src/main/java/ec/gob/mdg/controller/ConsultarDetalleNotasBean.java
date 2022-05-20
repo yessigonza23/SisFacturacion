@@ -32,7 +32,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
+
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.TimeZone;
 
 import ec.gob.mdg.model.Cliente;
 import ec.gob.mdg.model.Comprobante;
@@ -56,6 +60,7 @@ import ec.gob.mdg.sri.util.FileUtil;
 import ec.gob.mdg.sri.util.XML_Utilidades;
 import ec.gob.mdg.util.UtilsArchivos;
 import ec.gob.mdg.util.UtilsDate;
+import ec.gob.mdg.util.ValorMod11;
 import ec.gob.mdg.validaciones.Funciones;
 
 @Named
@@ -198,6 +203,36 @@ public class ConsultarDetalleNotasBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"No puede realizar cambios en el comprobante ya está autorizado por el SRI", "Error"));
 			} else {
+
+				//// GENERAR CLAVE ACCESO
+				Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+
+				calendar.setTime(fechaActual);
+
+				String anio = String.valueOf(calendar.get(Calendar.YEAR));
+				String mes = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+				String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+				if (calendar.get(Calendar.MONTH) < 10) {
+					mes = "0" + mes;
+				}
+
+				if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
+					dia = "0" + dia;
+				}
+
+				claveA = dia + mes + anio + "04" + institucion.getRuc() + institucion.getAmbiente()
+						+ punto.getEstablecimiento() + punto.getPuntoemision()
+						+ StringUtils.leftPad(String.valueOf(comprobanteNotas.getNumero()), 9, "0") + "12345678" + "1";
+
+				String verificador = String.valueOf(ValorMod11.mod11(claveA));
+
+				claveA = claveA + verificador;
+
+				comprobanteNotas.setClaveacceso(claveA);
+
+				serviceComprobante.modificar(comprobanteNotas);
+				/// GENERAR XML PARA LA FACTURA
 
 				genXml.generarXmlArchivo(comprobanteNotas.getPuntoRecaudacion().getId(), comprobanteNotas.getNumero());
 
@@ -441,7 +476,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 		}
 	}
 
-        //////////////////ENVIAR CORREO
+	////////////////// ENVIAR CORREO
 
 	public void eviarCorreo(Integer id_comprobante, String tipo) {
 
@@ -496,7 +531,7 @@ public class ConsultarDetalleNotasBean implements Serializable {
 					new DataHandler(new FileDataSource(pathFirmados + comprobante.getClaveacceso() + ".pdf")));
 			adjunto.setFileName(comprobante.getClaveacceso() + ".pdf");
 
-         //// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
+			//// AGREGAR UNA CONDICION PARA CUANDO NO HAY EL ADJUNTO -----PEENDIENTE
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(textoMensaje);

@@ -96,22 +96,30 @@ public class GenerarDOMNotaBean implements Serializable {
 	public void generarXmlArchivo(Integer id_punto, Integer numeroComprobante) {
 		try {
 			
-			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);			
-			punto = usuPunto.getPuntoRecaudacion();			
-			inst = punto.getInstitucion().getId();			
-			institucion = serviceInstitucion.institucionPorPunto(inst);			
-			comprobante = serviceComprobante.comprobantePorPtoPorIdNotas(punto.getId(), numeroComprobante);			
-			this.listaComprobanteDet = this.serviceComprobanteDetalle.listarComDetPorIdComp(comprobante.getId());			
+			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);	
+			
+			punto = usuPunto.getPuntoRecaudacion();	
+			
+			inst = punto.getInstitucion().getId();	
+			
+			institucion = serviceInstitucion.institucionPorPunto(inst);	
+			
+			comprobante = serviceComprobante.comprobantePorPtoPorIdNotas(punto.getId(), numeroComprobante);	
+			
+			this.listaComprobanteDet = this.serviceComprobanteDetalle.listarComDetPorIdComp(comprobante.getId());
+		
 			generarDocument();
+		
 			actualizaXml();
 			
-//			System.out.println("TERMINA NOTAS");
+		
 		} catch (Exception e) {
 
 		}
 	}
 
 	public void generarDocument() throws ParserConfigurationException {
+	
 
 		DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factoria.newDocumentBuilder();
@@ -140,7 +148,7 @@ public class GenerarDOMNotaBean implements Serializable {
 		Element ruc = document.createElement("ruc");
 		ruc.appendChild(document.createTextNode(institucion.getRuc()));
 		infoTributaria.appendChild(ruc);
-
+		
 		///////// GENERAR CLAVE DE ACCESO //////////////////////////
 
 		Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -165,7 +173,8 @@ public class GenerarDOMNotaBean implements Serializable {
 		claveA = claveA + verificador;
 		
 		//////////////////////////////////////////////////////////
-
+	
+		
 		Element claveAcceso = document.createElement("claveAcceso");
 		claveAcceso.appendChild(document.createTextNode(claveA));
 		infoTributaria.appendChild(claveAcceso);
@@ -193,6 +202,7 @@ public class GenerarDOMNotaBean implements Serializable {
 		infoTributaria.appendChild(dirMatriz);
 		
 		////////
+		
 
 		Element infoFactura = document.createElement("infoNotaCredito");
 		facturas.appendChild(infoFactura);
@@ -220,7 +230,7 @@ public class GenerarDOMNotaBean implements Serializable {
 		}
 	
 		///////////////////////////////////////////////////////////////
-
+		
 		Element tipoIdentificacionComprador = document.createElement("tipoIdentificacionComprador");
 		tipoIdentificacionComprador.appendChild(document.createTextNode(tipoIdentificacion));
 		infoFactura.appendChild(tipoIdentificacionComprador);
@@ -241,7 +251,8 @@ public class GenerarDOMNotaBean implements Serializable {
 		Element obligadoContabilidad = document.createElement("obligadoContabilidad");
 		obligadoContabilidad.appendChild(document.createTextNode("SI"));
 		infoFactura.appendChild(obligadoContabilidad);
-
+		
+		
 		///// DATOS COMPROBANTE MODIFICADO
 
 		Element codDocModificado = document.createElement("codDocModificado");
@@ -251,20 +262,24 @@ public class GenerarDOMNotaBean implements Serializable {
 		comprobanteMod = serviceComprobanteMod.comprobantePorPtoPorId(comprobante.getComprobantepto(),
 				comprobante.getComprobantemod());
 
+		
+		
 		Element codDocModumDOcModificado = document.createElement("numDocModificado");
 		codDocModumDOcModificado
 				.appendChild(document.createTextNode(comprobanteMod.getPuntoRecaudacion().getEstablecimiento() + "-"
 						+ comprobanteMod.getPuntoRecaudacion().getPuntoemision() + "-"
 						+ String.format("%09d", comprobanteMod.getNumero())));
 		infoFactura.appendChild(codDocModumDOcModificado);
-
+		
+		
+	
 		Element fechaEmisionDocSustento = document.createElement("fechaEmisionDocSustento");
 		fechaEmisionDocSustento.appendChild(document
 				.createTextNode(UtilsDate.fechaFormatoString(comprobante.getFechacomprmodificado(), "dd/MM/yyyy")));
 		infoFactura.appendChild(fechaEmisionDocSustento);
 				
 		/////////////////////////////////////////////
-
+		
 		////////// FORMATO PARA CANTIDADES 0.00 ///////////////////////////////////////
 
 		String patron = "#.00";
@@ -353,7 +368,7 @@ public class GenerarDOMNotaBean implements Serializable {
 			totalImpuesto.appendChild(valor);
 
 		}
-
+		
 		/////
 		Element motivo = document.createElement("motivo");
 		motivo.appendChild(document.createTextNode("Falta de retirar"));
@@ -461,6 +476,8 @@ public class GenerarDOMNotaBean implements Serializable {
 	
 			}
 		}
+	
+		
 		Element infoAdicional = document.createElement("infoAdicional");
 		facturas.appendChild(infoAdicional);
 
@@ -480,7 +497,7 @@ public class GenerarDOMNotaBean implements Serializable {
 		campoAdicional1.setAttributeNode(attr1);
 		campoAdicional1.appendChild(document.createTextNode(comprobante.getClientetelefono().trim()));
 		infoAdicional.appendChild(campoAdicional1);
-
+		
 		cliente = serviceCliente.ClientePorCiParametro(comprobante.getClienteruc());
 
 		Element campoAdicional2 = document.createElement("campoAdicional");
@@ -495,8 +512,10 @@ public class GenerarDOMNotaBean implements Serializable {
 
 	public void actualizaXml() throws Exception {	
 		String xmlString = convertDocumentToString(document);
+		
 		comprobante.setXml(xmlString);	
 		serviceComprobante.modificar(comprobante);	
+		
 	}
 
 	public String convertDocumentToString(Document doc) {
