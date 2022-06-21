@@ -37,14 +37,11 @@ public class PrincipalBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-
 		try {
-
 			fechaActual = UtilsDate.fechaActual();
 			usuPunto = serviceUsuPunto.listarUsuarioPuntoPorIdLogueado(p);
 			punto = usuPunto.getPuntoRecaudacion();
 			nombre = servicePuntoRecaudacion.listarPorId(punto);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

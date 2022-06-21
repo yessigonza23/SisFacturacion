@@ -68,6 +68,8 @@ public class ConsolidacionDevolucionBean implements Serializable {
 	//// LISTAR COMPROBANTE DEPOSITO
 	public void listarEstadoPendiente(Integer anio) {
 
+		
+		
 		if (anio != null)
 			try {
 				listaEstadoPendiente = serviceEstadoCuenta.listarEstadoCuentaPendiente(anio);
@@ -82,10 +84,15 @@ public class ConsolidacionDevolucionBean implements Serializable {
 	}
 
 	@Transactional
-	public void actualizaRespuesta(Integer id_estado,String observacion) {
-		if (id_estado != null && anio != null) {
+	public void actualizaRespuesta(EstadoCuenta estado,String observacion) {
+		if (estado != null && anio != null) {
 			try {
-				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(id_estado);
+				estadoCuenta = serviceEstadoCuenta.estadoCuentaPorId(estado.getId());
+				estadoCuenta.setRespuesta(estado.getRespuesta());
+				estadoCuenta.setObservacion(observacion);
+			//	System.out.println("estado respuesta y ober: " + estadoCuenta.getObservacion() + "-" + estadoCuenta.getRespuesta());
+				serviceEstadoCuenta.modificar(estadoCuenta);
+				//System.out.println("pasa grabando");
 
 				Auditoria auditoria = new Auditoria();
 
@@ -94,15 +101,11 @@ public class ConsolidacionDevolucionBean implements Serializable {
 				auditoria.setOperacion("E");
 				auditoria.setUsuario(us.getUsername());
 				auditoria.setFecha(UtilsDate.fechaActual());
-				auditoria.setValoractual("Proceso O.K.");
-				auditoria.setValoranterior("Devolución.");
-				auditoria.setClaveprimaria(estadoCuenta.getId());
+				auditoria.setValoranterior("Proceso O.K.");
+				auditoria.setValoractual("Devolución.");
+				auditoria.setClaveprimaria(estado.getId());
 				serviceAuditoria.registrar(auditoria);
-
-				estadoCuenta.setRespuesta("Devolución.");
-				estadoCuenta.setObservacion(observacion);
-				estadoCuenta.setFechamodificacion(UtilsDate.fechaActual());
-				serviceEstadoCuenta.modificar(estadoCuenta);
+				 
 
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso",
 						"Se realiza el cambio de respuesta a Devolución exitosamente"));

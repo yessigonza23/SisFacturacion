@@ -85,7 +85,7 @@ public class InstitucionDAOImpl implements IInstitucionDAO, Serializable{
 		List<Institucion> lista= new ArrayList<>();
 		
 		try {
-			Query query = em.createQuery("FROM Institucion i where i.id =?1");
+			Query query = em.createQuery("FROM Institucion i where i.id =?1 AND i.estado='A'");
 			query.setParameter(1,i);
 
 			lista = (List<Institucion>) query.getResultList();

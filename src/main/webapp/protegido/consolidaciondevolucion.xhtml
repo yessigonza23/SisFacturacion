@@ -36,8 +36,8 @@
 
 				<p:commandButton icon="ui-icon-disk" id="btnEstadoCuenta"
 					value="Consultar"
-					actionListener="#{consolidacionDevolucionBean.listarEstadoPendiente(consolidacionDevolucionBean.anio)}"
-					process="@form" update="ingConsolida:Res1">
+					actionListener="#{consolidacionDevolucionBean.listarEstadoPendiente(consolidacionDevolucionBean.anio)}" 
+					 update="ingConsolida:Res1">
 				</p:commandButton>
 
 				<p:commandButton value="Export as XLS" ajax="false">
@@ -56,7 +56,7 @@
 						<p:rowEditor />
 					</p:column>
 					<p:ajax event="rowEdit"
-						listener="#{consolidacionDevolucionBean.actualizaRespuesta(e.id,consolidacionDevolucionBean.observacion)}" />
+						listener="#{consolidacionDevolucionBean.actualizaRespuesta(e,e.observacion)}" />
 
 
 
@@ -98,11 +98,11 @@
 					<p:column headerText="Observacion" style="width:200px">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputLabel value="#{consolidacionDevolucionBean.observacion}" />
+								<h:outputLabel value="#{consolidacionDevolucionBean.estadoCuenta.observacion}" />
 							</f:facet>
 
 							<f:facet name="input">
-								<h:inputText value="#{consolidacionDevolucionBean.observacion}"
+								<h:inputText value="#{consolidacionDevolucionBean.estadoCuenta.observacion}"
 									style="text-align: justify;width:195px;" />
 							</f:facet>
 						</p:cellEditor>
@@ -121,18 +121,11 @@
 						filterMatchMode="contains" style="width:100px;">
 						<p:outputLabel value="#{e.servicio}" />
 					</p:column>
-
-
-
-
 				</p:dataTable>
 				<!-- 				</p:panel> -->
 
 
 			</h:form>
-			<!-- Script de estilos para el contenido fel formulario-->
-			<h:outputStylesheet library="css" name="buscar.css" />
-			<h:outputStylesheet library="css" name="registroUsuario.css" />
 		</ui:define>
 
 	</ui:composition>
